@@ -73,6 +73,8 @@ Outputs:
     Value: !Ref DBCluster
   ClusterEndpoint:
     Value: !GetAtt DBCluster.Endpoint
+  InstanceEndpoint:
+    Value: !GetAtt DBInstance.Endpoint
   ClusterPort:
     Value: !GetAtt DBCluster.Port
   EngineVersion:
