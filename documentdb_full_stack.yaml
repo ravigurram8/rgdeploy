@@ -2,7 +2,7 @@ Description:  "AWS CloudFormation Sample Template DocumentDB_Quick_Create: Sampl
 
 Parameters: 
   DBClusterName: 
-    Default: "MyCluster"
+    Default: "MyCluster1"
     Description : "Cluster name"
     Type: "String"
     MinLength: "1"
@@ -11,7 +11,7 @@ Parameters:
     ConstraintDescription : "Must begin with a letter and contain only alphanumeric characters."
 
   DBInstanceName: 
-    Default: "MyInstance"
+    Default: "MyInstance1"
     Description : "Instance name"
     Type: "String"
     MinLength: "1"
@@ -36,7 +36,26 @@ Parameters:
     MaxLength: "41"
     AllowedPattern : "[a-zA-Z0-9]+"
     ConstraintDescription : "must contain only alphanumeric characters."
-
+  AccessFromCidr:
+    Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
+    Type: String
+    Default: 0.0.0.0/0
+    MinLength: "9"
+    MaxLength: "18"
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
+  VPC:
+    Description: The VPC in which the EC2 instance will reside
+    Type: AWS::EC2::VPC::Id
+  Subnet1:
+    Description: The VPC subnet in which the EC2 instance
+    Type: AWS::EC2::Subnet::Id
+  Subnet2:
+    Description: The VPC subnet in which the EC2 instance
+    Type: AWS::EC2::Subnet::Id
+  Subnet3:
+    Description: The VPC subnet in which the EC2 instance
+    Type: AWS::EC2::Subnet::Id
   DBInstanceClass:
     Description : "Instance class. Please refer to: https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-classes-by-region"
     Type: "String"
@@ -51,6 +70,32 @@ Parameters:
     ConstraintDescription : "Instance type must be of the ones supported for the region. Please refer to: https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-classes-by-region"  
 
 Resources:
+  DocumentDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Amazon DocumentDB Security Group
+      GroupName: SG-DocumentDB
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+         - IpProtocol: tcp
+           CidrIp: !Ref AccessFromCidr
+           FromPort: 27017
+           ToPort: 27017
+      Tags:
+        - Key: Name
+          Value: SG-DocumentDB
+  DocumentDBSubnetGroup:
+    Type: AWS::DocDB::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: Subnet Group for DocumentDB
+      DBSubnetGroupName: SG-DocumentDB-subnet
+      SubnetIds: 
+         - !Ref Subnet1
+         - !Ref Subnet2
+         - !Ref Subnet3
+      Tags:
+        - Key: Name
+          Value: SG-DocumentDB-subnet
   DBCluster:
     Type: "AWS::DocDB::DBCluster"
     DeletionPolicy: Delete
@@ -59,7 +104,9 @@ Resources:
       MasterUsername: !Ref MasterUser
       MasterUserPassword: !Ref MasterPassword
       EngineVersion: 3.6.0
-
+      DBSubnetGroupName : !Ref DocumentDBSubnetGroup
+      VpcSecurityGroupIds: 
+        - !GetAtt DocumentDBSecurityGroup.GroupId
   DBInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:
