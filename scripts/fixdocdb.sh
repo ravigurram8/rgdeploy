@@ -62,6 +62,7 @@ cat "$mytemp/mongo-config.json" |\
         jq -r ".db_ssl_enable=true" |\
         jq -r ".db_auth_enable=true" |\
         jq -r ".db_documentdb_enable=true" |\
+        jq -r ".db_ssl_config.CAFile=\"rds-combined-ca-bundle.pem\""|\
         jq -r ".db_ssl_config.PEMFile=\"mongodb.pem\""|\
         jq -r ".db_auth_config.username=\"$mydbuser\"" |\
         jq -r ".db_auth_config.password=\"$mydbuserpwd\"" |\
