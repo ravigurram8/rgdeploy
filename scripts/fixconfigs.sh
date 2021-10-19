@@ -1,4 +1,5 @@
 #!/bin/bash
+version="0.1.0"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
     echo 'At least 5 parameters are required!'

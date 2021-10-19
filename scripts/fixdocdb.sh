@@ -1,4 +1,5 @@
 #!/bin/bash
+version="0.1.0"
 
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"

@@ -1,4 +1,5 @@
 #!/bin/bash
+version="0.1.0"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
   echo '    Param 1: (optional) URL for SNS Callback'
@@ -18,12 +19,14 @@ else
     baseurl="$myurl"
 fi
 
+echo "Starting stack..."
 docker stack deploy -c $RG_HOME/docker-compose.yml sp2
 
 #Wait for 30 secs
 sleep 5
 
 #Check if stack is deployed
+echo "Checking if stack is deployed"
 service_count=`docker service ls -q | wc -l`
 if [ "${service_count}" -gt 0  ]; then
   echo "Service count deployed is $service_count"
@@ -62,6 +65,7 @@ function check_stack_status(){
 
 for i in {0..3}
   do
+    echo "Checking stack status $i"
     check_stack_status
     res=$?
     echo "$res"
@@ -77,12 +81,14 @@ for i in {0..3}
 for i in {0..3}
   do
     sleep 10
+    echo "Checking if web application is up and running"
     status_code=$(curl -sL -w "%{http_code}\n" "$baseurl" -o /dev/null)
-		if [[ "$status_code" -ne 200 ]] ; then
-  		echo "Application is not up, responded with status $status_code"
-		else
-			echo "Application is up and running, status code response is $status_code"
-  		break
-  	fi	
+    if[["$status_code"-ne200 ]] ; then
+      echo "Application is not up, responded with status $status_code"
+    else
+      echo "Application is up and running, status code response is $status_code"
+      break
+    fi	
   done
- 
+
+echo "Done" 
