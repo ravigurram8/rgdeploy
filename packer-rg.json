@@ -6,7 +6,7 @@
     "subnetId": "",
     "awsProfile": "",
     "awsRegion": "",
-    "amiName": ""
+    "amiName": "Ubuntu20.04_MongoDB3.6_Docker-ce20.10"
   },
   "builders": [
     {
@@ -40,7 +40,7 @@
     },
     {
        "type": "file",
-        "source": "configs",
+        "source": "config",
         "destination": "/home/ubuntu/configs"
     },
     {
