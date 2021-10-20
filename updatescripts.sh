@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 # Download the latest scripts
 aws s3 cp s3://rg-deployment-docs/scripts.tar.gz /home/ubuntu
 mkdir -p /home/ubuntu/scripts
