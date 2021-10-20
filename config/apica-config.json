@@ -1,0 +1,30 @@
+{
+  "collectorConnection": {
+    "url": "http://pingserver:3003/checks",
+    "method": "get",
+    "options": {}
+  },
+  "doubleCheckConn": {
+    "url": "http://pingserver:3003/checks/{id}",
+    "method": "get",
+    "options": {}
+  },
+  "uniqueValue": "timestamp",
+  "state": "severity",
+  "recordId": "id",
+  "timeInterval": "*/1 * * * *",
+  "priority": {
+    "I": 0,
+    "W": 1,
+    "E": 2,
+    "F": 3,
+    "U": 0
+  },
+  "alertPriority": [
+    1,
+    2,
+    3
+  ],
+  "doubleCheckInterval": 2000,
+  "doubleCheckTry": 1
+}

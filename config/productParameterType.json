@@ -1,0 +1,8 @@
+{
+  "parameterType": [
+    "AWS::EC2::KeyPair::KeyName",
+    "AWS::EC2::Subnet::Id",
+    "AWS::EC2::SecurityGroup::Id",
+    "AWS::EC2::VPC::Id"
+  ]
+}

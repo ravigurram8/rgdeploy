@@ -1,0 +1,63 @@
+{
+  "bot-parameters": [
+    {
+      "name": "awsInstanceIp",
+      "rule": {
+        "function": "getNodes",
+        "parameter": [
+          "alertObj"
+        ]
+      },
+      "ruleType": "DBQuery",
+      "description": ""
+    },
+    {
+      "name": "sender_name",
+      "rule": "notificationConfig.smsBot.sender_name",
+      "ruleType": "nodeMemory",
+      "description": ""
+    },
+    {
+      "name": "message",
+      "rule": "alertObj.checkName + \" of business service \" + alertObj.groupName + \": \" + alertObj.message",
+      "ruleType": "nodeMemory",
+      "description": ""
+    },
+    {
+      "name": "apiKey",
+      "rule": "notificationConfig.smsBot.apiKey",
+      "ruleType": "nodeMemory",
+      "description": ""
+    },
+    {
+      "name": "number",
+      "rule": {
+        "function": "getContactNumber",
+        "parameter": [
+          "alertObj.tenantID",
+          "alertObj.groupName"
+        ]
+      },
+      "ruleType": "DBQuery",
+      "description": ""
+    },
+    {
+      "name": "sender_name",
+      "rule": "notificationConfig.smsBot.sender_name",
+      "ruleType": "nodeMemory",
+      "description": ""
+    },
+    {
+      "name": "sourceCloud",
+      "rule": "runbook.runbookYmlJson.providers[0].name",
+      "ruleType": "runbookYML",
+      "description": ""
+    },
+    {
+      "name": "dummy",
+      "rule": "",
+      "ruleType": "nodeMemory",
+      "description": ""
+    }
+  ]
+}

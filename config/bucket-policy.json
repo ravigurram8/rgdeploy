@@ -1,0 +1,9 @@
+{
+  "Sid": "id-1",
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": ""
+  },
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::REPLACE-WITH-S3-BUCKET-NAME/*"
+}

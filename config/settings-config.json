@@ -1,0 +1,535 @@
+{
+  "sagemaker": {
+    "NotebookInstanceLifecycleConfigName": "Research-Portal-Setup",
+    "onStartScript": "tools/aws-scripts/sagemaker/onStart/Lifecycle_Conf.sh",
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "Open Notebook",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          }
+        ]
+      },
+      "stopped": {
+        "connect": [],
+        "action": [
+          {
+            "action": "Start",
+            "imageUrl": "../../assets/images/play@2x.png"
+          }
+        ]
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "Open Notebook",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Start",
+            "imageUrl": "../../assets/images/play@2x.png"
+          },
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          }
+        ]
+      }
+    },
+    "transient_states": [
+      "pending",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "inservice",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "deleted"
+    ]
+  },
+  "s3": {
+    "Bucket": "research-portal-sagemaker-templates",
+    "notebooksDirectory": "tools/aws-scripts/s3/python-notebooks",
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Share",
+            "imageUrl": "../../assets/images/share@2x.png"
+          },
+          {
+            "action": "Unshare",
+            "imageUrl": "../../assets/images/unshare@2x.png"
+          },
+          {
+            "action": "Upload",
+            "imageUrl": "../../assets/images/cloud-computing@2x.png"
+          }
+        ]
+      },
+      "stopped": {
+        "connect": [],
+        "action": []
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Share",
+            "imageUrl": "../../assets/images/share@2x.png"
+          },
+          {
+            "action": "Upload",
+            "imageUrl": "../../assets/images/cloud-computing@2x.png"
+          }
+        ]
+      }
+    },
+    "transient_states": [],
+    "active_states": [
+      "active"
+    ],
+    "stopped_states": [],
+    "terminated_states": [
+      "deleted"
+    ]
+  },
+  "ec2": {
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png"
+          }
+        ]
+      },
+      "stopped": {
+        "connect": [],
+        "action": [
+          {
+            "action": "Start",
+            "imageUrl": "../../assets/images/play@2x.png"
+          }
+        ]
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png"
+          }
+        ]
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "rstudio": {
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          },
+          {
+            "menu": "Open Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png"
+          }
+        ]
+      },
+      "stopped": {
+        "connect": [],
+        "action": [
+          {
+            "action": "Start",
+            "imageUrl": "../../assets/images/play@2x.png"
+          }
+        ]
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png"
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png"
+          }
+        ]
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "wordpress": {
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "Website-URL",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": []
+      },
+      "stopped": {
+        "connect": [],
+        "action": []
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "Website-URL",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": []
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "dynamodb": {
+    "actions": {
+      "running": {
+        "connect": [],
+        "action": []
+      },
+      "stopped": {
+        "connect": [],
+        "action": []
+      },
+      "default": {
+        "connect": [],
+        "action": []
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "emr": {
+    "actions": {
+      "running": {
+        "connect": [],
+        "action": []
+      },
+      "stopped": {
+        "connect": [],
+        "action": []
+      },
+      "default": {
+        "connect": [],
+        "action": []
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "rds": {
+    "actions": {
+      "running": {
+        "connect": [],
+        "action": []
+      },
+      "stopped": {
+        "connect": [],
+        "action": []
+      },
+      "default": {
+        "connect": [],
+        "action": []
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "studyConfig": {
+    "actions": {
+      "Public": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": []
+      },
+      "Personal": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Share",
+            "imageUrl": "../../assets/images/share@2x.png"
+          },
+          {
+            "action": "Terminate",
+            "imageUrl": "../../assets/images/delete@2x.png"
+          }
+        ]
+      },
+      "Shared": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Share",
+            "imageUrl": "../../assets/images/share@2x.png"
+          }
+        ]
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action": [
+          {
+            "action": "Share",
+            "imageUrl": "../../assets/images/share@2x.png"
+          },
+          {
+            "action": "Upload",
+            "imageUrl": "../../assets/images/cloud-computing@2x.png"
+          }
+        ]
+      }
+    },
+    "filterArray": [
+      {
+        "key": "studyType",
+        "value": "All Studies"
+      },
+      {
+        "key": "studyType",
+        "value": "Public"
+      },
+      {
+        "key": "studyType",
+        "value": "Personal"
+      },
+      {
+        "key": "bookmarkedBy",
+        "value": "Bookmarked"
+      }
+    ]
+  },
+  "runInit": {
+    "sageMakerLifeCycle": true,
+    "createSNSTopic": true
+  },
+  "services": [
+    "s3",
+    "sagemaker",
+    "ec2",
+    "wordpress",
+    "dynamodb",
+    "emr",
+    "rds",
+    "rstudio"
+  ],
+  "cft_active_states": [
+    "available",
+    "created",
+    "create_complete",
+    "active"
+  ],
+  "cft_red_states": [
+    "delete_complete",
+    "rollback_complete",
+    "rollback_in_progress",
+    "create_failed",
+    "error"
+  ],
+  "cft_yellow_states": [
+    "initiated",
+    "create_in_progress",
+    "delete_in_progress"
+  ],
+  "transitive_states": [
+    "UNDER_CHANGE",
+    "PLAN_IN_PROGRESS"
+  ]
+}

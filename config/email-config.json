@@ -1,0 +1,26 @@
+{
+  "aws": {
+    "accessKeyId": "AKIAYADIJJ5EXAMPLE",
+    "secretAccessKey": "kvs1OLdYVHyYKa/OMGi+6UEL+fK8Fn01234567890",
+    "region": "us-east-1",
+    "accountNumber": "123456789012"
+  },
+  "email": {
+    "url": "http://REPLACE_WITH_BOTENGINE_IP:2687/bot/sns_notify_bot/exec",
+    "method": "post",
+    "options": {
+      "headers": {
+        "content-type": "application/json"
+      },
+      "body": {
+        "type": "script",
+        "data": {
+          "from": "REPLACE_WITH_SUPPORT_EMAIL",
+          "url": "REPLACE_WITH_SUPPORT_URL",
+          "sender": "PROD"
+        }
+      },
+      "json": true
+    }
+  }
+}

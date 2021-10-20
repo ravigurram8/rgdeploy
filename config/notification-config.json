@@ -1,0 +1,34 @@
+{
+  "notificationBot": {
+    "url": "",
+    "method": "post",
+    "options": {
+      "headers": {
+        "content-type": "application/json"
+      },
+      "body": {
+        "type": "script",
+        "data": {
+          "channelname": "catalyst_prod_outage",
+          "endpoint": "",
+          "username": "Alert-BOT",
+          "icon": ":bell:",
+          "color": "danger",
+          "url": ""
+        }
+      },
+      "json": true
+    }
+  },
+  "smsBot": {
+    "apiKey": "",
+    "sender_name": "TXTLCL"
+  },
+  "slackChannelName": {},
+  "productsNotification": {
+    "NotificationArns": []
+  },
+  "tokenID": [
+    "add your own token"
+  ]
+}

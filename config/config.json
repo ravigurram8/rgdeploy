@@ -1,0 +1,144 @@
+{
+  "id": "config",
+  "express": {
+    "port": 3002,
+    "host": "localhost",
+    "express_sid_key": "express.sid",
+    "sessionSecret": "sessionSekret"
+  },
+  "AWSCognito": {
+    "userPoolId": "REPLACE_WITH_COGNITO_POOL_ID",
+    "clientId": "REPLACE_WITH_COGNITO_CLIENT_ID",
+    "region": "REPLACE_WITH_COGNITO_REGION",
+    "groupName": "RL-Group",
+    "secretID": "portaldevsecret"
+  },
+  "cryptSetting": {
+    "password": "pass@!@#"
+  },
+  "enableB2CMode": true,
+  "capthca": {
+    "privateKey": "",
+    "publicKey": ""
+  },
+  "securityStrategy": {
+    "enableSecretManager": false,
+    "enableRoleBasedAuthentication": true
+  },
+  "freshChatDetails": {
+    "showFreshChatWidget": false,
+    "token": "REPLACE_WITH_FRESHCHAT_TOKEN",
+    "host": "https://wchat.in.freshchat.com"
+  },
+  "googleOAuthCredentials": {
+    "clientID": "ABCDRANDOMESTRING",
+    "clientSecret": "abcdEFGHRandomeString",
+    "callbackURL": "https://research.rlcatalyst.com"
+  },
+  "baseAccountPolicyName": "REPLACE_WITH_BASE_ACCOUNT_POLICY_NAME",
+  "baseAccountInstanceRoleName": "REPLACE_WITH_BASE_ACCOUNT_ROLE_NAME",
+  "IpOfInstanceCredentials": "169.254.169.254",
+  "baseAccountNumber": "REPLACE_WITH_BASE_ACOUNT_NUMBER",
+  "sensu": {
+    "username": "sensu",
+    "password": "secret"
+  },
+  "apm": {
+    "isEnabled": false,
+    "serviceName": "CC",
+    "secretToken": "ONCEUPONATIME",
+    "serverUrl": "http://localhost:8200"
+  },
+  "ELKindex": {
+    "RL-Marketplace": {
+      "port": 9200,
+      "host": ""
+    }
+  },
+  "DecisionEngine": {
+    "metrics": [
+      "cpu_usages_check",
+      "memory_usage_check"
+    ],
+    "RL-Marketplace": {
+      "host": ""
+    }
+  },
+  "LoginStrategy": "cognito",
+  "samlConfig": {
+    "domain": "",
+    "path": "",
+    "entryPoint": "",
+    "issuer": "",
+    "cert": "",
+    "groupToRoleMapping": {
+      "admin": [
+        "Admin"
+      ],
+      "principal": [
+        "Principal"
+      ],
+      "researcher": [
+        "Researcher"
+      ]
+    },
+    "roleMapToRg": {
+      "0": "researcher",
+      "1": "principal",
+      "2": "admin"
+    }
+  },
+  "baseURL": "REPLACE_WITH_BASE_URL",
+  "stateChangeEventTriggerURL": "http://sp2_cc-3102:3002/provisionProductEvent",
+  "accountCleanupEventTriggerURL": "http://sp2_cc-3102:3002/accountCleanupEvent",
+  "paramChangeUpdateURL": "http://sp2_cc-3102:3002/researchProducts/productParams",
+  "credentialManagementURL": "http://sp2_cc-3102:3002/authentication",
+  "researchGatewayAPIToken": "REPLACE_WITH_API_TOKEN",
+  "nsUseSecretsManager": true,
+  "thresholdPercentage": 80,
+  "PrincipalArn": "RG-Service-Catalog-Role",
+  "BucketName": "REPLACE_WITH_S3_BUCKET_NAME_CONTAINING_CFT_TEMPLATES",
+  "cftTemplateURL": "REPLACE_WITH_S3_BUCKET_URL_CONTAINING_CFT_TEMPLATES",
+  "RGUser": "RG-PortalUser",
+  "DescribeStackRetry": 2,
+  "DefaultCatalogAssignedToOrg": "Research",
+  "userSetting": {
+    "userRoleMapping": {
+      "0": "Researcher",
+      "1": "Principal Investigator",
+      "2": "Admin"
+    },
+    "userSortOptions": [
+      {
+        "key": "username",
+        "value": "Username",
+        "order": "asc"
+      },
+      {
+        "key": "username",
+        "value": "Username",
+        "order": "desc"
+      },
+      {
+        "key": "role",
+        "value": "User roles",
+        "order": "asc"
+      },
+      {
+        "key": "role",
+        "value": "User roles",
+        "order": "desc"
+      },
+      {
+        "key": "created_on",
+        "value": "Creation Date",
+        "order": "asc"
+      },
+      {
+        "key": "created_on",
+        "value": "Creation Date",
+        "order": "desc"
+      }
+    ]
+  }
+}
