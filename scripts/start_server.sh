@@ -83,7 +83,7 @@ for i in {0..3}
     sleep 10
     echo "Checking if web application is up and running"
     status_code=$(curl -sL -w "%{http_code}\n" "$baseurl" -o /dev/null)
-    if[["$status_code"-ne200 ]] ; then
+    if [ "$status_code" -ne 200 ]; then
       echo "Application is not up, responded with status $status_code"
     else
       echo "Application is up and running, status code response is $status_code"

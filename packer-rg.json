@@ -35,6 +35,10 @@
   "provisioners": [
     {
       "type": "shell",
+      "script": "./provisioners/provision-cfn-helper.sh"
+    },
+    {
+      "type": "shell",
       "script": "./provisioners/shutdown-apt-services.sh"
     },
     {
