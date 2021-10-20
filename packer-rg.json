@@ -40,13 +40,18 @@
     {
       "type": "shell",
       "environment_vars": ["MONGO_VERSION='3.6.23'"],
-      "script": "./scripts/provisioning.sh",
+      "script": "./provisioners/provision-mongo.sh",
       "pause_before": "10s"
     } ,
     {
       "type": "file",
       "source": "scripts",
       "destination": "/home/ubuntu/scripts"
+    },
+    {
+      "type": "file",
+      "source": "./docker-compose.yml",
+      "destination": "/home/ubuntu"
     },
     {
        "type": "file",

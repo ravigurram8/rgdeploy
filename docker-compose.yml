@@ -1,0 +1,96 @@
+###########################################################################
+## Required Docker CE 20
+## it can be started as follows
+##         docker stack deploy --compose-file docker-compose.yml sp2
+##
+###########################################################################
+
+version: '3.1'
+services:
+  web:
+    image: nginx:latest
+    ports:
+     - '80:80'
+    volumes:
+      - ${PWD}/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ${PWD}/integrations:/etc/nginx/myfiles
+    networks:
+      - sp2net
+  
+  cc-3102:
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.7.3_b764
+    secrets:
+      - source: sp2prod-config.json
+        target: /rlc/cc/server/app/config/config.json
+      - source: sp2prod-dashboard-settings.json
+        target: /rlc/cc/server/app/config/dashboard-settings.json
+    depends_on:
+     - scheduler-3102
+    environment:
+      - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
+      - REDIS_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
+      - SCHEDULER_HOST=scheduler-3102
+      - APP_ENV=PROD
+      - APM_ENABLE=false
+      - APM_URL=APM URL where it has been placed
+    volumes:
+      - ${PWD}/config:/rlc/cc/server/app/config
+      - ${PWD}/logs:/rlc/cc/server/app/logs
+      - ${PWD}/topologies:/rlc/cc/server/dashboard/topologies
+      - ${PWD}/catalog:/rlc/cc/tools/deploy/catalog
+    networks:
+      - sp2net
+    command: /bin/bash start.sh 
+
+  scheduler-3102:
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.7.3_b764
+    secrets:
+      - source: sp2prod-config.json
+        target: /rlc/cc/server/app/config/config.json
+      - source: sp2prod-dashboard-settings.json
+        target: /rlc/cc/server/app/config/dashboard-settings.json
+    environment:
+      - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
+      - REDIS_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
+      - APP_ENV=PROD
+      - APM_ENABLE=false
+      - APM_URL=APM_URL
+      - CC_HOST=cc-3102
+    volumes:
+      - ${PWD}/config:/rlc/cc/server/app/config
+      - ${PWD}/slogs:/rlc/cc/server/app/logs
+      - ${PWD}/topologies:/rlc/cc/server/dashboard/topologies
+    networks:
+      - sp2net
+    command: node ./app/scheduler/app.js
+    
+  notificationsink:  
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.7.3_b1
+    secrets:
+      - source: sp2prod-config.json
+        target: /opt/app/config/config.json
+      - source: sp2prod-dashboard-settings.json
+        target: /opt/app/config/dashboard-settings.json
+      - source: sp2prod-alert-config.json
+        target: /opt/app/config/alert-config.json
+    environment:
+      - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
+      - APP_ENV=PROD
+      - PORT=3005
+    volumes:
+      - ${PWD}/notification_sink_logs:/opt/app/notification_sink_logs
+      - ${PWD}/config:/opt/app/config
+    networks:
+      - sp2net
+
+secrets:
+  sp2prod-config.json:
+    external: true
+  sp2prod-dashboard-settings.json:
+    external: true
+  sp2prod-alert-config.json:
+    external: true
+ 
+
+networks:
+  sp2net:
