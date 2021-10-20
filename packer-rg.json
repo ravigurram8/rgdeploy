@@ -34,6 +34,16 @@
   ],
   "provisioners": [
     {
+      "type": "shell",
+      "script": "./provisioners/shutdown-apt-services.sh"
+    },
+    {
+      "type": "shell",
+      "environment_vars": ["MONGO_VERSION='3.6.23'"],
+      "script": "./scripts/provisioning.sh",
+      "pause_before": "10s"
+    } ,
+    {
       "type": "file",
       "source": "scripts",
       "destination": "/home/ubuntu/scripts"
