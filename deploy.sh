@@ -19,8 +19,7 @@ vpcid=$3
 subnetid=$4
 keypairname=$5
 rgurl=$6
-localhost=`pwd`
-
+localhome=`pwd`
 runid=$(openssl rand -hex 4)
 bucketstackname="RG-Portal-Bucket-$runid"
 BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
@@ -80,12 +79,12 @@ fi
 
 #Capture User Pool Client ID
 userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
+
 #Capture User Pool ID
 userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
 
-
-#update the AMI id in the instance profile CFT
-sed -i -e "s/ami.*$/$amiid/" $localhome/rg-deployment-docs/RGMainStack.yml
+#update the AMI id in the RGMainStak CFT
+sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg-deployment-docs/RGMainStack.yml
 
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
