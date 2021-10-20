@@ -37,8 +37,14 @@ The following sofware needs to be installed on the Portal EC2 instance
 | Redis     | 6.0.6   |
 | Docker    | 20.10.9 |
 
-## Installing MongoDB
+If an AMI with the pre-requisites has been shared with you, you can skip this section.
 
-## Installing Redis
+## Creating the AMI with pre-requisites.
+- Install packer
+- Run packer build package-rg.json
+- Note that AMI id from the output
+
+## Installing Research Gateway
+
 
 ## Installing Docker
