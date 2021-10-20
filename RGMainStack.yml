@@ -125,7 +125,7 @@ Resources:
   RGEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0180756fef642e0b5
+      ImageId: ami-046a4f080ecc9bf16
       InstanceType: t2.medium
       Monitoring: "true"
       DisableApiTermination: "false"
@@ -135,7 +135,7 @@ Resources:
         Ref: KeyName1
       SubnetId:
         Ref: Subnet1
-      SecurityGroups:
+      SecurityGroupIds:
         - Ref: RGPortalSG
       UserData:
         Fn::Base64:
@@ -150,6 +150,8 @@ Resources:
               - |
                 fixips.sh
               - |
+                sleep 30
+              - |
                 echo 'Fixing Mongo'
               - fixmongo.sh
               - PROD-cc
@@ -157,7 +159,8 @@ Resources:
               - rguser
               - Ref: UserPassword
               - Ref: RGUrl
-              - |2+
+              - |+
+              
               - |
                 tar -xvf /home/ubuntu/config.tar.gz -C /opt/deploy/sp2
               - |
@@ -169,7 +172,8 @@ Resources:
               - rguser
               - Ref: UserPassword
               - Ref: RGUrl
-              - |2+
+              - |+
+              
               - |
                 echo 'Login to ECR'
               - |
