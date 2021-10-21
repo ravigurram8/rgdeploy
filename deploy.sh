@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-# -e stops execution of script if a command has an error.
-#set -e
+#!/bin/bash
 
 if [ $? -lt 5 ]; then
   echo 'Usage: deploy.sh <amiid> <bucketname> <rgurl> '
@@ -27,7 +25,7 @@ if [ -z "$BUCKET_TEST" ]; then
   echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
   read a && echo "Copying files to bucket $bucketname"
 else
-  echo -e "An S3 bucket name $bucketname  doesn't exist in current AWS account. Creating..."
+  echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
   bucketname="$bucketname-$runid"
 
   # Create S3 bucket to copy RG Deployment files, ensure --stack-name 'name'
@@ -43,23 +41,32 @@ else
   fi
 fi
 # Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
+echo "Synching RG Deployment Files to new S3 bucket $bucketname"
+start=$(date +%s.%N)
 aws s3 sync s3://rg-deployment-docs s3://$bucketname
+duration=$(echo "$(date +%s.%N) - $start" | bc)
+execution_time=`printf "%.2f seconds" $duration`
+echo "S3 Sync Execution Time: $execution_time"
 
 #Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
 mkdir -p "$localhome/rg-deployment-docs/rg-cft-templates"
-#mkdir -p "$localhome/rg-deployment-docs/rg-portal-role-scripts"
 
 #Download RG Deployment files from S3 to the local folder created above,
+echo "Copying RG Deployment Files to local folder"
+start=$(date +%s.%N)
 aws s3 cp s3://rg-deployment-docs/ $localhome/rg-deployment-docs --recursive
-
+duration=$(echo "$(date +%s.%N) - $start" | bc)
+execution_time=`printf "%.2f seconds" $duration`
+echo "S3 Download Execution Time: $execution_time"
 # Extract cft templates locally
+echo "Extracting CFTs locally"
 tar -xvf $localhome/rg-deployment-docs/rg-cft-templates.tar.gz -C $localhome/rg-deployment-docs/rg-cft-templates/
 
 #Modify file RG_UserPool_CFT_final.yml to refer new S3 bucket
 sed -i -e "s/rg-deployment-docs/$bucketname/" $localhome/rg-deployment-docs/RG_UserPool_CFT_final.yml
 
 #Copy extracted cft template to the new bucket
-echo -e "\nCopying deployment files to new bucket"
+echo "Copying deployment files to new bucket"
 aws s3 sync $localhome/rg-deployment-docs/rg-cft-templates/ s3://$bucketname
 
 #Creating the Cognito User Pool
@@ -75,11 +82,11 @@ aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
 
 if [ $? -gt 0 ]; then
    echo " $userpoolstackname Stack Failed to Create "
+   exit 1
 fi
 
 #Capture User Pool Client ID
 userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
-
 #Capture User Pool ID
 userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
 
@@ -88,13 +95,14 @@ sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg-deployment-docs/RGMainStack
 
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
-#aws cloudformation deploy --template-file $localhome/rg-deployment-docs/RGInstanceProfile.yml --stack-name "rg-instance-profile-$runid" --capabilities CAPABILITY_IAM
 mainstackname="RG-Portal-$runid"
 aws cloudformation deploy --template-file $localhome/rg-deployment-docs/RGMainStack.yml --stack-name "$mainstackname" --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="appadmin" AdminPassword="dbadmin" VPC="$vpcid" Subnet1="$subnetid" KeyName1="$keypairname" --capabilities CAPABILITY_NAMED_IAM
 
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
-if [ $? -gt 0 ]; then
+if [ $? -gt 0 ]; then 
    echo " $mainstackname Stack Failed to Create "
+   exit 1
+else
+   portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
+   echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"   
 fi
-#myip=$(aws cloudformation describe-stack-resource --stack-name "$mainstackname" | --logical-resource-id "RGPortalEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
-echo "Research Gateway has been successfully deployed. You can access the EC2 instance at IP $myip"
