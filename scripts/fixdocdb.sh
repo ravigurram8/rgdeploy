@@ -80,3 +80,4 @@ if [ -f "${RG_HOME}/docker-compose.yml" ]; then
       echo "Modified docker-compose.yml with DocumentDB instance URL"
 fi
 echo "Success"
+
