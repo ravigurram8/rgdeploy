@@ -18,6 +18,10 @@ subnetid=$4
 keypairname=$5
 rgurl=$6
 localhome=`pwd`
+adminusername='admin'
+adminpassword=$(openssl rand -hex 24)
+appuser='rguser'
+appuserpassword=$(openssl rand -hex 24)
 runid=$(openssl rand -hex 4)
 bucketstackname="RG-Portal-Bucket-$runid"
 BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
@@ -96,7 +100,7 @@ sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg-deployment-docs/RGMainStack
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstackname="RG-Portal-$runid"
-aws cloudformation deploy --template-file $localhome/rg-deployment-docs/RGMainStack.yml --stack-name "$mainstackname" --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="appadmin" AdminPassword="dbadmin" VPC="$vpcid" Subnet1="$subnetid" KeyName1="$keypairname" --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation deploy --template-file $localhome/rg-deployment-docs/RGMainStack.yml --stack-name "$mainstackname" --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" VPC="$vpcid" Subnet1="$subnetid" KeyName1="$keypairname" --capabilities CAPABILITY_NAMED_IAM
 
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 if [ $? -gt 0 ]; then 

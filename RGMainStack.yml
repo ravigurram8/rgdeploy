@@ -226,7 +226,7 @@ Resources:
                       - - fixdocdb.sh
                         - Ref: DocumentDBInstanceURL
                         - PROD-cc
-                        - rgadminuser
+                        - rguser
                         - Ref: UserPassword
                         - "\n"
                   - Ref: AWS::NoValue
