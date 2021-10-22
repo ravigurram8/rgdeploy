@@ -4,7 +4,7 @@
     "aws_secret_key": "",
     "vpcId": "",
     "subnetId": "",
-    "awsProfile": "",
+    "awsProfile": "default",
     "awsRegion": "",
     "amiName": "Ubuntu20.04_MongoDB3.6_Docker-ce20.10"
   },
@@ -35,18 +35,12 @@
   "provisioners": [
     {
       "type": "shell",
+      "script": "./provisioners/provision-docker.sh"
+    },
+    {
+      "type": "shell",
       "script": "./provisioners/provision-cfn-helper.sh"
     },
-    {
-      "type": "shell",
-      "script": "./provisioners/shutdown-apt-services.sh"
-    },
-    {
-      "type": "shell",
-      "environment_vars": ["MONGO_VERSION='3.6.23'"],
-      "script": "./provisioners/provision-mongo.sh",
-      "pause_before": "10s"
-    } ,
     {
       "type": "file",
       "source": "scripts",
@@ -54,7 +48,17 @@
     },
     {
       "type": "file",
+      "source": "scripts",
+      "destination": "/usr/local/sbin"
+    },
+    {
+      "type": "file",
       "source": "./docker-compose.yml",
+      "destination": "/home/ubuntu"
+    },
+    {
+      "type": "file",
+      "source": "nginx.conf",
       "destination": "/home/ubuntu"
     },
     {
@@ -64,7 +68,7 @@
     },
     {
       "type": "shell",
-      "script": "provisioners/provision-rg.sh"
+      "script": "./provisioners/provision-rg.sh"
     }
   ]
 }
