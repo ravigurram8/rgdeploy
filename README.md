@@ -47,6 +47,7 @@ If an AMI with the pre-requisites has been shared with you, you can skip this se
 ## Installing Research Gateway
 - Clone this repo on a machine that has AWS CLI configured
 - Run deploy.sh with the following parameters
+
 | Parameter#  | Purpose                                                                                          |
 |-------------|--------------------------------------------------------------------------------------------------|
 | Param 1     | The AMI from which the EC2 instance that runs Research Gateway should be created                 |
