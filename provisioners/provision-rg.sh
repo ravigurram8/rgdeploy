@@ -1,12 +1,12 @@
 #!/bin/bash
 
-mkdir -p "/opt/deploy/sp2"
-mkdir -p "/opt/deploy/sp2/logs"
-mkdir -p "/opt/deploy/sp2/slogs"
-mkdir -p "/opt/deploy/sp2/notification_sink_logs"
-mkdir -p "/opt/deploy/sp2/configs"
-mkdir -p "/opt/deploy/sp2/integrations"
-mkdir -p "/opt/deploy/sp2/topologies"
-mkdir -p "/opt/deploy/sp2/catalog"
-
-echo -e "RG_HOME='/opt/deploy/sp2'\n" >> /etc/environment
+sudo mkdir -p "/opt/deploy/sp2"
+sudo mkdir -p "/opt/deploy/sp2/logs"
+sudo mkdir -p "/opt/deploy/sp2/slogs"
+sudo mkdir -p "/opt/deploy/sp2/notification_sink_logs"
+sudo mkdir -p "/opt/deploy/sp2/configs"
+sudo mkdir -p "/opt/deploy/sp2/integrations"
+sudo mkdir -p "/opt/deploy/sp2/topologies"
+sudo mkdir -p "/opt/deploy/sp2/catalog"
+sudo cp /home/ubuntu/nginx.conf /opt/deploy/sp2
+sudo echo -e "RG_HOME='/opt/deploy/sp2'\n" >> /etc/environment
