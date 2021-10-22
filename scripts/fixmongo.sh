@@ -1,4 +1,5 @@
 #!/bin/bash
+version='0.1.0'
 
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
@@ -11,7 +12,7 @@ if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo '             e.g. https://myrg.example.com'
   exit 0
 fi
-[ -z RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 # First check if the IP at which mongod is listening is correct
 mymongoip=`cat /etc/mongod.conf | sed -n -e 's/bindIp: \([^,]*\).*/\1/p' | sed -e 's/\s*//'`

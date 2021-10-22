@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.0"
+version="0.1.2"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
     echo 'At least 5 parameters are required!'
@@ -21,8 +21,9 @@ myappuser=$4
 myapppwd=$5
 myurl=$6
 
-[ -z RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
+[ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
@@ -38,7 +39,7 @@ instanceid=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 echo "Instance-id : $instanceid"
 if [ -z $myurl ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
-        [ -z $public_host_name ] && echo "No RG URL passed. Instance does not have public hostname. One of the two is required" && exit 1
+        [ -z $public_host_name ] && echo "No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs. Exiting!" && exit 1
     baseurl="http://$public_host_name/"
     snsprotocol="http"
 else
@@ -49,6 +50,20 @@ fi
 if ! [ -d "$RG_HOME/tmp" ]; then
     echo "$RG_HOME/tmp does not exist. Creating"
     mkdir "$RG_HOME/tmp"
+fi
+
+if ! [ -d "$RG_HOME/config" ]; then
+    echo "$RG_HOME/config does not exist. Creating"
+    mkdir "$RG_HOME/config"
+fi
+
+if ! [ -z "$(ls -A $RG_HOME/config)"  ]; then
+    echo "$RG_HOME/config is empty. Extracting templates"
+    tar -xvf "$RG_SRC/config.tar.gz" -C "$RG_HOME"
+    if ! [ -z "$(ls -A $RG_HOME/config)"  ]; then
+        echo "FATAL: $RG_HOME/config is still empty. Exiting" 
+        exit 1
+    fi
 fi
 mytemp=`mktemp -d -p "${RG_HOME}/tmp" -t "config.old.XXX"`
 echo "$mytemp"

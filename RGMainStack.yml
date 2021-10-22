@@ -24,7 +24,7 @@ Parameters:
   RGUrl:
     Description: URL at which this instance of Research Gateway can be reached. e.g. myrg.example.com
     Type: String
-    Default: ""
+    Default: enterprise-test2.rlcatalyst.com
     ConstraintDescription: RG URL
   UserPoolId:
     Description: UserPoolId of the Cognito UserPool created for this instance of Research Gateway
@@ -50,6 +50,35 @@ Parameters:
   KeyName1:
     Description: Keypair name for SSH access
     Type: AWS::EC2::KeyPair::KeyName
+  TGARN:
+    Description: Target Group ARN to which the RG Portal EC2 Instance is registered.
+    Type: String
+    Default: arn:aws:elasticloadbalancing:us-east-2:045938549113:targetgroup/enterprise-test2/1ee95b3703738125
+    ConstraintDescription: Target Group
+  DatabaseType:
+    Description: Choose between AWS DocumentDB (recommended) and a local MongoDB instance (not recommended for production)
+    Type: String
+    Default: DocumentDB
+    AllowedValues:
+      - DocumentDB
+      - MongoDB
+  DocumentDBInstanceURL:
+    Description: URL to connect to the DocumentDB (if DocumentDB chosen as the database type)
+    Type: String
+Conditions:
+  DocumentDBSelected:
+    Fn::Equals:
+      - Ref: DatabaseType
+      - DocumentDB
+  DocumentDBURLProvided:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: DocumentDBInstanceURL
+          - ""
+  UseDocumentDB:
+    Fn::And:
+      - Condition: DocumentDBSelected
+      - Condition: DocumentDBURLProvided
 Resources:
   RGPortalRole:
     Type: AWS::IAM::Role
@@ -96,6 +125,7 @@ Resources:
               - iam:deletePolicyVersion
               - iam:detachRolePolicy
               - iam:updateAssumeRolePolicy
+              - elasticloadbalancing:RegisterTargets
               - ses:*
               - sns:*
               - sts:AssumeRole
@@ -125,7 +155,7 @@ Resources:
   RGEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-046a4f080ecc9bf16
+      ImageId: ami-0da76ce58c196b0dc
       InstanceType: t2.medium
       Monitoring: "true"
       DisableApiTermination: "false"
@@ -140,11 +170,19 @@ Resources:
       UserData:
         Fn::Base64:
           Fn::Join:
-            - ' '
+            - "\n"
             - - |
                 #!/bin/bash
               - |
                 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+              - |
+                export RG_HOME=/opt/deploy/sp2
+              - |
+                aws s3 cp s3://rg-deployment-docs/updatescripts.sh /home/ubuntu
+              - |
+                chmod +x /home/ubuntu/updatescripts.sh
+              - |
+                /home/ubuntu/updatescripts.sh
               - |
                 echo 'Fixing IPs'
               - |
@@ -153,28 +191,64 @@ Resources:
                 sleep 30
               - |
                 echo 'Fixing Mongo'
-              - fixmongo.sh
-              - PROD-cc
-              - Ref: AdminPassword
-              - rguser
-              - Ref: UserPassword
-              - Ref: RGUrl
-              - |+
-              
-              - |
-                tar -xvf /home/ubuntu/config.tar.gz -C /opt/deploy/sp2
+              - Fn::Join:
+                  - ' '
+                  - - fixmongo.sh
+                    - PROD-cc
+                    - Ref: AdminPassword
+                    - rguser
+                    - Ref: UserPassword
+                    - Ref: RGUrl
+                    - "\n"
+              - "\n"
+              - tar -xvf /home/ubuntu/config.tar.gz -C /opt/deploy/sp2
               - |
                 echo 'Fixing Configs'
-              - export RG_HOME='/opt/deploy/sp2' && fixconfigs.sh
-              - Ref: UserPoolId
-              - Ref: ClientId
-              - Ref: CFTBucketName
-              - rguser
-              - Ref: UserPassword
-              - Ref: RGUrl
-              - |+
-              
-              - |
-                echo 'Login to ECR'
+              - Fn::Join:
+                  - ' '
+                  - - export RG_HOME='/opt/deploy/sp2' && fixconfigs.sh
+                    - Ref: UserPoolId
+                    - Ref: ClientId
+                    - Ref: CFTBucketName
+                    - rguser
+                    - Ref: UserPassword
+                    - Ref: RGUrl
+                    - "\n"
+              - Fn::If:
+                  - UseDocumentDB
+                  - |
+                    echo 'Fixing DocumentDB'
+                  - Ref: AWS::NoValue
+              - Fn::If:
+                  - UseDocumentDB
+                  - Fn::Join:
+                      - ' '
+                      - - fixdocdb.sh
+                        - Ref: DocumentDBInstanceURL
+                        - PROD-cc
+                        - rgadminuser
+                        - Ref: UserPassword
+                        - "\n"
+                  - Ref: AWS::NoValue
+              - "\n"
+              - echo 'Login to ECR'
               - |
                 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com
+              - |
+                echo 'Modifying HttpResponseHopLimit'
+              - |
+                ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+              - "aws ec2 modify-instance-metadata-options --instance-id $ec2instanceid --http-put-response-hop-limit 2              \n"
+              - |
+                echo 'Fixing Secrets'
+              - |
+                fixsecrets.sh
+              - |
+                echo "Starting server"
+              - Fn::Join:
+                  - ' '
+                  - - start_server.sh
+                    - Ref: RGUrl
+                    - Ref: TGARN
+                    - "\n"
+              - "\n"

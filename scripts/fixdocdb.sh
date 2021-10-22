@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.0"
+version="0.1.1"
 
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
@@ -38,8 +38,12 @@ fi
 # Modify the database to create roles and configs
 echo "Modifying database $1 to create defaults"
 tar -xvf /home/ubuntu/dump.tar.gz -C /home/ubuntu
-mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' --username $mydbuser --password $mydbuserpwd "/home/ubuntu/dump/$mydbname"
-mongo --ssl --host "$mydocdburl:27017" --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' --username $mydbuser --password $mydbuserpwd <<EOF
+mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
+             --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' \
+             --username $mydbuser --password $mydbuserpwd  --gzip \
+             --db "${mydbname}" "/home/ubuntu/dump/$mydbname" 
+mongo --ssl --host "$mydocdburl:27017" --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' \
+      --username $mydbuser --password $mydbuserpwd <<EOF
 use "$mydbname"
 db.configs.remove({"key":"snsUrl"});
 db.configs.insert({"key":"snsUrl","value":"$baseurl"});
