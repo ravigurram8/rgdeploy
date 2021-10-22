@@ -45,6 +45,21 @@ If an AMI with the pre-requisites has been shared with you, you can skip this se
 - Note that AMI id from the output
 
 ## Installing Research Gateway
+- Clone this repo on a machine that has AWS CLI configured
+- Run deploy.sh with the following parameters
+| Parameter#  | Purpose                                                                                          |
+|-------------|--------------------------------------------------------------------------------------------------|
+| Param 1     | The AMI from which the EC2 instance that runs Research Gateway should be created                 |
+| Param 2     | Name of the S3 bucket to create which holds the CFT templates used in the Standard Catalog       |
+| Param 3     | VPC Id of the VPC in which to launch the Research Gateway EC2 instance                           |
+| Param 4     | Subnet Id of the subnet in which to launch the Research Gateway EC2 instance                     |
+| Param 5     | The Key Pair to use for launching the EC2 Instance                                               |
+| Param 6     | (Optional) The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
+- Create your first user as follows
 
 
-## Installing Docker
+## Creating the first user
+- Connect to the EC2 instance using SSH or the SSM Session Manager from the AWS Console
+- Run the following command
+  curl --location --request POST 'http://<application_url>/user/signup' --header 'token: <add_token_here>' --header 'Content-Type: application/json' --data-raw '{"first_name": "<Add first name>", "last_name":"<Add last name>", "email":"<Add email>", "password":"<Add temp password>", "level": 2 }
+
