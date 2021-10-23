@@ -1,5 +1,6 @@
 #!/bin/bash
-version="0.1.1"
+version="0.1.2"
+echo "Fixing secrets...(fixsecrets.sh v$version)"
 cd /opt/deploy/sp2
 old_secrets=$(docker secret ls | awk '{print $1}' | grep -v 'ID' | grep -i sp2prod)
 if [ ! -z "$old_secrets" ]; then

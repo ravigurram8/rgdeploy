@@ -1,5 +1,6 @@
 #!/bin/bash
-version="0.1.2"
+version="0.1.3"
+echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
     echo 'At least 5 parameters are required!'
@@ -24,6 +25,7 @@ myurl=$6
 [ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
+echo "RG_SRC=$RG_SRC"
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
@@ -56,11 +58,11 @@ if ! [ -d "$RG_HOME/config" ]; then
     echo "$RG_HOME/config does not exist. Creating"
     mkdir "$RG_HOME/config"
 fi
-
-if ! [ -z "$(ls -A $RG_HOME/config)"  ]; then
+mkdir -p "$RG_HOME/config"
+if [ -z "$(ls -A $RG_HOME/config)"  ]; then
     echo "$RG_HOME/config is empty. Extracting templates"
     tar -xvf "$RG_SRC/config.tar.gz" -C "$RG_HOME"
-    if ! [ -z "$(ls -A $RG_HOME/config)"  ]; then
+    if [ -z "$(ls -A $RG_HOME/config)"  ]; then
         echo "FATAL: $RG_HOME/config is still empty. Exiting" 
         exit 1
     fi
