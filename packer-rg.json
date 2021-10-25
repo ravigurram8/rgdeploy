@@ -66,6 +66,10 @@
       "script": "./provisioners/provision-cfn-helper.sh"
     },
     {
+      "type": "shell",
+      "script": "./provisioners/provision-awscli.sh"
+    },
+    {
       "type": "file",
       "source": "scripts",
       "destination": "{{user `RG_SRC`}}/scripts"
