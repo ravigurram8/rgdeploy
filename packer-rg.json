@@ -55,6 +55,13 @@
       "script": "./provisioners/provision-docker.sh"
     },
     {
+
+      "type": "shell",
+      "inline": [
+         "sudo apt install awscli -y"
+        ]
+    },
+    {
       "type": "shell",
       "script": "./provisioners/provision-cfn-helper.sh"
     },
