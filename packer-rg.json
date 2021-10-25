@@ -48,7 +48,7 @@
     {
        "type": "file",
         "source": "config",
-        "destination": "${RG_SRC}/configs/"
+        "destination": "${RG_SRC}/config/"
     },
    {
       "type": "shell",
