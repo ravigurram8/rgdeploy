@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.3"
+version="0.1.4"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -130,4 +130,15 @@ cat "$mytemp/notification-config.json" |\
 echo "Modifying trustPolicy.json"
 cat "$mytemp/trustPolicy.json" |\
         jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\"" > "${RG_HOME}/config/trustPolicy.json"
+
+# Fix the Mongo and Redis host addresses in the docker compose file.
+repcmd='s#\${PWD}#'$RG_HOME'#'
+cat "$RG_SRC/docker-compose.yml" | sed -e $repcmd > "$RG_HOME/docker-compose.yml"
+cd $RG_HOME
+if [ -f docker-compose.yml ]; then
+	echo "docker-compose.yml exists"
+	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" docker-compose.yml
+	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
+	echo "Modified docker-compose.yml with private IP of the machine"
+fi        
 echo 'Configuration changed successfully'

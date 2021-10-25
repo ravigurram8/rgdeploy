@@ -12,8 +12,12 @@ if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo '             e.g. https://myrg.example.com'
   exit 0
 fi
-[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+mydbname=$1
+[ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
+[ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
+echo "RG_SRC=$RG_SRC"
+
 # First check if the IP at which mongod is listening is correct
 mymongoip=`cat /etc/mongod.conf | sed -n -e 's/bindIp: \([^,]*\).*/\1/p' | sed -e 's/\s*//'`
 echo "Mongod configured to listen at $mymongoip"
@@ -44,8 +48,18 @@ if [ $? -gt 0 ]; then
      fi
 fi
 
+# Seed the database with static information
+if [ ! -f "$RG_SRC/dump.tar.gz" ]; then
+   echo "No seed DB in $RG_SRC. Downloading..."
+   aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
+fi
+tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+
+mongorestore --host "$myip" "$mydbname" --noIndexRestore  --gzip \
+             --db "$mydbname" "$RG_SRC/dump/PROD-cc" 
+
 # Modify the database to create roles and configs
-echo "Modifying database $1 to create roles and configs"
+echo "Modifying database $mydbname to create roles and configs"
 mongo --host "$myip" "$1"<<EOF
 db.createRole({
   role: "readWriteMinusDropRole",

@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.2"
+version="0.1.3"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
@@ -26,7 +26,10 @@ mydbname=$2
 mydbuser=$3
 mydbuserpwd=$4
 myurl=$5
-RG_HOME='/opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
+echo "RG_HOME=$RG_HOME"
+[ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
+echo "RG_SRC=$RG_SRC"
 
 if [ -z "$myurl" ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
@@ -37,12 +40,17 @@ fi
 
 # Modify the database to create roles and configs
 echo "Modifying database $1 to create defaults"
-tar -xvf /home/ubuntu/dump.tar.gz -C /home/ubuntu
+if [ ! -f "$RG_SRC/dump.tar.gz" ]; then
+   echo "No seed DB in $RG_SRC. Downloading..."
+   aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
+fi
+tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+
 mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
-             --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' \
+             --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
              --username $mydbuser --password $mydbuserpwd  --gzip \
-             --db "${mydbname}" "/home/ubuntu/dump/$mydbname" 
-mongo --ssl --host "$mydocdburl:27017" --sslCAFile '/opt/deploy/sp2/config/rds-combined-ca-bundle.pem' \
+             --db "${mydbname}" "$RG_SRC/dump/PROD-cc" 
+mongo --ssl --host "$mydocdburl:27017" --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
       --username $mydbuser --password $mydbuserpwd <<EOF
 use "$mydbname"
 db.configs.remove({"key":"snsUrl"});
@@ -56,7 +64,7 @@ openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out RL-CA.pem 
 openssl genrsa -out mongodb.key 2048
 openssl req -new -key mongodb.key -out mongodb.csr -subj "/CN=$host_name"
 openssl x509 -req -in mongodb.csr -CA RL-CA.pem -CAkey rootCA.key -CAcreateserial -out mongodb.crt -days 500 -sha256
-cat mongodb.key mongodb.crt > /opt/deploy/sp2/config/mongodb.pem
+cat mongodb.key mongodb.crt > "$RG_HOME/config/mongodb.pem"
 
 
 echo "Modifying mongo-config.json file"
