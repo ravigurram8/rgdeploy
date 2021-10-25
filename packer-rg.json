@@ -6,6 +6,8 @@
     "subnetId": "",
     "awsProfile": "default",
     "awsRegion": "",
+    "RG_HOME": "/opt/deploy/sp2",
+    "RG_SRC": "/home/ubuntu",
     "amiName": "Ubuntu20.04_MongoDB3.6_Docker-ce20.10"
   },
   "builders": [
@@ -31,9 +33,24 @@
       "ami_name": "{{user `amiName`}}",
       "associate_public_ip_address": "true"
     }
-  ],
+    ],
   "provisioners": [
+   {
+      "type": "file",
+      "source": "docker-compose.yml",
+      "destination": "${RG_SRC}/"
+    },
     {
+      "type": "file",
+      "source": "nginx.conf",
+      "destination": "${RG_SRC}/"
+    },
+    {
+       "type": "file",
+        "source": "config",
+        "destination": "${RG_SRC}/configs/"
+    },
+   {
       "type": "shell",
       "script": "./provisioners/provision-docker.sh"
     },
@@ -47,28 +64,26 @@
       "destination": "/home/ubuntu/scripts"
     },
     {
-      "type": "file",
-      "source": "scripts",
-      "destination": "/usr/local/sbin"
-    },
-    {
-      "type": "file",
-      "source": "./docker-compose.yml",
-      "destination": "/home/ubuntu"
-    },
-    {
-      "type": "file",
-      "source": "nginx.conf",
-      "destination": "/home/ubuntu"
-    },
-    {
        "type": "file",
         "source": "config",
-        "destination": "/home/ubuntu/configs"
+        "destination": "${RG_SRC}/config"
     },
     {
       "type": "shell",
       "script": "./provisioners/provision-rg.sh"
+    },
+    {
+      "type": "shell",
+      "environment_vars": ["MONGO_VERSION=3.6","MONGO_Full_VERSION=23"],
+      "script": "./provisioners/provision-mongo.sh",
+      "pause_before": "10s"
+    },
+    {
+
+      "type": "shell",
+      "inline": [
+         "sudo cp --recursive scripts /usr/local/sbin"
+        ]
     }
   ]
 }
