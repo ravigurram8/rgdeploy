@@ -10,3 +10,5 @@ sudo mkdir -p "/opt/deploy/sp2/topologies"
 sudo mkdir -p "/opt/deploy/sp2/catalog"
 sudo cp /home/ubuntu/nginx.conf /opt/deploy/sp2
 sudo echo -e "RG_HOME='/opt/deploy/sp2'\n" >> /etc/environment
+cd /home/ubuntu
+sudo tar -czf config.tar.gz config
