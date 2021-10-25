@@ -38,17 +38,17 @@
    {
       "type": "file",
       "source": "docker-compose.yml",
-      "destination": "${RG_SRC}/"
+      "destination": "{{user `RG_SRC`}}/"
     },
     {
       "type": "file",
       "source": "nginx.conf",
-      "destination": "${RG_SRC}/"
+      "destination": "{{user `RG_SRC`}}/"
     },
     {
        "type": "file",
         "source": "config",
-        "destination": "${RG_SRC}/config/"
+        "destination": "{{user `RG_SRC`}}/config/"
     },
    {
       "type": "shell",
@@ -61,15 +61,16 @@
     {
       "type": "file",
       "source": "scripts",
-      "destination": "/home/ubuntu/scripts"
+      "destination": "{{user `RG_SRC`}}/scripts"
     },
     {
        "type": "file",
         "source": "config",
-        "destination": "${RG_SRC}/config"
+        "destination": "{{user `RG_SRC`}}/config"
     },
     {
       "type": "shell",
+      "environment_vars": ["RG_HOME=/opt/deploy/sp2","RG_SRC=/home/ubuntu"],
       "script": "./provisioners/provision-rg.sh"
     },
     {
