@@ -46,6 +46,11 @@
       "destination": "{{user `RG_SRC`}}/"
     },
     {
+      "type": "file",
+      "source": "dump.tar.gz",
+      "destination": "{{user `RG_SRC`}}/"
+    },
+    {
        "type": "file",
         "source": "config",
         "destination": "{{user `RG_SRC`}}/config/"
