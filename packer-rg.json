@@ -1,7 +1,5 @@
 {
   "variables": {
-    "aws_access_key": "",
-    "aws_secret_key": "",
     "vpcId": "",
     "subnetId": "",
     "awsProfile": "default",
@@ -14,8 +12,7 @@
     {
       "type": "amazon-ebs",
       "profile": "{{user `awsProfile`}}",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key`}}",
+      "iam_instance_profile": "packer-role",
       "region": "{{user `awsRegion`}}",
       "vpc_id": "{{user `vpcId`}}",
       "subnet_id": "{{user `subnetId`}}",
@@ -73,6 +70,10 @@
     {
       "type": "shell",
       "script": "./provisioners/provision-awscli.sh"
+    },
+    {
+      "type": "shell",
+      "script": "./provisioners/provision-ecr.sh"
     },
     {
       "type": "file",
