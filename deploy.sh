@@ -137,7 +137,7 @@ aws s3 sync $localhome/rg-deployment-docs/rg-cft-templates/ s3://$bucketname
 #Creating the Cognito User Pool
 echo "Creating Cognito User Pool"
 userpoolstackname="RG-PortalStack-UserPool-$runid"
-aws cloudformation deploy --template-file $localhome/rg-deployment-docs/rg_userpool.yml \
+aws cloudformation deploy --template-file $localhome/rg_userpool.yml \
                           --stack-name "$userpoolstackname" \
                           --parameter-overrides UserPoolNameParam="$userpoolstackname" PortalURLParam="$rgurl" \
                             Function1Name="UserManagementAfterSuccessSignup-$runid" Function2Name="UserManagement-$runid" \
@@ -159,7 +159,7 @@ userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoo
 start=$(date +%s.%N)
 echo "Creating DocumentDB Stack for Research Gateway"
 docdbstackname="RG-PortalStack-DocDB-$runid"
-aws cloudformation deploy --template-file $localhome/rg-deployment-docs/rg_document_db.yml --stack-name "$docdbstackname" \
+aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$docdbstackname" \
                           --parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
                             DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
                             Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
@@ -184,14 +184,14 @@ docdburl_id=$(aws cloudformation describe-stacks --stack-name $docdbstackname | 
 echo $amiid | grep -E '^ami-[0-9a-zA-Z]+'
 if [ $? -eq 0 ]; then
   echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
-  sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg-deployment-docs/rg_main_stack.yml
+  sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg_main_stack.yml
 fi
 
 echo "Deploying main stack (roles, ec2 instance etc.)"
 start=$(date +%s.%N)
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstackname="RG-PortalStack-$runid"
-aws cloudformation deploy --template-file $localhome/rg-deployment-docs/rg_main_stack.yml \
+aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --stack-name "$mainstackname" \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
