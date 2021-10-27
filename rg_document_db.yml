@@ -32,9 +32,9 @@ Parameters:
     NoEcho: "true"
     Description : "The database admin account password"
     Type: "String"
-    MinLength: "1"
-    MaxLength: "55"
-    AllowedPattern : "[a-zA-Z0-9]+"
+    MinLength: "8"
+    MaxLength: "100"
+    AllowedPattern : "[a-zA-Z0-9]{8,100}"
     ConstraintDescription : "must contain only alphanumeric characters."
   AccessFromCidr:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
