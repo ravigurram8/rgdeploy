@@ -48,11 +48,6 @@
       "destination": "{{user `RG_SRC`}}/"
     },
     {
-       "type": "file",
-        "source": "config",
-        "destination": "{{user `RG_SRC`}}/config/"
-    },
-   {
       "type": "shell",
       "script": "./provisioners/provision-docker.sh"
     },
