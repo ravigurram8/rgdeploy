@@ -32,10 +32,10 @@ Parameters:
     NoEcho: "true"
     Description : "The database admin account password"
     Type: "String"
-    MinLength: "8"
-    MaxLength: "100"
-    AllowedPattern : "[a-zA-Z0-9]{8,100}}"
-    ConstraintDescription : "Must contain only alphanumeric characters."
+    MinLength: "1"
+    MaxLength: "55"
+    AllowedPattern : "[a-zA-Z0-9]+"
+    ConstraintDescription : "must contain only alphanumeric characters."
   AccessFromCidr:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
     Type: String
@@ -56,6 +56,12 @@ Parameters:
   Subnet3:
     Description: The VPC subnet in which the EC2 instance
     Type: AWS::EC2::Subnet::Id
+  SecurityGroupName:
+    Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
+    Type: String
+  DocDBSubnetGroupName:
+    Description: Subnet Group Name
+    Type: String
   DBInstanceClass:
     Description : "Instance class. Please refer to: https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-classes-by-region"
     Type: "String"
@@ -74,7 +80,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties: 
       GroupDescription: Amazon DocumentDB Security Group
-      GroupName: SG-DocumentDB
+      GroupName: !Ref SecurityGroupName 
       VpcId: !Ref VPC
       SecurityGroupIngress:
          - IpProtocol: tcp
@@ -83,19 +89,19 @@ Resources:
            ToPort: 27017
       Tags:
         - Key: Name
-          Value: SG-DocumentDB
+          Value: !Ref SecurityGroupName
   DocumentDBSubnetGroup:
     Type: AWS::DocDB::DBSubnetGroup
     Properties: 
       DBSubnetGroupDescription: Subnet Group for DocumentDB
-      DBSubnetGroupName: SG-DocumentDB-subnet
+      DBSubnetGroupName: !Ref DocDBSubnetGroupName
       SubnetIds: 
          - !Ref Subnet1
          - !Ref Subnet2
          - !Ref Subnet3
       Tags:
         - Key: Name
-          Value: SG-DocumentDB-subnet
+          Value: !Ref DocDBSubnetGroupName
   DBCluster:
     Type: "AWS::DocDB::DBCluster"
     DeletionPolicy: Delete
@@ -126,4 +132,3 @@ Outputs:
     Value: !GetAtt DBCluster.Port
   EngineVersion:
     Value: "3.6.0"
-
