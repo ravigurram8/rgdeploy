@@ -41,7 +41,10 @@ If an AMI with the pre-requisites has been shared with you, you can skip this se
 
 ## Creating the AMI with pre-requisites.
 - Install packer
-- Run packer build package-rg.json
+- Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
+- Export AWS Access Keys and Secret Keys
+- Run packer build package-rg.json.
+- At Run time pass VPCID, SubnetID, AWSRegion as variables declared in packer-rg.json
 - Note that AMI id from the output
 
 ## Installing Research Gateway
