@@ -60,7 +60,7 @@ fi
 keypairname=$7
 aws ec2 describe-key-pairs --key-name $keypairname >/dev/null 2>&1
 if [ $? -gt 0 ]; then
-   echo "The subnet $subnet3id does not belong to $vpcid. Exiting."
+   echo "The KeyPair provided is not found. Exiting."
    exit 1
 fi
 rgurl=$8
@@ -82,9 +82,17 @@ appuser='rguser'
 appuserpassword=$(openssl rand -hex 24)
 adminpassword=$(openssl rand -hex 24)
 
+function calculate_duration() {
+   mylabel=$1
+   mystarttime=$2
+   myelapsedtime=$(( SECONDS - mystarttime ))
+   eval "echo $mylabel Elapsed time: $(date -ud "@$myelapsedtime" +'$((%s/3600/24)) %M min %S sec')"
+}
+
 localhome=`pwd`
 bucketstackname="RG-PortalStack-Bucket-$runid"
 start_time=$SECONDS
+
 BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
 if [ -z "$BUCKET_TEST" ]; then
   echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
@@ -107,28 +115,25 @@ else
 fi
 # Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
 echo "Synching RG Deployment Files to new S3 bucket $bucketname"
-start=$(date +%s.%N)
+s3_sync_start_time=$SECONDS
 aws s3 sync s3://rg-deployment-docs s3://$bucketname
-duration=$(echo "$(date +%s.%N) - $start" | bc)
-execution_time=`printf "%.2f seconds" $duration`
-echo "S3 Sync Execution Time: $execution_time"
+calculate_duration "S3 Sync" $s3_sync_start_time
 
 #Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
-mkdir -p "$localhome/rg-deployment-docs/rg-cft-templates"
+mkdir -p "$localhome/rg-cft-templates"
 
 #Download RG Deployment files from S3 to the local folder created above,
 echo "Copying RG Deployment Files to local folder"
-start=$(date +%s.%N)
+s3_copy_start_time=$SECONDS
 aws s3 cp s3://rg-deployment-docs/ $localhome/rg-deployment-docs --recursive
-duration=$(echo "$(date +%s.%N) - $start" | bc)
-execution_time=`printf "%.2f seconds" $duration`
-echo "S3 Download Execution Time: $execution_time"
+calculate_duration "S3 Copy" $s3_copy_start_time
+
 # Extract cft templates locally
 echo "Extracting CFTs locally"
-tar -xvf $localhome/rg-deployment-docs/rg-cft-templates.tar.gz -C $localhome/rg-deployment-docs/rg-cft-templates/
+tar -xvf $localhome/rg-deployment-docs/rg-cft-templates.tar.gz -C $localhome/rg-cft-templates/
 
 #Modify file rg_userpool.yml to refer new S3 bucket
-sed -i -e "s/rg-deployment-docs/$bucketname/" $localhome/rg-deployment-docs/rg_userpool.yml
+sed -i -e "s/rg-deployment-docs/$bucketname/" $localhome/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
@@ -156,7 +161,7 @@ userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$u
 userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
 
 #Create DocumentDB stack
-start=$(date +%s.%N)
+docdb_start_time=$SECONDS
 echo "Creating DocumentDB Stack for Research Gateway"
 docdbstackname="RG-PortalStack-DocDB-$runid"
 aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$docdbstackname" \
@@ -171,10 +176,7 @@ if [ $? -gt 0 ]; then
    echo " $docdbstackname Stack Failed to Create "
    exit 1
 fi
-duration=$(echo "$(date +%s.%N) - $start" | bc)
-execution_time=`printf "%.2f seconds" $duration`
-
-echo "RG DocumentDB Instance Creation Time: $execution_time"
+calculate_duration "DocumentDB Instance Creation" $docdb_start_time
 
 #Capture DocumentDB Instance Id
 docdburl_id=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
@@ -188,8 +190,7 @@ if [ $? -eq 0 ]; then
 fi
 
 echo "Deploying main stack (roles, ec2 instance etc.)"
-start=$(date +%s.%N)
-echo "Deploying main stack (roles, ec2 instance etc.)"
+mainstack_start_time=$SECONDS
 mainstackname="RG-PortalStack-$runid"
 aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --stack-name "$mainstackname" \
@@ -206,6 +207,5 @@ else
    portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
    echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"   
 fi
-
-elapsed=$(( SECONDS - start_time ))
-eval "echo Research Gateway Deplyment Elapsed time: $(date -ud "@$elapsed" +'$((%s/3600/24)) %M min %S sec')"
+calculate_duration "MainStack Creation" $mainstack_start_time
+calculate_duration "Research Gateway Deployment" $start_time 
