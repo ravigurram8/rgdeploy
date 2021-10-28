@@ -29,17 +29,26 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 | Role: DB (Option 1) MongoDB | MongoDB 3.6.23          |
 |                             |                         |
 
+The software above will be available pre-deployed on the AMI shared with you.
+
+## AWS Services required
+- AWS Cognito
+- AWS S3
+- AWS CloudFormation
+- AWS DocumentDB
+
 # Installing the required 3rd party software
 The following sofware needs to be installed on the Portal EC2 instance
 | Software  | Version |
 |-----------|---------|
 | MongoDB   | 3.6.23  |
-| Redis     | 6.0.6   |
 | Docker    | 20.10.9 |
 
-If an AMI with the pre-requisites has been shared with you, you can skip this section.
+If an AMI with the pre-requisites has been shared with you, you can skip this section. 
 
 ## Creating the AMI with pre-requisites.
+
+You can create the AMI with pre-requisites yourself by following these steps:
 - Install packer
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
 - Export AWS Access Keys and Secret Keys
