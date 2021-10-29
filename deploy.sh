@@ -77,10 +77,10 @@ if [ $? -gt 0 ]; then
    exit 1
 fi
 
-runid="$(openssl rand -hex 2)"
+runid=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 4 ; echo)
 appuser='rguser'
-appuserpassword=$(openssl rand -hex 24)
-adminpassword=$(openssl rand -hex 24)
+appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
+adminpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
 
 function calculate_duration() {
    mylabel=$1
@@ -133,11 +133,11 @@ echo "Extracting CFTs locally"
 tar -xvf $localhome/rg-deployment-docs/rg-cft-templates.tar.gz -C $localhome/rg-cft-templates/
 
 #Modify file rg_userpool.yml to refer new S3 bucket
-sed -i -e "s/rg-deployment-docs/$bucketname/" $localhome/rg_userpool.yml
+sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" $localhome/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
-aws s3 sync $localhome/rg-deployment-docs/rg-cft-templates/ s3://$bucketname
+aws s3 sync $localhome/rg-cft-templates/ s3://$bucketname
 
 #Creating the Cognito User Pool
 echo "Creating Cognito User Pool"
@@ -200,12 +200,12 @@ aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                             DocumentDBInstanceURL="$docdburl_id" \
                           --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
-if [ $? -gt 0 ]; then 
+if [ $? -gt 0 ]; then
    echo " $mainstackname Stack Failed to Create "
    exit 1
 else
    portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
-   echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"   
+   echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"
 fi
 calculate_duration "MainStack Creation" $mainstack_start_time
-calculate_duration "Research Gateway Deployment" $start_time 
+calculate_duration "Research Gateway Deployment" $start_time
