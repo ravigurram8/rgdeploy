@@ -65,11 +65,12 @@ You can create the AMI with pre-requisites yourself by following these steps:
 | Param 1     | The AMI from which the EC2 instance that runs Research Gateway should be created                 |
 | Param 2     | Name of the S3 bucket to create which holds the CFT templates used in the Standard Catalog       |
 | Param 3     | VPC Id of the VPC in which to launch the Research Gateway EC2 instance                           |
-| Param 4     | Subnet Id of the subnet in which to launch the Research Gateway EC2 instance                     |
-| Param 5     | The Key Pair to use for launching the EC2 Instance                                               |
-| Param 6     | (Optional) The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
-
-
+| Param 4     | The Subnet1 in which to launch the Research Gateway DocumentDB                                   |
+| Param 5     | The Subnet2 in which to launch the Research Gateway DocumentDB                                   |
+| Param 6     | The Subnet3 in which to launch the Research Gateway DocumentDB                                   |
+| Param 7     | The Key Pair to use for launching the EC2 Instance                                               |
+| Param 8     | (Optional) The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
+| Param 9     | (Optional) The Target Group to which the Portal EC2 instance should be added                     |
 
 ## Creating the first user
 - Connect to the EC2 instance using SSH or the SSM Session Manager from the AWS Console
