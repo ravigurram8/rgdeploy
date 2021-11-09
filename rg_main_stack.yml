@@ -229,3 +229,21 @@ Resources:
                     - Ref: TGARN
                     - "\n"
               - "\n"
+              - |
+              # Signal the status
+              - Fn::Join:
+                  - ' '
+                  - - /opt/aws/bin/cfn-signal -e $?
+                    - --stack 
+                    - Ref: AWS::StackName
+                    - --resource RGEC2Instance
+                    - --region
+                    - Ref: AWS::Region
+              - |
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+Outputs:
+  RGAccessURL:
+    Description: URL to access Research Gateway
+    Value: !Ref RGUrl
