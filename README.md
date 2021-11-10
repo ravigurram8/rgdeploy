@@ -44,6 +44,7 @@ The following sofware needs to be installed on the Portal EC2 instance
 | MongoDB   | 3.6.23  |
 | Docker    | 20.10.9 |
 
+For your convenience we have created packer scripts which allow you to create the AMI in your account.
 If an AMI with the pre-requisites has been shared with you, you can skip this section. 
 
 ## Creating the AMI with pre-requisites.
