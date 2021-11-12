@@ -52,12 +52,12 @@ If an AMI with the pre-requisites has been shared with you, you can skip this se
 You can create the AMI with pre-requisites yourself by following these steps:
 - Install packer
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
-- Export AWS Access Keys and Secret Keys
-  export AWS_ACCESS_KEY_ID=""
-  export AWS_SECRET_ACCESS_KEY=""
-  export AWS_DEFAULT_REGION=""
+- Export AWS Access Keys and Secret Keys 
+- export AWS_ACCESS_KEY_ID=""
+- export AWS_SECRET_ACCESS_KEY=""
+- export AWS_DEFAULT_REGION=""
 - Run packer build package-rg.json.
-  packer build -var 'awsRegion=us-east-2' -var 'vpcId=' -var 'subnetId=' packer-rg.json
+- packer build -var 'awsRegion=us-east-2' -var 'vpcId=' -var 'subnetId=' packer-rg.json
 - At Run time pass VPCID, SubnetID, AWSRegion as variables declared in packer-rg.json
 - Note that AMI id from the output
 
