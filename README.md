@@ -54,7 +54,9 @@ You can create the AMI with pre-requisites yourself by following these steps:
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
 - Export AWS Access Keys and Secret Keys 
 > export AWS_ACCESS_KEY_ID="your_Access_Key"
+> 
 > export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
+> 
 > export AWS_DEFAULT_REGION="Your_Region"
 - Run packer build package-rg.json.
 > packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
