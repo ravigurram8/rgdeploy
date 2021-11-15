@@ -1,6 +1,44 @@
 #!/bin/bash
+if [ "$1" = "-f" ]; then
+  if [ -z "$2" ]; then
+    echo "Need a filename with -f option"
+    exit 1
+  fi
+  if ! [ -f $2 ]; then
+    echo "Could not find file $2"
+    exit 1
+  fi
+  echo "Reading past run details from $2"
+  myinput=`cat $2`
+  amiid=$(jq -r '.params.amiid' <<< ${myinput})
+  bucketname=$(jq -r '.params.bucketname' <<< ${myinput})
+  vpcid=$(jq -r '.params.vpcid' <<< ${myinput})
+  subnet1id=$(jq -r '.params.subnet1id' <<< ${myinput})
+  subnet2id=$(jq -r '.params.subnet2id' <<< ${myinput})
+  subnet3id=$(jq -r '.params.subnet3id' <<< ${myinput})
+  keypairname=$(jq -r '.params.keypairname' <<< ${myinput})
+  rgurl=$(jq -r '.params.rgurl' <<< ${myinput})
+  tgarn=$(jq -r '.params.tgarn' <<< ${myinput})
 
-if [ $# -lt 7 ]; then
+  runid=$(jq -r '.runid' <<< ${myinput})
+  appuser=$(jq -r '.appuser' <<< ${myinput})
+  appuserpassword=$(jq -r '.appuserpassword' <<< ${myinput})
+  adminpassword=$(jq -r '.adminpassword' <<< ${myinput})
+  echo "Run ID: $runid"
+  echo "APPUSER: $appuser"
+  echo "APPUSERPWD: $appuserpassword"
+  echo "ADMINPWD: $adminpassword"
+  echo "AMIID: $amiid"
+  echo "BUCKET: $bucketname"
+  echo "VPCID: $vpcid"
+  echo "SUBNET1: $subnet1id"
+  echo "SUBNET2: $subnet2id"
+  echo "SUBNET3: $subnet3id"
+  echo "KEYPAIR: $keypairname"
+  echo "RGURL: $rgurl"
+  echo "TGARN: $tgarn"
+
+elif [ $# -lt 7 ]; then
   echo 'Usage: deploy.sh <amiid> <bucketname> <rgurl> '
   echo '       Param 1:  The AMI from which the EC2 for Research Gateway should be created'
   echo '       Param 2:  The S3 bucket to create for holding the CFT templates'
@@ -13,15 +51,46 @@ if [ $# -lt 7 ]; then
   echo '       Param 8:  (Optional) The URL at which Research Gateway will be accessed'
   echo '       Param 9:  (Optional) The Target Group to which the Portal EC2 instance should be added'
   exit 1
+else
+  echo "New run"
+  amiid=$1
+  bucketname=$2
+  vpcid=$3
+  subnet1id=$4
+  subnet2id=$5
+  subnet3id=$6
+  keypairname=$7
+  rgurl=$8
+  tgarn=$9
+  runid=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 4 ; echo)
+  appuser='rguser'
+  appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
+  adminpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
+  cat << EOT >> "$runid.json"
+  {
+    "runid": "$runid",
+    "appuser": "$appuser",
+    "appuserpassword": "$appuserpassword",
+    "adminpassword": "$adminpassword",
+    "params": {
+      "amiid":  "$amiid",
+      "bucketname":  "$bucketname",
+      "vpcid":  "$vpcid",
+      "subnet1id":  "$subnet1id",
+      "subnet2id":  "$subnet2id",
+      "subnet3id":  "$subnet3id",
+      "keypairname":  "$keypairname",
+      "rgurl":  "$rgurl",
+      "tgarn":  "$tgarn"
+    }
+  }
+EOT
 fi
-amiid=$1
 aws ec2 describe-images --image-id $amiid >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The AMI $amiid does not exist. Exiting"
    exit 1
 fi
-
-bucketname=$2
 
 if ! [ `echo $bucketname | grep -P '(?=^.{3,63}$)(?!^xn\-\-)(?!.*s3alias$)(?!^(\d+\.)+\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$)'` ]; then
   echo "Invalid bucketname passed"
@@ -29,58 +98,47 @@ if ! [ `echo $bucketname | grep -P '(?=^.{3,63}$)(?!^xn\-\-)(?!.*s3alias$)(?!^(\
   exit 1
 fi
 
-vpcid=$3
 aws ec2 describe-vpcs --vpc-id $vpcid >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The VPC $vpcid does not exist. Exiting."
    exit 1
 fi
 
-subnet1id=$4
 aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpcid --subnet-ids $subnet1id >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet1id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
-subnet2id=$5
 aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpcid --subnet-ids $subnet2id >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet2id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
-subnet3id=$6
 aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpcid --subnet-ids $subnet3id >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet3id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
-keypairname=$7
 aws ec2 describe-key-pairs --key-name $keypairname >/dev/null 2>&1
 if [ $? -gt 0 ]; then
    echo "The KeyPair provided is not found. Exiting."
    exit 1
 fi
-rgurl=$8
+
 echo $rgurl | grep -i -e '^http'
 if [ $? -gt 0 ]; then
    echo "The URL $rgurl must begin with http. Exiting."
    exit 1
 fi
 
-tgarn=$9
 aws elbv2 describe-target-groups --target-group-arns $tgarn > /dev/null
 if [ $? -gt 0 ]; then
    echo "The Target Group ARN $tgarn does not exists. Exiting."
    exit 1
 fi
-
-runid=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 4 ; echo)
-appuser='rguser'
-appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
-adminpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
 
 function calculate_duration() {
    mylabel=$1
