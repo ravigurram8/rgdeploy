@@ -242,7 +242,7 @@ Resources:
               - |
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT5M
+        Timeout: PT9M
 Outputs:
   RGAccessURL:
     Description: URL to access Research Gateway
