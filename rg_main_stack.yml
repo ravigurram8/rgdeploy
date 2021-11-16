@@ -123,6 +123,7 @@ Resources:
               - ec2:ModifyInstanceMetadataOptions
               - iam:attachRolePolicy
               - iam:createPolicy
+              - iam:createPolicyVersion
               - iam:createRole
               - iam:deletePolicy
               - iam:deletePolicyVersion
