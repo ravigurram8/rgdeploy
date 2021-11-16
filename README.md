@@ -80,7 +80,7 @@ You can create the AMI with pre-requisites yourself by following these steps:
 - Note that AMI id from the output
 
 ## Installing Research Gateway
-- Clone this repo on a machine that has AWS CLI configured
+- Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
 - Run deploy.sh with the following parameters
 
 | Parameter#  | Purpose                                                                                          |
