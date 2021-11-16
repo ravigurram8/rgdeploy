@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.4"
+version="0.1.5"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -48,6 +48,8 @@ else
     baseurl="$myurl/"
     snsprotocol=`echo $myurl | sed -e 's/\(http.*:\/\/\).*/\1/' | sed -e 's/://' -e 's/\///g'`
 fi
+echo "Base URL set to $baseurl"
+echo "snsprotocol set to $snsprotocol"
 
 if ! [ -d "$RG_HOME/tmp" ]; then
     echo "$RG_HOME/tmp does not exist. Creating"

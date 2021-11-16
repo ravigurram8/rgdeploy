@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.3"
+version="0.1.4"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
@@ -37,6 +37,7 @@ if [ -z "$myurl" ]; then
 else
     baseurl="$myurl/"
 fi
+echo "snsUrl will be set to $baseurl"
 
 # Modify the database to create roles and configs
 echo "Modifying database $1 to create defaults"
