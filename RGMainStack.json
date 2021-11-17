@@ -111,6 +111,13 @@
           "Condition": "DocumentDBURLProvided"
         }
       ]
+    },
+    "UseLocalMongoDB": {
+      "Fn::Not":[
+        {
+          "Condition": "DocumentDBSelected"
+        }
+      ]
     }
   },
   "Resources": {
@@ -256,32 +263,35 @@
                 "aws s3 cp s3://rg-deployment-docs/updatescripts.sh /home/ubuntu\n",
                 "chmod +x /home/ubuntu/updatescripts.sh\n",
                 "/home/ubuntu/updatescripts.sh\n",
-                "echo 'Fixing IPs'\n",
                 "fixips.sh\n",
-                "sleep 30\n",
-                "echo 'Fixing Mongo'\n",
                 {
-                  "Fn::Join": [
-                    " ",
-                    [ 
-                      "fixmongo.sh",
-                      "PROD-cc",
-                      {
-                        "Ref": "AdminPassword"
-                      },
-                      "rguser",
-                      {
-                        "Ref": "UserPassword"
-                      },
-                      {
-                        "Ref": "RGUrl"
-                      },
-                      "\n"
-                    ]
+                  "Fn::If": [
+                    "UseLocalMongoDB",
+                    {
+                      "Fn::Join": [
+                        " ",
+                        [ 
+                          "fixmongo.sh",
+                          "PROD-cc",
+                          {
+                            "Ref": "AdminPassword"
+                          },
+                          "rguser",
+                          {
+                            "Ref": "UserPassword"
+                          },
+                          {
+                            "Ref": "RGUrl"
+                          },
+                          "\n"
+                        ]
+                      ]
+                    },
+                    {
+                      "Ref": "AWS::NoValue"
+                    }
                   ]
                 },
-                "tar -xvf /home/ubuntu/config.tar.gz -C /opt/deploy/sp2\n",
-                "echo 'Fixing Configs'\n",
                 {
                   "Fn::Join": [
                     " ",
@@ -310,15 +320,6 @@
                 {
                   "Fn::If": [
                     "UseDocumentDB",
-                    "echo 'Fixing DocumentDB'\n",
-                    {
-                      "Ref": "AWS::NoValue"
-                    }
-                  ]
-                },
-                {
-                  "Fn::If": [
-                    "UseDocumentDB",
                     {
                       "Fn::Join": [
                         " ",
@@ -328,7 +329,7 @@
                             "Ref": "DocumentDBInstanceURL"
                           },
                           "PROD-cc",
-                          "rgadminuser",
+                          "rguser",
                           {
                             "Ref": "UserPassword"
                           },
@@ -339,14 +340,7 @@
                     { "Ref": "AWS::NoValue"} 
                   ]
                 },
-                "echo 'Login to ECR'\n",
-                "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com\n",
-                "echo 'Modifying HttpResponseHopLimit'\n",
-                "ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)\n",
-                "aws ec2 modify-instance-metadata-options --instance-id $ec2instanceid --http-put-response-hop-limit 2              \n",
-                "echo 'Fixing Secrets'\n",
                 "fixsecrets.sh\n",
-                "echo \"Starting server\"\n",
                 {
                   "Fn::Join": [
                     " ",

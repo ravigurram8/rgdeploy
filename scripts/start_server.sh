@@ -1,5 +1,6 @@
 #!/bin/bash
-version="0.1.2"
+version="0.1.4"
+echo "Starting server....(start_server.sh v$version)"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
   echo '    Param 1: (optional) URL for SNS Callback'
@@ -16,12 +17,20 @@ myurl=$1
 tgarn=$2
 port=80
 
+echo 'Login to ECR'
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com
+echo 'Modifying HttpResponseHopLimit'
+ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+aws ec2 modify-instance-metadata-options --instance-id "$ec2instanceid" --http-put-response-hop-limit 2
+
 if [ -z $myurl ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
     baseurl="$public_host_name"
 else
     baseurl="$myurl"
 fi
+echo "BaseURL=$baseurl"
+echo "TGARN=$tgarn"
 
 if [ ! -z $tgarn ]; then
     ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
