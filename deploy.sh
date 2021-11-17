@@ -77,7 +77,7 @@ else
   keypairname=$7
   env=$8
   rgurl=$9
-  tgarn=$10
+  tgarn=${10}
   
   runid=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 4 ; echo)
   appuser='rguser'
