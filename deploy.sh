@@ -62,8 +62,9 @@ elif [ $# -lt 7 ]; then
   echo '       Param 5:  The Subnet2 in which to launch the Research Gateway DocumentDB'
   echo '       Param 6:  The Subnet3 in which to launch the Research Gateway DocumentDB'
   echo '       Param 7:  The Key Pair to use for launching the EC2 instance.'
-  echo '       Param 8:  (Optional) The URL at which Research Gateway will be accessed'
-  echo '       Param 9:  (Optional) The Target Group to which the Portal EC2 instance should be added'
+  echo '       Param 8:  The Environment DEV / QA / STAGE / PROD to deploy DB instance.'
+  echo '       Param 9:  (Optional) The URL at which Research Gateway will be accessed'
+  echo '       Param 10:  (Optional) The Target Group to which the Portal EC2 instance should be added'
   exit 1
 else
   echo "New run"
@@ -74,8 +75,10 @@ else
   subnet2id=$5
   subnet3id=$6
   keypairname=$7
-  rgurl=$8
-  tgarn=$9
+  env=$8
+  rgurl=$9
+  tgarn=$10
+  
   runid=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 4 ; echo)
   appuser='rguser'
   appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
@@ -94,6 +97,7 @@ else
       "subnet2id":  "$subnet2id",
       "subnet3id":  "$subnet3id",
       "keypairname":  "$keypairname",
+      "environment": "$env",
       "rgurl":  "$rgurl",
       "tgarn":  "$tgarn"
     }
@@ -269,7 +273,7 @@ aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
-                            DocumentDBInstanceURL="$docdburl_id" \
+                            DocumentDBInstanceURL="$docdburl_id" Environment="$env" \
                           --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 if [ $? -gt 0 ]; then
