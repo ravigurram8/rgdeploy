@@ -1,13 +1,13 @@
 #!/bin/bash
 # Download the latest scripts
-version='0.1.0'
+version='0.1.1'
 echo "updatescripts.sh version: $version"
 
 aws s3 cp s3://rg-deployment-docs/scripts.tar.gz /home/ubuntu
 mkdir -p /home/ubuntu/scripts
 tar -xvf /home/ubuntu/scripts.tar.gz -C /home/ubuntu/scripts
 
-grep -i version  /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
+grep -i 'version='  /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
 # Check if any of the scripts are later versions than those present
 # in the AMI
 if [ ! -f /usr/local/sbin/fixips.sh ] ||  [ /home/ubuntu/scripts/fixips.sh -nt /usr/local/sbin/fixips.sh ]; then

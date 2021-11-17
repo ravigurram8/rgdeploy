@@ -37,6 +37,7 @@ if [ -z "$myurl" ]; then
 else
     baseurl="$myurl/"
 fi
+echo "snsUrl will be set to $baseurl"
 
 # Modify the database to create roles and configs
 echo "Modifying database $1 to create defaults"

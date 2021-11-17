@@ -14,14 +14,32 @@ It provides in-built security, based on AWS Best Practices
 It provides a pre-built catalog of products which are ready to use out of the box.
 
 # Planning for deployment
+## Research Gateway Architecture
+   ![image](https://user-images.githubusercontent.com/73109773/141417964-3738d959-99a2-471d-bf34-15f15637eac8.png)
 
-## Hardware Requirements
+## 1. Hardware Requirements
 | Virtual Machine Purpose            | Virtual Machine Spec                                           |
 |------------------------------------|----------------------------------------------------------------|
 | Role: Portal                       | t2.medium 2CPU, 8GB RAM, 100GB Disk                            |
 | Role: DB (Option 2) AWS DocumentDB | db.t3.large (dev) db.r5.large+ (prod)                          |
 
-## Software Requirements
+## 2. Network Requirements
+   a. VPC  
+   b. 3 Public Subnets  
+   c. 3 Private Subnets  
+   d. IGW  
+   e. NAT Instance / NAT Gateway  
+   f. Bastion Hosts  
+   g. Appliation Load Balancer  
+   h. Listener  
+   i. ACM or External Certificates for SSL  
+   j. Target Group  
+   
+ ### Create #2a - #2c above using the following quick-start:  
+ 
+ [![Launch Stack](https://cdn.rawgit.com/buildkite/cloudformation-launch-stack-button-svg/master/launch-stack.svg)](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://aws-quickstart.s3.amazonaws.com/quickstart-aws-vpc/templates/aws-vpc.template.yaml&param_NumberOfAZs=3)
+
+## 3. Software Requirements
 
 | Virtual Machine Purpose     | Software pre-requisites |
 |-----------------------------|-------------------------|
@@ -53,18 +71,16 @@ You can create the AMI with pre-requisites yourself by following these steps:
 - Install packer
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
 - Export AWS Access Keys and Secret Keys 
-> export AWS_ACCESS_KEY_ID="your_Access_Key"
-> 
-> export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
-> 
-> export AWS_DEFAULT_REGION="Your_Region"
+- export AWS_ACCESS_KEY_ID="your_Access_Key"
+- export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
+- export AWS_DEFAULT_REGION="Your_Region"
 - Run packer build package-rg.json.
-> packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
+- packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
 - At Run time pass VPCID, SubnetID, AWSRegion as variables declared in packer-rg.json
 - Note that AMI id from the output
 
 ## Installing Research Gateway
-- Clone this repo on a machine that has AWS CLI configured
+- Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
 - Run deploy.sh with the following parameters
 
 | Parameter#  | Purpose                                                                                          |
@@ -77,7 +93,7 @@ You can create the AMI with pre-requisites yourself by following these steps:
 | Param 6     | The Subnet3 in which to launch the Research Gateway DocumentDB                                   |
 | Param 7     | The Key Pair to use for launching the EC2 Instance                                               |
 | Param 8     | (Optional) The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
-| Param 9     | (Optional) The Target Group to which the Portal EC2 instance should be added                     |
+| Param 9     | (Optional) The Target Group ARN to which the Portal EC2 instance should be added                     |
 
 ## Creating the first user
 - Connect to the EC2 instance using SSH or the SSM Session Manager from the AWS Console

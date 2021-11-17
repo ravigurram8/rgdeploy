@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.2"
+version="0.1.3"
 echo "Fixing IPs....(fixips.sh v$version)"
 #Find out the IP address of eth0
 myip=`hostname -I | awk '{print $1}'`
@@ -19,16 +19,16 @@ if [ -f /etc/mongod.conf ]; then
 fi
 
 
-# Fix the bind address in /etc/redis/redis.conf
-if [ -f /etc/redis/redis.conf ]; then
-	echo "redis.conf exists"
-	sed -i -e "s/^bind.*/bind $myip /" /etc/redis/redis.conf
-        cat /etc/redis/redis.conf | grep -e '^bind'
-        systemctl enable redis-server
-	echo "Restarting Redis"
-	service redis-server restart
-fi
-echo "Waiting 30s for services to restart"
+## Fix the bind address in /etc/redis/redis.conf
+#if [ -f /etc/redis/redis.conf ]; then
+#	echo "redis.conf exists"
+#	sed -i -e "s/^bind.*/bind $myip /" /etc/redis/redis.conf
+#        cat /etc/redis/redis.conf | grep -e '^bind'
+#        systemctl enable redis-server
+#	echo "Restarting Redis"
+#	service redis-server restart
+#fi
+#echo "Waiting 30s for services to restart"
 sleep 30
 service mongod status
-service redis-server status
+#service redis-server status

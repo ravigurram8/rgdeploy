@@ -50,6 +50,8 @@ else
     baseurl="$myurl/"
     snsprotocol=`echo $myurl | sed -e 's/\(http.*:\/\/\).*/\1/' | sed -e 's/://' -e 's/\///g'`
 fi
+echo "Base URL set to $baseurl"
+echo "snsprotocol set to $snsprotocol"
 
 if ! [ -d "$RG_HOME/tmp" ]; then
     echo "$RG_HOME/tmp does not exist. Creating"
