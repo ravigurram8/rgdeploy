@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.4"
+version="0.1.5"
 echo "Starting server....(start_server.sh v$version)"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
@@ -37,6 +37,8 @@ if [ ! -z $tgarn ]; then
     echo "Registering instance $ec2instanceid with Target group: $tgarn"
     aws elbv2 register-targets  --targets "Id=$ec2instanceid,Port=$port" --target-group-arn "$tgarn" 
 fi
+echo "Calling swarm init will respond with error if this node is already part of a swarm"
+docker swarm init
 echo "Starting stack..."
 docker stack deploy -c $RG_HOME/docker-compose.yml sp2
 
