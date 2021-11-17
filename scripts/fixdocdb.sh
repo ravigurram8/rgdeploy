@@ -1,6 +1,7 @@
 #!/bin/bash
 version="0.1.4"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
+
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
   echo '    Param 1: URL of the DocumentDB instance'

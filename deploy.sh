@@ -1,6 +1,6 @@
 #!/bin/bash
-region=$(aws configure list | grep region | awk '{print $2}')
-echo "current aws region is $region"
+# Verify that utilities we use in this script are installed on the machine
+echo "Verifying utilities are installed"
 apps=(jq aws)
 for program in "${apps[@]}"; do
     if ! command -v "$program" > /dev/null 2>&1; then
@@ -10,6 +10,8 @@ else
         echo "$program found"
     fi
 done
+region=$(aws configure list | grep region | awk '{print $2}')
+echo "current aws region is $region"
 
 if [ "$1" = "-f" ]; then
   if [ -z "$2" ]; then

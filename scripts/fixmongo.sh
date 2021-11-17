@@ -1,6 +1,7 @@
 #!/bin/bash
 version='0.1.2'
 echo "Fixing MongoDB ...(fixmongo.sh v$version)"
+
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
   echo '    Param 1: Name of the DB you want to use for application user e.g. PROD-cc'
@@ -13,7 +14,7 @@ if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   exit 0
 fi
 mydbname=$1
-[ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
