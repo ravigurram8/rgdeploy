@@ -54,7 +54,7 @@ mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
              --db "${mydbname}" "$RG_SRC/dump/PROD-cc" 
 mongo --ssl --host "$mydocdburl:27017" --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
       --username $mydbuser --password $mydbuserpwd <<EOF
-use "$mydbname"
+use $mydbname
 db.configs.remove({"key":"snsUrl"});
 db.configs.insert({"key":"snsUrl","value":"$baseurl"});
 EOF
