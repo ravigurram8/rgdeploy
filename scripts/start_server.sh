@@ -1,17 +1,21 @@
 #!/bin/bash
-version="0.1.0"
+version="0.1.2"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
   echo '    Param 1: (optional) URL for SNS Callback'
   echo '             Will use public-host-name if not passed'
-  echo '             e.g. myrg.example.com'
+  echo '             e.g. https://myrg.example.com'
+  echo '    Param 2: (optional) Target Group ARN to register with'
   exit 0
 fi
 
-[ -z RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 
 myurl=$1
+tgarn=$2
+port=80
+
 if [ -z $myurl ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
     baseurl="$public_host_name"
@@ -19,6 +23,11 @@ else
     baseurl="$myurl"
 fi
 
+if [ ! -z $tgarn ]; then
+    ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+    echo "Registering instance $ec2instanceid with Target group: $tgarn"
+    aws elbv2 register-targets  --targets "Id=$ec2instanceid,Port=$port" --target-group-arn "$tgarn" 
+fi
 echo "Starting stack..."
 docker stack deploy -c $RG_HOME/docker-compose.yml sp2
 
@@ -54,7 +63,7 @@ function check_stack_status(){
         fi
     fi
   done
-  echo "Statck replicaition : $state_replicated"
+  echo "Stack replication : $state_replicated"
   if [ "${state_replicated}" -gt 0 ]; then
       echo "CRITICAL - Not all services are replicated"
   else

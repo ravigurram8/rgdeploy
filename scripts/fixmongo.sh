@@ -14,7 +14,7 @@ if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   exit 0
 fi
 mydbname=$1
-[ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
