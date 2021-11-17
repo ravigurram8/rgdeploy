@@ -173,7 +173,7 @@ if [ -z "$BUCKET_TEST" ]; then
   read a && echo "Copying files to bucket $bucketname"
 else
   echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
-  bucketname="$bucketname-$runid"
+  bucketname="$bucketname"
 
   # Create S3 bucket to copy RG Deployment files, ensure --stack-name 'name'
   # should be unique and it does not exist as part of current stacks.
