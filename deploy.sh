@@ -255,7 +255,7 @@ fi
 calculate_duration "DocumentDB Instance Creation" $docdb_start_time
 
 #Capture DocumentDB Instance Id
-docdburl_id=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
+docdburl=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
 
 #Creating Main stack
 #update the AMI id in the RGMainStack CFT
@@ -273,7 +273,7 @@ aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
-                            DocumentDBInstanceURL="$docdburl_id" Environment="$env" \
+                            DocumentDBInstanceURL="$docdburl" Environment="$env" \
                           --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 if [ $? -gt 0 ]; then
