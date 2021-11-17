@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.5"
+version="0.1.6"
 echo "Starting server....(start_server.sh v$version)"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
@@ -19,6 +19,14 @@ port=80
 
 echo 'Login to ECR'
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com
+
+echo 'Pulling docker image for research portal'
+docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.7.3_b764
+echo 'Pulling docker image for nginx'
+docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/nginx:latest
+echo 'Pulling docker image for notificationsink'
+docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.7.3_b1
+
 echo 'Modifying HttpResponseHopLimit'
 ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 aws ec2 modify-instance-metadata-options --instance-id "$ec2instanceid" --http-put-response-hop-limit 2
@@ -39,6 +47,12 @@ if [ ! -z $tgarn ]; then
 fi
 echo "Calling swarm init will respond with error if this node is already part of a swarm"
 docker swarm init
+
+echo "Creating secrets"
+docker secret create sp2prod-dashboard-settings.json "$RG_HOME/config/dashboard-settings.json"
+docker secret create sp2prod-config.json "$RG_HOME/config/config.json"
+docker secret create sp2prod-alert-config.json "$RG_HOME/config/alert-config.json"
+
 echo "Starting stack..."
 docker stack deploy -c $RG_HOME/docker-compose.yml sp2
 
