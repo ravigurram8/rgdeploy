@@ -1,6 +1,7 @@
 #!/bin/bash
 version="0.1.1"
 echo "Fixing swarm....(fixswarm.sh v$version)"
+
 # Remove the stack which is deployed if any
 cd /opt/deploy/sp2
 echo "Removing sp2 stack"
