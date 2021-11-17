@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.4"
+version="0.1.5"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -26,6 +26,8 @@ myurl=$6
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
+[ -z $RG_ENV ] && RG_SRC='PROD'
+echo "RG_ENV=$RG_ENV"
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
@@ -129,7 +131,9 @@ cat "$mytemp/notification-config.json" |\
         jq -r ".tokenID=[\"$instanceid\"]" > "${RG_HOME}/config/notification-config.json"
 echo "Modifying trustPolicy.json"
 cat "$mytemp/trustPolicy.json" |\
-        jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\"" > "${RG_HOME}/config/trustPolicy.json"
+        jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\""  |\
+        jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV\""  |\ 
+        jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV\"" > "${RG_HOME}/config/trustPolicy.json"
 
 # Fix the Mongo and Redis host addresses in the docker compose file.
 repcmd='s#\${PWD}#'$RG_HOME'#'
@@ -139,6 +143,7 @@ if [ -f docker-compose.yml ]; then
 	echo "docker-compose.yml exists"
 	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" docker-compose.yml
 	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
+	sed -i -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" docker-compose.yml
 	echo "Modified docker-compose.yml with private IP of the machine"
 fi        
 echo 'Configuration changed successfully'

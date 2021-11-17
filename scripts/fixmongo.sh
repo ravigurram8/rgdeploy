@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.1.1'
+version='0.1.2'
 echo "Fixing MongoDB ...(fixmongo.sh v$version)"
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
@@ -35,6 +35,8 @@ if [ -z $myurl ]; then
 else
     baseurl="$myurl/"
 fi
+echo "Base URL is $baseurl"
+
 systemctl is-active --quiet mongod
 if [ $? -gt 0 ]; then
     echo "mongod service is not running. Starting..."
