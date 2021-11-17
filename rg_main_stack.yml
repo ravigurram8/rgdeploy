@@ -65,6 +65,15 @@ Parameters:
   DocumentDBInstanceURL:
     Description: URL to connect to the DocumentDB (if DocumentDB chosen as the database type)
     Type: String
+  Environment:
+    Description: Choose between Development QA Staging or Production
+    Type: String
+    Default: PROD
+    AllowedValues:
+      -DEV
+      -QA
+      -STAGE
+      -PROD
 Conditions:
   DocumentDBSelected:
     Fn::Equals:
