@@ -1,6 +1,7 @@
 #!/bin/bash
 version="0.1.3"
 echo "Fixing IPs....(fixips.sh v$version)"
+
 #Find out the IP address of eth0
 myip=`hostname -I | awk '{print $1}'`
 
