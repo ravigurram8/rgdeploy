@@ -5,6 +5,7 @@
       "Sid": "Stmt1609262373000",
       "Effect": "Allow",
       "Action": [
+	"acm:*",
         "config:*",
         "ce:DescribeCostCategoryDefinition",
         "ce:GetRightsizingRecommendation",

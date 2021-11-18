@@ -133,17 +133,27 @@
         "connect": [
           {
             "menu": "SSH/RDP",
-            "imageUrl": "../../assets/images/technology@2x.png"
+            "imageUrl": "../../assets/images/technology@2x.png",
+            "outputsRequired": [
+              "InstanceIPAddress",
+              "InstanceId"
+            ]
           }
         ],
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
           },
           {
             "action": "Reboot",
-            "imageUrl": "../../assets/images/reset@2x.png"
+            "imageUrl": "../../assets/images/reset@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
           }
         ]
       },
@@ -152,7 +162,10 @@
         "action": [
           {
             "action": "Start",
-            "imageUrl": "../../assets/images/play@2x.png"
+            "imageUrl": "../../assets/images/play@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
           }
         ]
       },
@@ -198,11 +211,55 @@
         "connect": [
           {
             "menu": "SSH/RDP",
-            "imageUrl": "../../assets/images/technology@2x.png"
+            "imageUrl": "../../assets/images/technology@2x.png",
+            "outputsRequired": [
+              "InstanceIPAddress",
+              "InstanceId"
+            ]
           },
           {
             "menu": "Open Link",
-            "imageUrl": "../../assets/images/link@2x.png"
+            "imageUrl": "../../assets/images/link@2x.png",
+            "outputsRequired": [
+              "InstanceDNSName",
+              "ApplicationPort"
+            ]
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
+          }
+        ]
+      },
+      "stopped": {
+        "connect": [],
+        "action": [
+          {
+            "action": "Start",
+            "imageUrl": "../../assets/images/play@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
+          }
+        ]
+      },
+      "default": {
+        "connect": [
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
           }
         ],
         "action": [
@@ -215,13 +272,80 @@
             "imageUrl": "../../assets/images/reset@2x.png"
           }
         ]
+      }
+    },
+    "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+    ],
+    "active_states": [
+      "running",
+      "active"
+    ],
+    "stopped_states": [
+      "stopped"
+    ],
+    "terminated_states": [
+      "terminated"
+    ]
+  },
+  "nextflow": {
+    "actions": {
+      "running": {
+        "connect": [
+          {
+            "menu": "SSH to Server",
+            "imageUrl": "../../assets/images/technology@2x.png",
+            "outputsRequired": [
+              "InstanceIPAddress",
+              "InstanceId"
+            ]
+          },
+          {
+            "menu": "Monitor Pipeline",
+            "imageUrl": "../../assets/images/link@2x.png",
+            "outputsRequired": [
+              "InstanceIPAddress",
+              "InstanceId"
+            ]
+          },
+          {
+            "menu": "View Outputs",
+            "imageUrl": "../../assets/images/link@2x.png",
+            "outputsRequired": [
+              "InstanceIPAddress",
+              "InstanceId"
+            ]
+          }
+        ],
+        "action": [
+          {
+            "action": "Stop",
+            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
+          },
+          {
+            "action": "Reboot",
+            "imageUrl": "../../assets/images/reset@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
+          }
+        ]
       },
       "stopped": {
         "connect": [],
         "action": [
           {
             "action": "Start",
-            "imageUrl": "../../assets/images/play@2x.png"
+            "imageUrl": "../../assets/images/play@2x.png",
+            "outputsRequired": [
+              "InstanceId"
+            ]
           }
         ]
       },
@@ -267,7 +391,10 @@
         "connect": [
           {
             "menu": "Website-URL",
-            "imageUrl": "../../assets/images/link@2x.png"
+            "imageUrl": "../../assets/images/link@2x.png",
+            "outputsRequired": [
+              "WebsiteURL"
+            ]
           }
         ],
         "action": []
@@ -508,7 +635,8 @@
     "dynamodb",
     "emr",
     "rds",
-    "rstudio"
+    "rstudio",
+    "nextflow"
   ],
   "cft_active_states": [
     "available",
