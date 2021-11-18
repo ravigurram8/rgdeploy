@@ -44,6 +44,6 @@ if [ ! -f /usr/local/sbin/start_server.sh ] ||  [ /home/ubuntu/scripts/start_ser
   echo "Found newer version of start_server.sh. Updating"
   cp /home/ubuntu/scripts/start_server.sh  /usr/local/sbin/
 fi
-grep -i version /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
+grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
 rm -rf /home/ubuntu/scripts
 echo "Done updating scripts"
