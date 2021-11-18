@@ -1,15 +1,15 @@
 #!/bin/bash
-version="0.1.4"
+version="0.1.5"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
 
-if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
+if [ "$1" == "-h" ]  || [ $# -lt 5 ]; then
   echo "Usage: `basename $0` db_name admin_password user_name user_password"
   echo '    Param 1: URL of the DocumentDB instance'
   echo '             e.g. myinstance.c912049703214.us-east-2.docdb.amazonaws.com'
   echo '    Param 2: Name of the DB you want to use for application user e.g. PROD-cc'
   echo '    Param 3: MasterUserName e.g. rgadmin'
   echo '    Param 4: MasterUserPassword e.g.  rgadmin123'
-  echo '    Param 5: (optional) URL for SNS Callback'
+  echo '    Param 5: URL for SNS Callback'
   echo '             Will use public-host-name if not passed'
   echo '             e.g. https://myrg.example.com/' 
   exit 0
@@ -27,16 +27,26 @@ mydbname=$2
 mydbuser=$3
 mydbuserpwd=$4
 myurl=$5
+err='Success'
 [ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
 
 if [ -z "$myurl" ]; then
-    public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
-    baseurl="http://$public_host_name/"
+    if [ -z $public_host_name ]; then
+        echo "ERROR: No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs."
+        baseurl=''
+        err='Error'
+    else
+        baseurl="http://$public_host_name/"
+    fi
 else
     baseurl="$myurl/"
+    snsprotocol=`echo $myurl | sed -e 's/\(http.*:\/\/\).*/\1/' | sed -e 's/://' -e 's/\///g'`
+    if [ -z $snsprotocol ]; then
+        echo "WARNING: No protocol specified for RG URL. Assuming http!"
+        baseurl="http://$myurl/"
 fi
 echo "snsUrl will be set to $baseurl"
 
@@ -52,12 +62,16 @@ mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
              --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
              --username $mydbuser --password $mydbuserpwd  --gzip \
              --db "${mydbname}" "$RG_SRC/dump/PROD-cc" 
+if [ -z $baseurl ]; then
+    echo "WARNING: Base URL is not passed. Skipping snsUrl configuration in DB."
+else             
 mongo --ssl --host "$mydocdburl:27017" --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
       --username $mydbuser --password $mydbuserpwd <<EOF
 use $mydbname
 db.configs.remove({"key":"snsUrl"});
 db.configs.insert({"key":"snsUrl","value":"$baseurl"});
 EOF
+fi
 
 echo "Creating mongodb.pem file"
 host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname)"

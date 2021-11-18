@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.5"
+version="0.1.6"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -12,6 +12,7 @@ if [ $# -lt 5 ]; then
     echo '  Param 6: (Optional) URL to reach RG '
     echo '           e.g https://rg.example.com'
     echo '           Note that the protocol will be picked from this param!'
+    echo '           Will use public-host-name if not passed'
     exit 1
 fi
 
@@ -21,7 +22,7 @@ mys3bucket=$3
 myappuser=$4
 myapppwd=$5
 myurl=$6
-
+err='Success'
 [ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
@@ -43,9 +44,15 @@ instanceid=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 echo "Instance-id : $instanceid"
 if [ -z $myurl ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
-        [ -z $public_host_name ] && echo "No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs. Exiting!" && exit 1
-    baseurl="http://$public_host_name/"
-    snsprotocol="http"
+    if [ -z $public_host_name ]; then
+        echo "ERROR: No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs."
+        baseurl=''
+        snsprotocol=''
+        err='Error'
+    else
+        baseurl="http://$public_host_name/"
+        snsprotocol="http"
+    fi
 else
     baseurl="$myurl/"
     snsprotocol=`echo $myurl | sed -e 's/\(http.*:\/\/\).*/\1/' | sed -e 's/://' -e 's/\///g'`
@@ -88,6 +95,9 @@ cat "$mytemp/bucket-policy.json" |\
         jq -r ".Resource=\"arn:aws:s3:::$mys3bucket/*\""  > "${RG_HOME}/config/bucket-policy.json"
 s3url="https://${mys3bucket}.s3.${region}.amazonaws.com"
 echo "Modifying config.json"
+if [ -z $baseurl ]; then
+    echo "WARNING: Base URL is not passed. config.json file may not be configured correctly"
+fi
 cat "$mytemp/config.json" | jq -r ".baseURL=\"$baseurl\"" |\
         jq -r ".googleOAuthCredentials.callbackURL=\"$baseurl\"" |\
         jq -r ".baseAccountInstanceRoleName=\"$role_name\"" |\
@@ -107,6 +117,10 @@ cat "$mytemp/dashboard-settings.json" |\
         jq -r ".AWSCognito.clientId=\"$myclientid\"" |\
         jq -r ".AWSCognito.region=\"$region\"" > "${RG_HOME}/config/dashboard-settings.json"
 echo "Modifying snsConfig.json"
+if [ -z $snsProtocol ]; then
+    echo "WARNING: SNS protocol could not be determined. Did you pass in the correct RG URL?"
+    echo "snsConfig.json file may not be configured correctly"
+fi
 cat "$mytemp/snsConfig.json" |\
         jq -r ".snsProtocol=\"$snsprotocol\"" > "${RG_HOME}/config/snsConfig.json"
 echo "Modifying mongo-config.json"
@@ -120,10 +134,16 @@ cat "$mytemp/mongo-config.json" |\
         jq -r ".db_auth_config.password=\"$myapppwd\"" |\
         jq -r ".db_auth_config.authenticateDb=\"admin\"" > "${RG_HOME}/config/mongo-config.json"
 echo "Modifying global-config.json"
+if [ -z $baseurl ]; then
+    echo "WARNING: Base URL is not passed. global-config.json file may not be configured correctly"
+fi
 cat "$mytemp/global-config.json" |\
         jq -r ".secureURL.PROD=\"$baseurl\"" |\
         jq -r ".linksForRg.termsAndConditions=\"$baseurl\"" > "${RG_HOME}/config/global-config.json"
 echo "Modifying email-config.json"
+if [ -z $baseurl ]; then
+    echo "WARNING: Base URL is not passed. The following file may not be configured correctly"
+fi
 cat "$mytemp/email-config.json" |\
         jq -r ".email.url=\"$baseurl:2687/bot/sns_notify_bot/exec\"" |\
         jq -r ".email.options.body.data.from=\"rlc.support@relevancelab.com\"" |\
@@ -147,5 +167,10 @@ if [ -f docker-compose.yml ]; then
 	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
 	sed -i -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" docker-compose.yml
 	echo "Modified docker-compose.yml with private IP of the machine"
-fi        
-echo 'Configuration changed successfully'
+fi 
+
+if [ $err == 'Error']; then
+    echo 'Completed with Errors. Service may not work correctly. Please review the configuration files.'
+else
+    echo 'Configuration changed successfully'
+fi
