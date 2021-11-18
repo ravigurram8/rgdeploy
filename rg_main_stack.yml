@@ -24,7 +24,6 @@ Parameters:
   RGUrl:
     Description: URL at which this instance of Research Gateway can be reached. e.g. myrg.example.com
     Type: String
-    Default: enterprise-test2.rlcatalyst.com
     ConstraintDescription: RG URL
   UserPoolId:
     Description: UserPoolId of the Cognito UserPool created for this instance of Research Gateway
@@ -66,14 +65,17 @@ Parameters:
     Description: URL to connect to the DocumentDB (if DocumentDB chosen as the database type)
     Type: String
   Environment:
-    Description: Choose between Development QA Staging or Production
+    Description: Choose between DEV QA STAGE or PROD
     Type: String
     Default: PROD
     AllowedValues:
-      -DEV
-      -QA
-      -STAGE
-      -PROD
+      - DEV
+      - QA
+      - STAGE
+      - PROD
+  BaseAccountPolicyName:
+    Description: Name for RG Portal Base Account Policy
+    Type: String
 Conditions:
   DocumentDBSelected:
     Fn::Equals:
@@ -122,7 +124,7 @@ Resources:
   ResearchGatewayRolePolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      ManagedPolicyName: RG-Portal-Base-Account-Policy
+      ManagedPolicyName: !Ref BaseAccountPolicyName
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -132,7 +134,6 @@ Resources:
               - ec2:ModifyInstanceMetadataOptions
               - iam:attachRolePolicy
               - iam:createPolicy
-              - iam:createPolicyVersion
               - iam:createRole
               - iam:deletePolicy
               - iam:deletePolicyVersion
@@ -191,6 +192,11 @@ Resources:
               - |
                 export RG_HOME=/opt/deploy/sp2
               - |
+                Fn::Join:
+                  - ''
+                  - - export RG_ENV=
+                    - Ref: Environment
+              - |
                 aws s3 cp s3://rg-deployment-docs/updatescripts.sh /home/ubuntu
               - |
                 chmod +x /home/ubuntu/updatescripts.sh
@@ -203,10 +209,13 @@ Resources:
                   - Fn::Join:
                       - ' '
                       - - fixmongo.sh
-                        - PROD-cc
-                        - Ref: AdminPassword
-                        - rguser
-                        - Ref: UserPassword
+                        - Fn::Join:
+                            - ''
+                            - - Ref: Environment
+                              - cc 
+                        - Ref: AdminPassword 
+                        - rguser 
+                        - Ref: UserPassword 
                         - Ref: RGUrl
                         - "\n"
                   - Ref: AWS::NoValue
@@ -226,9 +235,13 @@ Resources:
                       - ' '
                       - - fixdocdb.sh
                         - Ref: DocumentDBInstanceURL
-                        - PROD-cc
-                        - rguser
+                        - Fn::Join:
+                            - ''
+                            - - Ref: Environment
+                              - cc
+                        - rguser 
                         - Ref: UserPassword
+                        - Ref: RGUrl
                         - "\n"
                   - Ref: AWS::NoValue
               - |
@@ -243,7 +256,7 @@ Resources:
               # Signal the status
               - Fn::Join:
                   - ' '
-                  - - /opt/aws/bin/cfn-signal -e 0
+                  - - /opt/aws/bin/cfn-signal -e $?
                     - --stack 
                     - Ref: AWS::StackName
                     - --resource RGEC2Instance
@@ -252,7 +265,7 @@ Resources:
               - |
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT9M
+        Timeout: PT5M
 Outputs:
   RGAccessURL:
     Description: URL to access Research Gateway
