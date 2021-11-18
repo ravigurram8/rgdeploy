@@ -26,7 +26,7 @@ myurl=$6
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
-[ -z $RG_ENV ] && RG_SRC='PROD'
+[ -z $RG_ENV ] && RG_ENV='PROD'
 echo "RG_ENV=$RG_ENV"
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
