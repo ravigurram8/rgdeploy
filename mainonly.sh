@@ -168,93 +168,16 @@ function calculate_duration() {
 
 localhome=`pwd`
 bucketstackname="RG-PortalStack-Bucket-$runid"
-start_time=$SECONDS
-
-BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
-if [ -z "$BUCKET_TEST" ]; then
-  echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
-  read a && echo "Copying files to bucket $bucketname"
-else
-  echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
-  bucketname="$bucketname"
-
-  # Create S3 bucket to copy RG Deployment files, ensure --stack-name 'name'
-  # should be unique and it does not exist as part of current stacks.
-  echo "Deploying the bucket stack"
-  aws cloudformation deploy --template-file rg_deploy_bucket.yml --stack-name "$bucketstackname" \
-                            --parameter-overrides S3NewBucketName="$bucketname"
-  echo "Waiting for stack $bucketname to finish deploying..."
-  aws cloudformation wait stack-create-complete --stack-name $bucketstackname
-  if [ $? -eq 255 ]; then
-    echo "Failed to deploy stack $bucketstackname Exiting"
-    exit 1
-  fi
-fi
-# Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
-echo "Synching RG Deployment Files to new S3 bucket $bucketname"
-s3_sync_start_time=$SECONDS
-aws s3 sync s3://rg-deployment-docs s3://$bucketname
-calculate_duration "S3 Sync" $s3_sync_start_time
-
-#Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
-mkdir -p "$localhome/rg-cft-templates"
-
-#Download RG Deployment files from S3 to the local folder created above,
-echo "Copying RG Deployment Files to local folder"
-s3_copy_start_time=$SECONDS
-aws s3 cp s3://rg-deployment-docs/ $localhome/rg-deployment-docs --recursive
-calculate_duration "S3 Copy" $s3_copy_start_time
-
-# Extract cft templates locally
-echo "Extracting CFTs locally"
-tar -xvf $localhome/rg-deployment-docs/rg-cft-templates.tar.gz -C $localhome/rg-cft-templates/
-
-#Modify file rg_userpool.yml to refer new S3 bucket
-sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" $localhome/rg_userpool.yml
-
-#Copy extracted cft template to the new bucket
-echo "Copying deployment files to new bucket"
-aws s3 sync $localhome/rg-cft-templates/ s3://$bucketname
-
-#Creating the Cognito User Pool
-echo "Creating Cognito User Pool"
 userpoolstackname="RG-PortalStack-UserPool-$runid"
-aws cloudformation deploy --template-file $localhome/rg_userpool.yml \
-                          --stack-name "$userpoolstackname" \
-                          --parameter-overrides UserPoolNameParam="$userpoolstackname" PortalURLParam="$rgurl" \
-                            Function1Name="UserManagementAfterSuccessSignup-$runid" Function2Name="UserManagement-$runid" \
-                          --capabilities CAPABILITY_IAM
 
-aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
-
-if [ $? -gt 0 ]; then
-   echo " $userpoolstackname Stack Failed to Create "
-   exit 1
-fi
+start_time=$SECONDS
 
 #Capture User Pool Client ID
 userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
 #Capture User Pool ID
 userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
 
-#Create DocumentDB stack
-docdb_start_time=$SECONDS
-echo "Creating DocumentDB Stack for Research Gateway"
 docdbstackname="RG-PortalStack-DocDB-$runid"
-aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$docdbstackname" \
-                          --parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
-                            DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
-                            Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
-                            SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid"
-echo "Waiting for stack $docdbstackname to finish deploying..."
-aws cloudformation wait stack-create-complete --stack-name "$docdbstackname"
-
-if [ $? -gt 0 ]; then
-   echo " $docdbstackname Stack Failed to Create "
-   exit 1
-fi
-calculate_duration "DocumentDB Instance Creation" $docdb_start_time
-
 #Capture DocumentDB Instance Id
 docdburl=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
 
