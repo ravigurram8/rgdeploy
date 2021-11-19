@@ -193,7 +193,7 @@ Resources:
               - |
                 export RG_HOME=/opt/deploy/sp2
               - |
-                Fn::Join:
+              - Fn::Join:
                   - ''
                   - - export RG_ENV=
                     - Ref: Environment
