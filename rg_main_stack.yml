@@ -239,7 +239,7 @@ Resources:
                         - Fn::Join:
                             - ''
                             - - Ref: Environment
-                              - cc
+                              - -cc
                         - rguser 
                         - Ref: UserPassword
                         - Ref: RGUrl
