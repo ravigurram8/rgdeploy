@@ -49,9 +49,7 @@ echo "Calling swarm init will respond with error if this node is already part of
 docker swarm init
 
 echo "Creating secrets"
-docker secret create sp2prod-dashboard-settings.json "$RG_HOME/config/dashboard-settings.json"
-docker secret create sp2prod-config.json "$RG_HOME/config/config.json"
-docker secret create sp2prod-alert-config.json "$RG_HOME/config/alert-config.json"
+fixsecrets.sh
 
 echo "Starting stack..."
 docker stack deploy -c $RG_HOME/docker-compose.yml sp2

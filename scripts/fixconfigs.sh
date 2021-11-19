@@ -62,12 +62,12 @@ echo "snsprotocol set to $snsprotocol"
 
 if ! [ -d "$RG_HOME/tmp" ]; then
     echo "$RG_HOME/tmp does not exist. Creating"
-    mkdir "$RG_HOME/tmp"
+    mkdir -p  "$RG_HOME/tmp"
 fi
 
 if ! [ -d "$RG_HOME/config" ]; then
     echo "$RG_HOME/config does not exist. Creating"
-    mkdir "$RG_HOME/config"
+    mkdir -p "$RG_HOME/config"
 fi
 mkdir -p "$RG_HOME/config"
 if [ -z "$(ls -A $RG_HOME/config)"  ]; then
@@ -117,7 +117,7 @@ cat "$mytemp/dashboard-settings.json" |\
         jq -r ".AWSCognito.clientId=\"$myclientid\"" |\
         jq -r ".AWSCognito.region=\"$region\"" > "${RG_HOME}/config/dashboard-settings.json"
 echo "Modifying snsConfig.json"
-if [ -z $snsProtocol ]; then
+if [ -z $snsprotocol ]; then
     echo "WARNING: SNS protocol could not be determined. Did you pass in the correct RG URL?"
     echo "snsConfig.json file may not be configured correctly"
 fi
@@ -153,8 +153,8 @@ cat "$mytemp/notification-config.json" |\
         jq -r ".tokenID=[\"$instanceid\"]" > "${RG_HOME}/config/notification-config.json"
 echo "Modifying trustPolicy.json"
 cat "$mytemp/trustPolicy.json" |\
-        jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\""  |\
-        jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV\""  |\ 
+        jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\"" |\
+        jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV\""  |\
         jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV\"" > "${RG_HOME}/config/trustPolicy.json"
 
 # Fix the Mongo and Redis host addresses in the docker compose file.
@@ -169,7 +169,7 @@ if [ -f docker-compose.yml ]; then
 	echo "Modified docker-compose.yml with private IP of the machine"
 fi 
 
-if [ $err == 'Error']; then
+if [ $err == 'Error' ]; then
     echo 'Completed with Errors. Service may not work correctly. Please review the configuration files.'
 else
     echo 'Configuration changed successfully'

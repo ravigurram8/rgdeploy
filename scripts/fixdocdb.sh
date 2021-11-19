@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.5"
+version="0.1.6"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
 
 if [ "$1" == "-h" ]  || [ $# -lt 5 ]; then
@@ -47,6 +47,7 @@ else
     if [ -z $snsprotocol ]; then
         echo "WARNING: No protocol specified for RG URL. Assuming http!"
         baseurl="http://$myurl/"
+    fi
 fi
 echo "snsUrl will be set to $baseurl"
 
@@ -73,14 +74,19 @@ db.configs.insert({"key":"snsUrl","value":"$baseurl"});
 EOF
 fi
 
+rootca="${RG_HOME}/config/rootCA.key"
+rlca="${RG_HOME}/config/RL-CA.pem"
+mongodbkey="${RG_HOME}/config/mongodb.key"
+mongodbcsr="${RG_HOME}/config/mongodb.csr"
+mongodbcrt="${RG_HOME}/config/mongodb.crt"
 echo "Creating mongodb.pem file"
-host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname)"
-openssl genrsa -out rootCA.key 2048
-openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out RL-CA.pem -subj "/CN=."
-openssl genrsa -out mongodb.key 2048
-openssl req -new -key mongodb.key -out mongodb.csr -subj "/CN=$host_name"
-openssl x509 -req -in mongodb.csr -CA RL-CA.pem -CAkey rootCA.key -CAcreateserial -out mongodb.crt -days 500 -sha256
-cat mongodb.key mongodb.crt > "$RG_HOME/config/mongodb.pem"
+host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname | sed -e 's/\..*//')"
+openssl genrsa -out "$rootca" 2048
+openssl req -x509 -new -nodes -key "$rootca" -sha256 -days 1024 -out "$rlca" -subj "/CN=."
+openssl genrsa -out "$mongodbkey" 2048
+openssl req -new -key "$mongodbkey" -out "$mongodbcsr" -subj "/CN=$host_name"
+openssl x509 -req -in "$mongodbcsr" -CA "$rlca" -CAkey "$rootca" -CAcreateserial -out "$mongodbcrt" -days 500 -sha256
+cat "$mongodbkey" "$mongodbcrt" > "$RG_HOME/config/mongodb.pem"
 
 
 echo "Modifying mongo-config.json file"
@@ -104,4 +110,3 @@ if [ -f "${RG_HOME}/docker-compose.yml" ]; then
       echo "Modified docker-compose.yml with DocumentDB instance URL"
 fi
 echo "Success"
-

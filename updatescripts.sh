@@ -1,49 +1,58 @@
 #!/bin/bash
 # Download the latest scripts
-version='0.1.1'
+version='0.1.2'
 echo "updatescripts.sh version: $version"
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+echo "RG_HOME=$RG_HOME"
+[ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
+echo "RG_SRC=$RG_SRC"
+echo "Fetching latest scripts"
+aws s3 cp s3://rg-deployment-docs/scripts.tar.gz $RG_SRC
+mkdir -p $RG_SRC/scripts
+tar -xvf $RG_SRC/scripts.tar.gz -C $RG_SRC/scripts
 
-aws s3 cp s3://rg-deployment-docs/scripts.tar.gz /home/ubuntu
-mkdir -p /home/ubuntu/scripts
-tar -xvf /home/ubuntu/scripts.tar.gz -C /home/ubuntu/scripts
+echo "Fetching latest configs"
+aws s3 cp s3://rg-deployment-docs/config.tar.gz $RG_SRC
+tar -xvf $RG_SRC/config.tar.gz -C $RG_HOME
+tar -xvf $RG_SRC/config.tar.gz -C $RG_SRC
 
 grep -i 'version='  /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
 # Check if any of the scripts are later versions than those present
 # in the AMI
-if [ ! -f /usr/local/sbin/fixips.sh ] ||  [ /home/ubuntu/scripts/fixips.sh -nt /usr/local/sbin/fixips.sh ]; then
+if [ ! -f /usr/local/sbin/fixips.sh ] ||  [ $RG_SRC/scripts/fixips.sh -nt /usr/local/sbin/fixips.sh ]; then
   echo "Found newer version of fixips.sh. Updating"
-  cp /home/ubuntu/scripts/fixips.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixips.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /home/ubuntu/scripts/fixmongo.sh ] ||  [ /home/ubuntu/scripts/fixmongo.sh -nt /usr/local/sbin/fixmongo.sh ]; then
+if [ ! -f /usr/local/sbin/fixmongo.sh ] ||  [ $RG_SRC/scripts/fixmongo.sh -nt /usr/local/sbin/fixmongo.sh ]; then
   echo "Found newer version of fixmongo.sh. Updating"
-  cp /home/ubuntu/scripts/fixmongo.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixmongo.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /usr/local/sbin/fixconfigs.sh ] ||  [ /home/ubuntu/scripts/fixconfigs.sh -nt /usr/local/sbin/fixconfigs.sh ]; then
+if [ ! -f /usr/local/sbin/fixconfigs.sh ] ||  [ $RG_SRC/scripts/fixconfigs.sh -nt /usr/local/sbin/fixconfigs.sh ]; then
   echo "Found newer version of fixconfigs.sh. Updating"
-  cp /home/ubuntu/scripts/fixconfigs.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixconfigs.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /usr/local/sbin/fixdocdb.sh ] ||  [ /home/ubuntu/scripts/fixdocdb.sh -nt /usr/local/sbin/fixdocdb.sh ]; then
+if [ ! -f /usr/local/sbin/fixdocdb.sh ] ||  [ $RG_SRC/scripts/fixdocdb.sh -nt /usr/local/sbin/fixdocdb.sh ]; then
   echo "Found newer version of fixdocdb.sh. Updating"
-  cp /home/ubuntu/scripts/fixdocdb.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixdocdb.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /usr/local/sbin/fixsecrets.sh ] ||  [ /home/ubuntu/scripts/fixsecrets.sh -nt /usr/local/sbin/fixsecrets.sh ]; then
+if [ ! -f /usr/local/sbin/fixsecrets.sh ] ||  [ $RG_SRC/scripts/fixsecrets.sh -nt /usr/local/sbin/fixsecrets.sh ]; then
   echo "Found newer version of fixsecrets.sh. Updating"
-  cp /home/ubuntu/scripts/fixsecrets.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixsecrets.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /usr/local/sbin/fixswarm.sh ] ||  [ /home/ubuntu/scripts/fixswarm.sh -nt /usr/local/sbin/fixswarm.sh ]; then
+if [ ! -f /usr/local/sbin/fixswarm.sh ] ||  [ $RG_SRC/scripts/fixswarm.sh -nt /usr/local/sbin/fixswarm.sh ]; then
   echo "Found newer version of fixswarm.sh. Updating"
-  cp /home/ubuntu/scripts/fixswarm.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/fixswarm.sh  /usr/local/sbin/
 fi
 
-if [ ! -f /usr/local/sbin/start_server.sh ] ||  [ /home/ubuntu/scripts/start_server.sh -nt /usr/local/sbin/start_server.sh ]; then
+if [ ! -f /usr/local/sbin/start_server.sh ] ||  [ $RG_SRC/scripts/start_server.sh -nt /usr/local/sbin/start_server.sh ]; then
   echo "Found newer version of start_server.sh. Updating"
-  cp /home/ubuntu/scripts/start_server.sh  /usr/local/sbin/
+  cp $RG_SRC/scripts/start_server.sh  /usr/local/sbin/
 fi
 grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
-rm -rf /home/ubuntu/scripts
+rm -rf $RG_SRC/scripts
 echo "Done updating scripts"
