@@ -274,7 +274,7 @@ aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
-                            DocumentDBInstanceURL="$docdburl" Environment="$env" \
+                            DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env" \
                           --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 if [ $? -gt 0 ]; then
