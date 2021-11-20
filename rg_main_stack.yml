@@ -177,6 +177,13 @@ Resources:
         Ref: ResearchGatewayInstanceProfile
       KeyName:
         Ref: KeyName1
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeType: gp2
+            VolumeSize: '30'
+            DeleteOnTermination: 'true'
+            Encrypted: 'true'        
       SubnetId:
         Ref: Subnet1
       SecurityGroupIds:
