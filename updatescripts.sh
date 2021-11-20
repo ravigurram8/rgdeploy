@@ -13,7 +13,7 @@ tar -xvf $RG_SRC/scripts.tar.gz -C $RG_SRC/scripts
 
 echo "Fetching latest configs"
 aws s3 cp s3://rg-deployment-docs/config.tar.gz $RG_SRC
-tar -xvf $RG_SRC/config.tar.gz -C $RG_HOME
+tar --keep-newer-files -xvf $RG_SRC/config.tar.gz -C $RG_HOME
 tar -xvf $RG_SRC/config.tar.gz -C $RG_SRC
 
 grep -i 'version='  /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh

@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.6"
+version="0.1.7"
 echo "Starting server....(start_server.sh v$version)"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
@@ -21,11 +21,12 @@ echo 'Login to ECR'
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com
 
 echo 'Pulling docker image for research portal'
-docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.7.3_b764
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i researchportal | awk '{print $2}' | uniq)
 echo 'Pulling docker image for nginx'
-docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/nginx:latest
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i nginx | awk '{print $2}' | uniq)
 echo 'Pulling docker image for notificationsink'
-docker pull 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.7.3_b1
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i notificationsink | awk '{print $2}' | uniq)
+
 
 echo 'Modifying HttpResponseHopLimit'
 ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
