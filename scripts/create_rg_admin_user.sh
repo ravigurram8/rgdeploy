@@ -44,7 +44,7 @@ data="{\"username\":\"rgadmin\",\"first_name\":\"$firstname\",\"last_name\":\"$l
 #echo $data | jq -r
 
 message=`curl --location --request POST "$baseurl/user/signup" --header "token: $token" --header "Content-Type: application/json" --data-raw $data | jq -r '.message'`
-if [ $message == "success"]; then
+if [ $message == "success" ]; then
     echo "Admin user created. You should receive an email to verify your email address. Please click on the link to change your password"
 else
     echo "Error: Could not create user. Please contact support"

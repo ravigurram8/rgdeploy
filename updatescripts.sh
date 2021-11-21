@@ -53,6 +53,12 @@ if [ ! -f /usr/local/sbin/start_server.sh ] ||  [ $RG_SRC/scripts/start_server.s
   echo "Found newer version of start_server.sh. Updating"
   cp $RG_SRC/scripts/start_server.sh  /usr/local/sbin/
 fi
+
+if [ ! -f /usr/local/sbin/create_rg_admin_user.sh ] ||  [ $RG_SRC/scripts/create_rg_admin_user.sh -nt /usr/local/sbin/create_rg_admin_user.sh ]; then
+  echo "Found newer version of create_rg_admin_user.sh. Updating"
+  cp $RG_SRC/scripts/create_rg_admin_user.sh  /usr/local/sbin/
+fi
+
 grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
 rm -rf $RG_SRC/scripts
 echo "Done updating scripts"
