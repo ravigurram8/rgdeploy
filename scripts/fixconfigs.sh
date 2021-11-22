@@ -93,7 +93,7 @@ cp "${RG_HOME}/config/trustPolicy.json" "$mytemp"
 echo "Modifying bucket-policy.json"
 cat "$mytemp/bucket-policy.json" |\
         jq -r ".Resource=\"arn:aws:s3:::$mys3bucket/*\""  > "${RG_HOME}/config/bucket-policy.json"
-s3url="https://${mys3bucket}.s3.${region}.amazonaws.com"
+s3url="https://${mys3bucket}.s3.${region}.amazonaws.com/"
 echo "Modifying config.json"
 if [ -z $baseurl ]; then
     echo "WARNING: Base URL is not passed. config.json file may not be configured correctly"

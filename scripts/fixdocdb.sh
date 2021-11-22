@@ -54,10 +54,21 @@ echo "snsUrl will be set to $baseurl"
 # Modify the database to create roles and configs
 echo "Modifying database $1 to create defaults"
 if [ ! -f "$RG_SRC/dump.tar.gz" ]; then
-   echo "No seed DB in $RG_SRC. Downloading..."
-   aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
+   echo "No seed DB in $RG_SRC."
+else 
+   echo "Seed DB exists. Renaming"
+   mv "$RG_SRC/dump.tar.gz" "$RG_SRC/dump.old.tar.gz"
 fi
+echo "Downloading new dump file..."
+aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
 tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+if [ ! -d "$RG_SRC/dump/PROD-cc"]; then
+    echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."
+    rm -rf "$RG_SRC/dump"
+    mv "$RG_SRC/dump.old.tar.gz" "$RG_SRC/dump.tar.gz"
+    tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+fi
+
 
 mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
              --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
