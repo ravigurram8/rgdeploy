@@ -1,46 +1,57 @@
-{
-    "Nextflow-Advanced" : 
-    {
-        "ami_id_list" : [
-            {
-                "us-east-1" : "ami-05cc8c04f7af20b08"
-            },
-            {
-                "us-east-2" : "ami-0ef8aa2853b0ce10c"
-            },
-            {
-                "us-west-1" : "ami-0d5a82bb9604af8e0"
-            },
-            {
-                "us-west-2" : "ami-08ad0cabec72366d5"
-            },
-            {
-                "ap-south-1" : "ami-0c0c04d59451b8a0f"
-            }
-        ],
-        "ami_path" : "/RL/RG/StandardCatalog/nextflow-latest"
-    }
+[
+   {
+    "Name": "Nextflow-Advanced",
+
+    "ami_id_list": [
+        {
+            "Key": "us-east-1",
+            "Value": "ami-05cc8c04f7af20b08"
+        },
+        {
+            "Key": "us-east-2",
+            "Value" : "ami-0ef8aa2853b0ce10c"
+        },
+        {
+            "Key": "us-west-1", 
+            "Value": "ami-0d5a82bb9604af8e0"
+        },
+        {
+            "Key": "us-west-2",
+            "Value": "ami-08ad0cabec72366d5"
+        },
+        {
+            "Key": "ap-south-1",
+            "Value": "ami-0c0c04d59451b8a0f"
+        }
+    ],
+    "ami_path" : "/RL/RG/StandardCatalog/nextflow-latest"
+   }
 ,
-"RStudio" : [
-    {
+   {
+        "Name":"RStudio" , 
         "ami_id_list" : [
             {
-                "us-east-1" : "ami-087c17d1fe0178315"
+                "Key": "us-east-1",
+                "Value": "ami-087c17d1fe0178315"
             },
             {
-                "us-east-2" : "ami-00dfe2c7ce89a450b"
+                "Key": "us-east-2",
+                "Value":  "ami-00dfe2c7ce89a450b"
             },
             {
-                "us-west-1" : "ami-038c15c04e38f2829"
+                "Key": "us-west-1",
+                "Value": "ami-038c15c04e38f2829"
             },
             {
-                "us-west-2" : "ami-0e1e279ee72698766"
+                "Key": "us-west-2",
+                "Value": "ami-0e1e279ee72698766"
             },
             {
-                "ap-south-1" : "ami-0a05747d7b5e577bc"
+                "Key": "ap-south-1",
+                "Value": "ami-0a05747d7b5e577bc"
             }
         ],
         "ami_path" : "/RL/RG/StandardCatalog/RStudio"
-    }
+   }
+
 ]
-}
