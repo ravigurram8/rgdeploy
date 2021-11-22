@@ -65,7 +65,7 @@ services:
     command: node ./app/scheduler/app.js
     
   notificationsink:  
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.8.1_b2
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.8.1_b4
     secrets:
       - source: sp2prod-config.json
         target: /opt/app/config/config.json
