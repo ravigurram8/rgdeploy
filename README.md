@@ -74,6 +74,7 @@ You can create the AMI with pre-requisites yourself by following these steps:
 - export AWS_ACCESS_KEY_ID="your_Access_Key"
 - export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
 - export AWS_DEFAULT_REGION="Your_Region"
+- Download dump.tar.gz to your local rdeploy folder from s3://rg-deployment-docs
 - Run packer build package-rg.json.
 - packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
 - At Run time pass VPCID, SubnetID, AWSRegion as variables declared in packer-rg.json
