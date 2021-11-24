@@ -170,6 +170,9 @@ localhome=`pwd`
 bucketstackname="RG-PortalStack-Bucket-$runid"
 start_time=$SECONDS
 
+echo "Update Parameter Store"
+updatessmpaths.sh
+
 BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
 if [ -z "$BUCKET_TEST" ]; then
   echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
