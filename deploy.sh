@@ -171,7 +171,7 @@ bucketstackname="RG-PortalStack-Bucket-$runid"
 start_time=$SECONDS
 
 echo "Update Parameter Store"
-updatessmpaths.sh
+source scripts/updatessmpaths.sh
 
 BUCKET_TEST=`aws s3api head-bucket --bucket $bucketname 2>&1`
 if [ -z "$BUCKET_TEST" ]; then
