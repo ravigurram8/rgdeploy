@@ -59,6 +59,10 @@ if [ ! -f /usr/local/sbin/create_rg_admin_user.sh ] ||  [ $RG_SRC/scripts/create
   cp $RG_SRC/scripts/create_rg_admin_user.sh  /usr/local/sbin/
 fi
 
+if [ ! -f /usr/local/sbin/updatessmpaths.sh ] ||  [ $RG_SRC/scripts/updatessmpaths.sh -nt /usr/local/sbin/updatessmpaths.sh ]; then
+  echo "Found newer version of updatessmpaths.sh. Updating"
+  cp $RG_SRC/scripts/updatessmpaths.sh  /usr/local/sbin/
+fi
 grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
 rm -rf $RG_SRC/scripts
 echo "Done updating scripts"
