@@ -20,7 +20,7 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 ## 1. Hardware Requirements
 | Virtual Machine Purpose            | Virtual Machine Spec                                           |
 |------------------------------------|----------------------------------------------------------------|
-| Role: Portal                       | t2.medium 2CPU, 8GB RAM, 100GB Disk                            |
+| Role: Portal                       | t2.large 2CPU, 8GB RAM, 100GB Disk                            |
 | Role: DB (Option 2) AWS DocumentDB | db.t3.large (dev) db.r5.large+ (prod)                          |
 
 ## 2. Network Requirements
@@ -51,7 +51,7 @@ The software above will be available pre-deployed on the AMI shared with you.
 
 ## AWS Services required
 - AWS Cognito
-- AWS S3
+- Amazon S3
 - AWS CloudFormation
 - AWS DocumentDB
 
@@ -71,9 +71,9 @@ You can create the AMI with pre-requisites yourself by following these steps:
 - Install packer
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
 - Export AWS Access Keys and Secret Keys 
-- export AWS_ACCESS_KEY_ID="your_Access_Key"
-- export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
-- export AWS_DEFAULT_REGION="Your_Region"
+   - export AWS_ACCESS_KEY_ID="your_Access_Key"
+   - export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
+   - export AWS_DEFAULT_REGION="Your_Region"
 - Download dump.tar.gz to your local rdeploy folder from s3://rg-deployment-docs
 - Run packer build package-rg.json.
 - packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
@@ -94,12 +94,21 @@ You can create the AMI with pre-requisites yourself by following these steps:
 | Param 6     | The Subnet3 in which to launch the Research Gateway DocumentDB                                   |
 | Param 7     | The Key Pair to use for launching the EC2 Instance                                               |
 | Param 8     | Choose the environment - one of PROD, STAGE, QA, DEV |
-| Param 9     | (Optional) The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
-| Param 10     | (Optional) The Target Group ARN to which the Portal EC2 instance should be added                     |
+| Param 9     | The URL at which the Research Gateway will be accessed. e.g. https://myrg.example.com |
+| Param 10     | The Target Group ARN to which the Portal EC2 instance should be added                     |
 
 ## Creating the first user
 - Connect to the EC2 instance using SSH or the SSM Session Manager from the AWS Console
 - Run the following command
-
-  curl --location --request POST 'http://<application_url>/user/signup' --header 'token: <add_token_here>' --header 'Content-Type: application/json' --data-raw '{"first_name": "Add first name", "last_name": "Add last name", "email": "Add email", "password": "Add temp password", "level": 2 }
+  - create_rg_admin_user.sh
+- Enter the details prompted
+   - First Name
+   - Last Name
+   - Email Id
+- Ensure you get a success message.
+- Check your email for an email with a verification link. You may need to check your spam folder for an email from 
+no-reply@verificationemail.com
+- Click on the verification link in the email and change your password.
+- You can now access the Research Gateway at the URL (Param 9 above) with the email id and password.
+- Refer to the [help pages](https://researchgateway.readthedocs.io/en/latest/) for more details on using Research Gateway
 
