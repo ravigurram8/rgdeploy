@@ -28,7 +28,7 @@ mydbuser=$3
 mydbuserpwd=$4
 myurl=$5
 err='Success'
-[ -z $RG_HOME ] && RG_HOME='opt/deploy/sp2'
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
@@ -62,7 +62,7 @@ fi
 echo "Downloading new dump file..."
 aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
 tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
-if [ ! -d "$RG_SRC/dump/PROD-cc"]; then
+if [ ! -d "$RG_SRC/dump/PROD-cc" ]; then
     echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."
     rm -rf "$RG_SRC/dump"
     mv "$RG_SRC/dump.old.tar.gz" "$RG_SRC/dump.tar.gz"
