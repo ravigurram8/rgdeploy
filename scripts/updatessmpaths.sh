@@ -7,8 +7,9 @@ fi
 
 a=($(cat "$DEPL_HOME/products/ami-list.json" | jq -r '.[] | [.ami_path, (.ami_id_list[] | select(.Key=="us-east-2")| .Value)] | @tsv' ))
 set -- "${a[@]}"
-ssm_param_paths=`aws ssm describe-parameters --profile prod --region us-east-2` 
+
 #xtrargs=" --profile prod --region us-east-2"
+ssm_param_paths=`aws ssm describe-parameters $xtraargs` 
 while (($#))
 do
   param_name=$1
