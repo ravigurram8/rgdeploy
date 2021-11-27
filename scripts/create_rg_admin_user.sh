@@ -47,5 +47,5 @@ message=`curl --location --request POST "$baseurl/user/signup" --header "token: 
 if [ "$message" == "success" ]; then
     echo "Admin user created. You should receive an email to verify your email address. Please click on the link to change your password"
 else
-    echo "Error: Could not create user. Please contact support"
+    echo "Error: Could not create user ($message). Please contact support"
 fi
