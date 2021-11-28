@@ -1,7 +1,11 @@
 #!/bin/bash
-version="0.1.2"
+version="0.1.3"
 echo "Fixing secrets...(fixsecrets.sh v$version)"
-cd /opt/deploy/sp2
+
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+echo "RG_HOME=$RG_HOME"
+
+cd "$RG_HOME"
 old_secrets=$(docker secret ls | grep -i sp2prod | awk '{print $1}' )
 if [ ! -z "$old_secrets" ]; then
     echo "Found old secrets. Removing..."

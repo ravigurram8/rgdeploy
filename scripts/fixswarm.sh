@@ -1,11 +1,19 @@
 #!/bin/bash
-version="0.1.1"
+version="0.1.2"
 echo "Fixing swarm....(fixswarm.sh v$version)"
 
+[ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
+echo "RG_HOME=$RG_HOME"
+
 # Remove the stack which is deployed if any
-cd /opt/deploy/sp2
+cd "$RG_HOME"
 echo "Removing sp2 stack"
 docker stack remove sp2
+old_secrets=$(docker secret ls | grep -i sp2prod | awk '{print $1}' )
+if [ ! -z "$old_secrets" ]; then
+    echo "Found old secrets. Removing..."
+    docker secret rm $old_secrets
+fi
 echo "Waiting 15 seconds"
 sleep 15
 
@@ -19,13 +27,4 @@ docker network ls | grep -e 'ingress.*overlay' | awk '{print $1}'
 
 [ $? -gt 0 ] && echo "Could not remove ingress network. Exiting" && exit 0
 
-echo "Re-initializing the swarm"
-docker swarm init
-
-echo "Recreating the secrets"
-docker secret create sp2prod-dashboard-settings.json ./config/dashboard-settings.json
-docker secret create sp2prod-config.json ./config/config.json
-docker secret create sp2prod-alert-config.json ./config/alert-config.json
-docker secret ls
-
-echo "You can now re-deploy your stack"
+echo "You can now re-deploy your stack using start_server.sh"
