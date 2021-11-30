@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.6"
+version="0.1.7"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -29,6 +29,9 @@ echo "RG_HOME=$RG_HOME"
 echo "RG_SRC=$RG_SRC"
 [ -z $RG_ENV ] && RG_ENV='PROD'
 echo "RG_ENV=$RG_ENV"
+
+echo "Fetching latest docker-compose.yml"
+aws s3 cp s3://rg-deployment-docs/docker-compose.yml $RG_SRC
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
