@@ -210,7 +210,6 @@ Resources:
               - |
                 /home/ubuntu/updatescripts.sh
               - |
-                fixips.sh
               - Fn::If:
                   - UseLocalMongoDB
                   - Fn::Join:

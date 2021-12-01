@@ -21,11 +21,11 @@ echo 'Login to ECR'
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 045938549113.dkr.ecr.us-east-2.amazonaws.com
 
 echo 'Pulling docker image for research portal'
-docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i researchportal | awk '{print $2}' | uniq)
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i researchportal | awk '{print $2}' | uniq | tr -d '\r')
 echo 'Pulling docker image for nginx'
-docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i nginx | awk '{print $2}' | uniq)
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i nginx | awk '{print $2}' | uniq | tr -d '\r')
 echo 'Pulling docker image for notificationsink'
-docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i notificationsink | awk '{print $2}' | uniq)
+docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i notificationsink | awk '{print $2}' | uniq | tr -d '\r')
 
 
 echo 'Modifying HttpResponseHopLimit'

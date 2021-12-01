@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.3"
+version="0.1.4"
 echo "Fixing IPs....(fixips.sh v$version)"
 
 #Find out the IP address of eth0
@@ -34,13 +34,3 @@ sleep 30
 service mongod status
 #service redis-server status
 
-# Fix the Mongo and Redis host addresses in the docker compose file.
-repcmd='s#\${PWD}#'$RG_HOME'#'
-cat /home/ubuntu/docker-compose.yml | sed -e $repcmd > /opt/deploy/sp2/docker-compose.yml
-cd $RG_HOME
-if [ -f docker-compose.yml ]; then
-	echo "docker-compose.yml exists"
-	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" docker-compose.yml
-	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
-	echo "Modified docker-compose.yml with private IP of the machine"
-fi

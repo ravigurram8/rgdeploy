@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.7"
+version="0.1.8"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -29,9 +29,6 @@ echo "RG_HOME=$RG_HOME"
 echo "RG_SRC=$RG_SRC"
 [ -z $RG_ENV ] && RG_ENV='PROD'
 echo "RG_ENV=$RG_ENV"
-
-echo "Fetching latest docker-compose.yml"
-aws s3 cp s3://rg-deployment-docs/docker-compose.yml $RG_SRC
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
@@ -160,16 +157,20 @@ cat "$mytemp/trustPolicy.json" |\
         jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV\""  |\
         jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV\"" > "${RG_HOME}/config/trustPolicy.json"
 
-# Fix the Mongo and Redis host addresses in the docker compose file.
+echo "Fetching latest docker-compose.yml"
+aws s3 cp s3://rg-deployment-docs/docker-compose.yml $RG_SRC
+
+# Fix the Redis host and APP_ENV in the docker compose file.
+# DB_HOST will be set later in the fixmongo.sh or fixdocdb.sh scripts.
+echo "Copying docker-compose.yml from $RG_SRV to $RG_HOME"
 repcmd='s#\${PWD}#'$RG_HOME'#'
 cat "$RG_SRC/docker-compose.yml" | sed -e $repcmd > "$RG_HOME/docker-compose.yml"
 cd $RG_HOME
 if [ -f docker-compose.yml ]; then
 	echo "docker-compose.yml exists"
-	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" docker-compose.yml
 	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
 	sed -i -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" docker-compose.yml
-	echo "Modified docker-compose.yml with private IP of the machine"
+	echo "Modified docker-compose.yml with APP_ENV=$RG_ENV and REDIS_HOST=$myip"
 fi 
 
 if [ $err == 'Error' ]; then

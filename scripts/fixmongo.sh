@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.1.2'
+version='0.1.3'
 echo "Fixing MongoDB ...(fixmongo.sh v$version)"
 
 if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
@@ -13,6 +13,9 @@ if [ "$1" == "-h" ]  || [ $# -lt 4 ]; then
   echo '             e.g. https://myrg.example.com'
   exit 0
 fi
+
+source fixips.sh
+
 mydbname=$1
 [ -z $RG_HOME ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
@@ -107,3 +110,10 @@ else
         echo 'Cannot find /etc/mongod.conf'
         exit 1
 fi
+
+cd $RG_HOME
+if [ -f "$RG_HOME/docker-compose.yml" ]; then
+	echo "docker-compose.yml exists"
+	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" "$RG_HOME/docker-compose.yml"
+	echo "Modified docker-compose.yml with private IP of the machine"
+fi 
