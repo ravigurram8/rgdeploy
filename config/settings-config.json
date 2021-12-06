@@ -659,5 +659,6 @@
   "transitive_states": [
     "UNDER_CHANGE",
     "PLAN_IN_PROGRESS"
-  ]
+  ],
+  "s3FileSizeMaxLimit": "5368709120"
 }

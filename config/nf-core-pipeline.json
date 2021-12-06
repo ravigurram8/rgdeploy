@@ -1,0 +1,177 @@
+[
+  {
+    "pipeline_name": "nextflow-tutorial",
+    "pipeline_git_url": "https://github.com/seqeralabs/nextflow-tutorial.git",
+    "pipeline_container": "nextflow/rnaseq-nf:latest"
+  },
+  {
+    "pipeline_name": "rnaseq",
+    "pipeline_git_url": "https://github.com/nf-core/rnaseq",
+    "pipeline_container": "nextflow/rnaseq-nf:latest"
+  },
+  {
+    "pipeline_name": "sarek",
+    "pipeline_git_url": "https://github.com/nf-core/sarek",
+    "pipeline_container": "nfcore/sarek:2.5"
+  },
+  {
+    "pipeline_name": "viralrecon",
+    "pipeline_git_url": "https://github.com/nf-core/viralrecon",
+    "pipeline_container": "nfcore/viralrecon"
+  },
+  {
+    "pipeline_name": "ampliseq",
+    "pipeline_git_url": "https://github.com/nf-core/ampliseq",
+    "pipeline_container": "nfcore/ampliseq"
+  },
+  {
+    "pipeline_name": "fetchngs",
+    "pipeline_git_url": "https://github.com/nf-core/fetchngs",
+    "pipeline_container": ""
+  },
+  {
+    "pipeline_name": "mhcquant",
+    "pipeline_git_url": "https://github.com/nf-core/mhcquant",
+    "pipeline_container": "nfcore/mhcquant"
+  },
+  {
+    "pipeline_name": "bcellmagic",
+    "pipeline_git_url": "https://github.com/nf-core/bcellmagic",
+    "pipeline_container": "nfcore/bcellmagic"
+  },
+  {
+    "pipeline_name": "smrnaseq",
+    "pipeline_git_url": "https://github.com/nf-core/smrnaseq",
+    "pipeline_container": "nfcore/smrnaseq"
+  },
+  {
+    "pipeline_name": "hic",
+    "pipeline_git_url": "https://github.com/nf-core/hic",
+    "pipeline_container": "nfcore/hic"
+  },
+  {
+    "pipeline_name": "methylseq",
+    "pipeline_git_url": "https://github.com/nf-core/methylseq",
+    "pipeline_container": "nfcore/methylseq"
+  },
+  {
+    "pipeline_name": "clipseq",
+    "pipeline_git_url": "https://github.com/nf-core/clipseq",
+    "pipeline_container": "nfcore/clipseq"
+  },
+  {
+    "pipeline_name": "chipseq",
+    "pipeline_git_url": "https://github.com/nf-core/chipseq",
+    "pipeline_container": "nfcore/chipseq"
+  },
+  {
+    "pipeline_name": "dualrnaseq",
+    "pipeline_git_url": "https://github.com/nf-core/dualrnaseq",
+    "pipeline_container": "nfcore/dualrnaseq"
+  },
+  {
+    "pipeline_name": "nanoseq",
+    "pipeline_git_url": "https://github.com/nf-core/nanoseq",
+    "pipeline_container": "nfcore/nanoseq"
+  },
+  {
+    "pipeline_name": "proteomicslfq",
+    "pipeline_git_url": "https://github.com/nf-core/proteomicslfq",
+    "pipeline_container": "nfcore/proteomicslfq"
+  },
+  {
+    "pipeline_name": "atacseq",
+    "pipeline_git_url": "https://github.com/nf-core/atacseq",
+    "pipeline_container": "nfcore/atacseq"
+  },
+  {
+    "pipeline_name": "imcyto",
+    "pipeline_git_url": "https://github.com/nf-core/imcyto",
+    "pipeline_container": "nfcore/imcyto"
+  },
+  {
+    "pipeline_name": "coproid",
+    "pipeline_git_url": "https://github.com/nf-core/coproid",
+    "pipeline_container": "nfcore/coproid"
+  },
+  {
+    "pipeline_name": "nascent",
+    "pipeline_git_url": "https://github.com/nf-core/nascent",
+    "pipeline_container": "nfcore/nascent"
+  },
+  {
+    "pipeline_name": "eager",
+    "pipeline_git_url": "https://github.com/nf-core/eager",
+    "pipeline_container": "nfcore/eager"
+  },
+  {
+    "pipeline_name": "bacass",
+    "pipeline_git_url": "https://github.com/nf-core/bacass",
+    "pipeline_container": "nfcore/bacass"
+  },
+  {
+    "pipeline_name": "mag",
+    "pipeline_git_url": "https://github.com/nf-core/mag",
+    "pipeline_container": "nfcore/mag"
+  },
+  {
+    "pipeline_name": "bactmap",
+    "pipeline_git_url": "https://github.com/nf-core/bactmap",
+    "pipeline_container": "nfcore/bactmap"
+  },
+  {
+    "pipeline_name": "metaboigniter",
+    "pipeline_git_url": "https://github.com/nf-core/metaboigniter",
+    "pipeline_container": "nfcore/metaboigniter"
+  },
+  {
+    "pipeline_name": "diaproteomics",
+    "pipeline_git_url": "https://github.com/nf-core/diaproteomics",
+    "pipeline_container": "nfcore/diaproteomics"
+  },
+  {
+    "pipeline_name": "pgdb",
+    "pipeline_git_url": "https://github.com/nf-core/pgdb",
+    "pipeline_container": "nfcore/pgdb"
+  },
+  {
+    "pipeline_name": "scrnaseq",
+    "pipeline_git_url": "https://github.com/nf-core/scrnaseq",
+    "pipeline_container": "nfcore/scrnaseq"
+  },
+  {
+    "pipeline_name": "cageseq",
+    "pipeline_git_url": "https://github.com/nf-core/cageseq",
+    "pipeline_container": "nfcore/cageseq"
+  },
+  {
+    "pipeline_name": "epitopeprediction",
+    "pipeline_git_url": "https://github.com/nf-core/epitopeprediction",
+    "pipeline_container": "nfcore/epitopeprediction"
+  },
+  {
+    "pipeline_name": "hlatyping",
+    "pipeline_git_url": "https://github.com/nf-core/hlatyping",
+    "pipeline_container": "nfcore/hlatyping"
+  },
+  {
+    "pipeline_name": "rnafusion",
+    "pipeline_git_url": "https://github.com/nf-core/rnafusion",
+    "pipeline_container": "nfcore/rnafusion"
+  },
+  {
+    "pipeline_name": "slamseq",
+    "pipeline_git_url": "https://github.com/nf-core/slamseq",
+    "pipeline_container": "nfcore/slamseq"
+  },
+  {
+    "pipeline_name": "neutronstar",
+    "pipeline_git_url": "https://github.com/nf-core/neutronstar",
+    "pipeline_container": "nfcore/neutronstar"
+  },
+  {
+    "pipeline_name": "deepvariant",
+    "pipeline_git_url": "https://github.com/nf-core/deepvariant",
+    "pipeline_container": "nfcore/deepvariant"
+  }
+]
