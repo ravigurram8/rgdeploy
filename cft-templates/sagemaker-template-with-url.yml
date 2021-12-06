@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata: 
+  License: Apache-2.0
+Description: 'AWS CloudFormation Sample Template SageMaker NotebookInstance: This template demonstrates
+  the creation of a SageMaker NotebookInstance with encryption. You will be billed for the AWS resources used if you create a stack from
+  this template. (fdp-1qj64b3fd)'
+Parameters:
+  NotebookInstanceType:
+    AllowedValues:
+      - ml.t2.medium
+      - ml.t3.medium
+    ConstraintDescription: Must select a valid notebook instance type.
+    Default: ml.t2.medium
+    Description: Select Instance type for the SageMaker Notebook. e.g.ml.t2.medium
+    Type: String
+Resources:
+  SageMakerRole: 
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "sagemaker.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess"
+        - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+        - "arn:aws:iam::aws:policy/IAMReadOnlyAccess"
+  SageMakerNotebookInstance:
+    Type: "AWS::SageMaker::NotebookInstance"
+    Properties:
+      InstanceType: !Ref NotebookInstanceType 
+      RoleArn: !GetAtt SageMakerRole.Arn
+      LifecycleConfigName: 'Research-Portal-Setup'
+Outputs:
+  SageMakerNotebookInstanceARN:
+    Description: "ARN for the newly created SageMaker Notebook Instance"
+    Value: !Ref SageMakerNotebookInstance
+  NotebookInstanceName:
+    Description: "Name for the newly created SageMaker Notebook Instance"
+    Value: !GetAtt [SageMakerNotebookInstance, NotebookInstanceName]
