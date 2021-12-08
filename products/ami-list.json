@@ -5,24 +5,32 @@
     "ami_id_list": [
         {
             "Key": "us-east-1",
-            "Value": "ami-05cc8c04f7af20b08"
+            "Value": "ami-02161943742b2f0e1"
         },
         {
             "Key": "us-east-2",
-            "Value" : "ami-0ef8aa2853b0ce10c"
+            "Value" : "ami-06a28664a50da1083"
         },
         {
             "Key": "us-west-1", 
-            "Value": "ami-0d5a82bb9604af8e0"
+            "Value": "ami-083064b2ce8cff688"
         },
         {
             "Key": "us-west-2",
-            "Value": "ami-08ad0cabec72366d5"
+            "Value": "ami-02a57220b3320a450"
         },
         {
             "Key": "ap-south-1",
-            "Value": "ami-0c0c04d59451b8a0f"
-        }
+            "Value": "ami-0922d7f6b2b855794"
+        },
+        {
+            "Key": "ap-southeast-1",
+            "Value": "ami-0ee126c404d54fc5b"
+        },        
+        {
+            "Key": "ap-southeast-2",
+            "Value": "ami-0cdcce7966c66cd6b"
+        },
     ],
     "ami_path" : "/RL/RG/StandardCatalog/nextflow-latest"
    }
