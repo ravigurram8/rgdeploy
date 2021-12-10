@@ -57,6 +57,14 @@
             {
                 "Key": "ap-south-1",
                 "Value": "ami-0a05747d7b5e577bc"
+            },
+            {
+                "Key": "ap-southeast-1",
+                "Value": "ami-09901df6afc33ca1c"
+            },
+            {
+                "Key": "ap-southeast-2",
+                "Value": "ami-08fa44231c6415b53"
             }
         ],
         "ami_path" : "/RL/RG/StandardCatalog/RStudio"
