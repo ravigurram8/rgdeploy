@@ -1,11 +1,24 @@
 #!/bin/bash
-if [ $# -gt 0 ] && [ -d $1 ]; then
-  DEPL_HOME=$1
-else
-  DEPL_HOME=`pwd`
+if [ $# -lt 1 ]; then
+  echo " Usage: updatessmpaths.sh <repo-dir> <aws-region>"
+  echo "    Param 1: AWS Region where the Research Gateway is deployed e.g us-east-2"
+  echo "    Param 2: (Optional) Full path to rgdeploy repo. e.g. /home/ubuntu/rgdeploy"
+  exit 0
 fi
 
-a=($(cat "$DEPL_HOME/products/ami-list.json" | jq -r '.[] | [.ami_path, (.ami_id_list[] | select(.Key=="us-east-2")| .Value)] | @tsv' ))
+region=$1
+xtrargs="--region $region"
+
+if [ $# -gt 1 ] && [ -d $1 ]; then
+  DEPL_HOME=$2
+else
+  echo "Invalid folder $2 passed."
+  DEPL_HOME=`pwd`
+fi
+echo "Using $DEPL_HOME as base folder"
+
+jqcmd='.[] | [.ami_path, (.ami_id_list[] | select(.Key=='"\"$region\""')| .Value)] | @tsv'
+a=($(cat "$DEPL_HOME/products/ami-list.json" | jq -r "$jqcmd" ))
 set -- "${a[@]}"
 
 #xtrargs=" --profile prod --region us-east-2"

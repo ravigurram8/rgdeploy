@@ -130,6 +130,9 @@ Resources:
           - Effect: Allow
             Action:
               - config:*
+              - ec2:DescribeImages
+              - ec2:CopyImage
+              - ec2:ModifyImageAttribute
               - ec2:ModifyInstanceMetadataOptions
               - iam:attachRolePolicy
               - iam:createPolicy
