@@ -74,9 +74,6 @@ Resources:
             /opt/aws/bin/cfn-signal --exit-code 0 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
 
 Outputs:
-  RStudioURL:
-    Value: !GetAtt RstudioEC2Instance.PublicDnsName
-    Description: URL to Access RStudio
   InstanceDNSName:
     Value: !GetAtt RstudioEC2Instance.PublicDnsName
     Description: Public DNS Name
