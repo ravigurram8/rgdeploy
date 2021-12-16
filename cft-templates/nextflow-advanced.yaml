@@ -59,7 +59,7 @@ Parameters:
     Description: >-
       The full path on the local disk where outputs of the pipeline should be stored. The default path above will enable you to view the outputs via the browser. The path should be accessible to the user ec2-user.
       Alternately, provide An S3 bucket for storing analysis results. The bucket name must respect the S3 bucket naming conventions
-      (can contain lowercase letters, numbers, periods and hyphens).
+      (can contain lowercase letters, numbers, periods and hyphens). Eg: s3://<BucketName>
     Default: /home/ec2-user/nextflow/outputs/  
     Type: String
   ComputeEnvMinvCpus:
