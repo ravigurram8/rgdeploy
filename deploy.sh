@@ -84,6 +84,9 @@ else
   appuser='rguser'
   appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
   adminpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
+  [ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
+  echo "S3 Source bucket is $S3_SOURCE"
+
   cat << EOT >> "$runid.json"
   {
     "runid": "$runid",
@@ -196,7 +199,7 @@ fi
 # Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
 echo "Synching RG Deployment Files to new S3 bucket $bucketname"
 s3_sync_start_time=$SECONDS
-aws s3 sync s3://rg-deployment-docs s3://$bucketname
+aws s3 sync s3://$S3_SOURCE s3://$bucketname
 calculate_duration "S3 Sync" $s3_sync_start_time
 
 #Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
@@ -205,7 +208,7 @@ mkdir -p "$localhome/rg-cft-templates"
 #Download RG Deployment files from S3 to the local folder created above,
 echo "Copying RG Deployment Files to local folder"
 s3_copy_start_time=$SECONDS
-aws s3 cp s3://rg-deployment-docs/ $localhome/rg-deployment-docs --recursive
+aws s3 cp s3://$S3_SOURCE/ $localhome/rg-deployment-docs --recursive
 calculate_duration "S3 Copy" $s3_copy_start_time
 
 # Extract cft templates locally
@@ -298,6 +301,9 @@ stack_summaries=`aws cloudformation list-stacks`
 #Creating the Cognito User Pool
 echo "Creating Cognito User Pool"
 userpoolstackname="RG-PortalStack-UserPool-$runid"
+# getstack status if returns 2 exit, if 0 (Create-complete) skip this block 229 to 235
+# if it is 1  delete stack if delete fails, exit stack exists manually delete and retry, 
+# next create the new stack.
 echo "$userpoolstackname"
 eval "get_stack_status $userpoolstackname"
 stack_status=$?
@@ -327,6 +333,9 @@ userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoo
 #Creating DocumentDB stack
 echo "Creating DocumentDB stack"
 docdbstackname="RG-PortalStack-DocDB-$runid"
+# getstack status if returns 2 exit, if 0 (Create-complete) skip this block 254 to 260
+# if it is 1  delete stack if delete fails, exit stack exists manually delete and retry, 
+# next create the new stack.
 echo "$docdbstackname"
 eval "get_stack_status $docdbstackname"
 stack_status=$?
