@@ -13,7 +13,7 @@ done
 region=$(aws configure list | grep region | awk '{print $2}')
 echo "current aws region is $region"
 
-if [ "$1" == "-f" ]; then
+if [ "$1" = "-f" ]; then
   if [ -z "$2" ]; then
     echo "Need a filename with -f option"
     exit 1
@@ -53,7 +53,7 @@ if [ "$1" == "-f" ]; then
   echo "RGURL: $rgurl"
   echo "TGARN: $tgarn"
 
-elif [ $# -lt 9 ]; then
+elif [ $# -lt 7 ]; then
   echo 'Usage: deploy.sh <amiid> <bucketname> <rgurl> '
   echo '       Param 1:  The AMI from which the EC2 for Research Gateway should be created'
   echo '       Param 2:  The S3 bucket to create for holding the CFT templates'
@@ -84,9 +84,6 @@ else
   appuser='rguser'
   appuserpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
   adminpassword=$(date +%s | sha256sum | base64 | tr -dc _a-z-0-9| head -c 24 ; echo)
-  [ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
-  echo "S3 Source bucket is $S3_SOURCE"
-
   cat << EOT >> "$runid.json"
   {
     "runid": "$runid",
@@ -199,7 +196,7 @@ fi
 # Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
 echo "Synching RG Deployment Files to new S3 bucket $bucketname"
 s3_sync_start_time=$SECONDS
-aws s3 sync s3://$S3_SOURCE s3://$bucketname
+aws s3 sync s3://rg-deployment-docs s3://$bucketname
 calculate_duration "S3 Sync" $s3_sync_start_time
 
 #Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
@@ -208,7 +205,7 @@ mkdir -p "$localhome/rg-cft-templates"
 #Download RG Deployment files from S3 to the local folder created above,
 echo "Copying RG Deployment Files to local folder"
 s3_copy_start_time=$SECONDS
-aws s3 cp s3://$S3_SOURCE/ $localhome/rg-deployment-docs --recursive
+aws s3 cp s3://rg-deployment-docs/ $localhome/rg-deployment-docs --recursive
 calculate_duration "S3 Copy" $s3_copy_start_time
 
 # Extract cft templates locally
@@ -221,169 +218,74 @@ sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" $localhome/rg_userpool.yml
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
 aws s3 sync $localhome/rg-cft-templates/ s3://$bucketname
-#=====================================================================================================
-function get_stack_status() {
-    stackname=$1
-    stack_status=0
-    jqcmd='.StackSummaries[] | select(.StackName=='"\"$stackname\""')'
-    #echo $jqcmd
-    stack_exists=`echo $stack_summaries | jq -r "$jqcmd"`
 
-    if [ -z "$stack_exists" ]; then
-    # stack does not exist    
-	    return 0
-    fi
-    stack_status=`echo $stack_exists | jq -r '.StackStatus'`
-    echo $stack_status
-    #if [ "$stack_status" == "CREATE_COMPLETE" ]; then
-    if [ "$stack_status" == "CREATE_COMPLETE" ] || [ "$stack_status" == "UPDATE_COMPLETE" ] || [ "$stack_status" == "UPDATE_COMPLETE_CLEANUP_IN_PROGRESS" ] || [ "$stack_status" == "UPDATE_ROLLBACK_COMPLETE" ]; then
-         return 1
-    #elif [ "$stack_status" == "ROLLBACK_COMPLETE" ] || [ "$stack_status" == "UPDATE_ROLLBACK_COMPLETE" ]; then
-    elif [ "$stack_status" == "CREATE_FAILED" ] || [ "$stack_status" == "ROLLBACK_COMPLETE" ] || [ "$stack_status" == "ROLLBACK_FAILED" ] || [ "$stack_status" == "UPDATE_FAILED" ]; then
-         return 2
-    elif [ "$stack_status" == "DELETE_COMPLETE" ]; then
-         return 0
-    else 
-    # stack exists but with status other than above  
-         return 3
-    fi
-}
-
-function delete_stack() {
-    echo "Deleting stack $1"
-    aws cloudformation delete-stack --stack-name $1
-}
-
-function create_cognito_pool() {
-    echo "Creating new stack $1"
-    aws cloudformation deploy --template-file $localhome/rg_userpool.yml \
-                          --stack-name "$1" \
-                          --parameter-overrides UserPoolNameParam="$1" PortalURLParam="$rgurl" \
+#Creating the Cognito User Pool
+echo "Creating Cognito User Pool"
+userpoolstackname="RG-PortalStack-UserPool-$runid"
+aws cloudformation deploy --template-file $localhome/rg_userpool.yml \
+                          --stack-name "$userpoolstackname" \
+                          --parameter-overrides UserPoolNameParam="$userpoolstackname" PortalURLParam="$rgurl" \
                             Function1Name="UserManagementAfterSuccessSignup-$runid" Function2Name="UserManagement-$runid" \
                           --capabilities CAPABILITY_IAM
 
-    aws cloudformation wait stack-create-complete --stack-name "$1"
+aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
 
-}
+if [ $? -gt 0 ]; then
+   echo " $userpoolstackname Stack Failed to Create "
+   exit 1
+fi
 
-function create_doc_db() {
-    echo "Creating new stack $1"
-    aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$1" \
+#Capture User Pool Client ID
+userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
+#Capture User Pool ID
+userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
+
+#Create DocumentDB stack
+docdb_start_time=$SECONDS
+echo "Creating DocumentDB Stack for Research Gateway"
+docdbstackname="RG-PortalStack-DocDB-$runid"
+aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$docdbstackname" \
                           --parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
                             DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
                             Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
                             SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid"
-        echo "Waiting for stack $1 to finish deploying..."
-        aws cloudformation wait stack-create-complete --stack-name "$1"
-}
+echo "Waiting for stack $docdbstackname to finish deploying..."
+aws cloudformation wait stack-create-complete --stack-name "$docdbstackname"
 
-function create_main_stack() {
-    echo "Creating new stack $1"
-    #update the AMI id in the RGMainStack CFT
-    echo $amiid | grep -E '^ami-[0-9a-zA-Z]+'
-    if [ $? -eq 0 ]; then
-       echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
-       sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg_main_stack.yml
-    fi
-    aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
+if [ $? -gt 0 ]; then
+   echo " $docdbstackname Stack Failed to Create "
+   exit 1
+fi
+calculate_duration "DocumentDB Instance Creation" $docdb_start_time
+
+#Capture DocumentDB Instance Id
+docdburl=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
+
+#Creating Main stack
+#update the AMI id in the RGMainStack CFT
+echo $amiid | grep -E '^ami-[0-9a-zA-Z]+'
+if [ $? -eq 0 ]; then
+  echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
+  sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg_main_stack.yml
+fi
+
+echo "Deploying main stack (roles, ec2 instance etc.)"
+mainstack_start_time=$SECONDS
+mainstackname="RG-PortalStack-$runid"
+aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --stack-name "$mainstackname" \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
                             DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env" \
                           --capabilities CAPABILITY_NAMED_IAM
-        echo "Waiting for stack $1 to finish deploying..."
-        aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
-}
-#===============================================================================================================
-stack_summaries=`aws cloudformation list-stacks`
-#===============================================================================================================
-#Creating the Cognito User Pool
-echo "Creating Cognito User Pool"
-userpoolstackname="RG-PortalStack-UserPool-$runid"
-# getstack status if returns 2 exit, if 0 (Create-complete) skip this block 229 to 235
-# if it is 1  delete stack if delete fails, exit stack exists manually delete and retry, 
-# next create the new stack.
-echo "$userpoolstackname"
-eval "get_stack_status $userpoolstackname"
-stack_status=$?
-echo $stack_status
-#exit 0
-if [ $stack_status -eq 3 ]; then
-    exit 1
+aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
+if [ $? -gt 0 ]; then
+   echo " $mainstackname Stack Failed to Create "
+   exit 1
+else
+   portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
+   echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"
 fi
-if [ $stack_status -eq 2 ]; then
-    delete_stack $userpoolstackname
-    if [ $? -gt 0 ]; then
-       echo "Could not delete stack $userpoolstackname"
-       exit 1
-    fi
-    stack_status=0
-fi
-if [ $stack_status -eq 0 ]; then
-    create_cognito_pool $userpoolstackname
-fi
-# Obtain user pool stack outputs.
-echo "Obtaining user pool outputs"
-#Capture User Pool Client ID
-userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
-#Capture User Pool ID
-userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
-#===============================================================================================================
-#Creating DocumentDB stack
-echo "Creating DocumentDB stack"
-docdbstackname="RG-PortalStack-DocDB-$runid"
-# getstack status if returns 2 exit, if 0 (Create-complete) skip this block 254 to 260
-# if it is 1  delete stack if delete fails, exit stack exists manually delete and retry, 
-# next create the new stack.
-echo "$docdbstackname"
-eval "get_stack_status $docdbstackname"
-stack_status=$?
-echo $stack_status
-if [ $stack_status -eq 3 ]; then
-    exit 1
-fi
-if [ $stack_status -eq 2 ]; then
-    delete_stack $docdbstackname
-    if [ $? -gt 0 ]; then
-       echo "Could not delete stack $docdbstackname"
-       exit 1
-    fi
-    stack_status=0
-fi
-if [ $stack_status -eq 0 ]; then
-    create_doc_db $docdbstackname
-fi
-echo "Obtaining DocDB outputs"
-#Capture DocumentDB Instance Id
-docdburl=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
-#===============================================================================================================
-#Creating Main stack
-echo "Deploying main stack (roles, ec2 instance etc.)"
-mainstack_start_time=$SECONDS
-mainstackname="RG-PortalStack-$runid"
-echo "$mainstackname"
-eval "get_stack_status $mainstackname"
-stack_status=$?
-echo $stack_status
-if [ $stack_status -eq 3 ]; then
-    exit 1
-fi
-if [ $stack_status -eq 2 ]; then
-    delete_stack $mainstackname
-    if [ $? -gt 0 ]; then
-       echo "Could not delete stack $mainstackname"
-       exit 1
-    fi
-    stack_status=0
-fi
-if [ $stack_status -eq 0 ]; then
-    create_main_stack $mainstackname
-fi
-echo "Obtaining MainStack outputs"
-portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
-#===============================================================================================================
-
-
 calculate_duration "MainStack Creation" $mainstack_start_time
 calculate_duration "Research Gateway Deployment" $start_time
