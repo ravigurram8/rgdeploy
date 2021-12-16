@@ -35,20 +35,10 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       UserData: !Base64
-        Fn::Join:
-        - ''
-        - [IPAddress=, !Ref 'EIP']
       InstanceType: !Ref 'InstanceType'
       SecurityGroups: [!Ref 'InstanceSecurityGroup']
       KeyName: !Ref 'KeyPair'
       ImageId: !Ref 'LatestAmiId'
-  EIP:
-    Type: AWS::EC2::EIP
-  EIPAssociation:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      InstanceId: !Ref 'EC2Instance'
-      EIP: !Ref 'EIP'
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -66,7 +56,6 @@ Resources:
         FromPort: '5986'
         ToPort: '5986'
         CidrIp: !Ref 'AllowedSSHLocation'
-    
 Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
