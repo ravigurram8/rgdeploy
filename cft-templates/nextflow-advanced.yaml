@@ -156,6 +156,10 @@ Resources:
                 Value: !Sub ${AWS::StackName}
               - Key: Name
                 Value: !Sub worker-node-${AWS::StackName}
+              - Key: researcher_name
+                Value: !Ref ResearcherName
+              - Key: project_name
+                Value: !Ref ProjectId
         BlockDeviceMappings:
           - Ebs:
               DeleteOnTermination: True
