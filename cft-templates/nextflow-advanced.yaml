@@ -33,6 +33,8 @@ Metadata:
           - SpotBidPercentage
           - WorkerNodeInstanceType
           - WorkerNodeEBSVolumeSize
+          - ResearcherName
+          - ProjectId
     ALB: true
     ProductName: nextflow
 Parameters:
@@ -58,7 +60,7 @@ Parameters:
   OutputDataLocation:
     Description: >-
       The full path on the local disk where outputs of the pipeline should be stored. The default path above will enable you to view the outputs via the browser. The path should be accessible to the user ec2-user.
-      Alternately, provide An S3 bucket for storing analysis results. The bucket name must respect the S3 bucket naming conventions
+      Alternately, provide an S3 bucket for storing analysis results. The bucket name must respect the S3 bucket naming conventions
       (can contain lowercase letters, numbers, periods and hyphens). Eg: s3://<BucketName>
     Default: /home/ec2-user/nextflow/outputs/  
     Type: String
@@ -105,6 +107,10 @@ Parameters:
     Description: The initial size of the volume (in GBs) Worker Node EBS will use for storage.
     Type: Number
     Default: 100
+  ResearcherName:
+    Type: String
+  ProjectId:
+    Type: String
 
 Resources:
   IamInstanceProfile:
@@ -495,7 +501,7 @@ Resources:
           cd /root/ 
 
           cd .nextflow/ 
-          PROJECT_NF_CONFIG=config
+          PROJECT_NF_CONFIG=config 
 
           cat << EOF >> $PROJECT_NF_CONFIG                                                                                                                                                                                                                                                                                                                                                                
           process.container = '${PipelineContainer}'
@@ -505,7 +511,7 @@ Resources:
           }
           docker.enabled = true
           params.outdir='${OutputDataLocation}'
-          params.reads='s3://${InputDataLocation}/data/ggal/*_{1,2}.fq'
+          params.reads='s3://${InputDataLocation}'
           profiles {
             standard {
               process.container = '${PipelineContainer}'
@@ -523,7 +529,17 @@ Resources:
           EOF
           
           cd /home/ec2-user/
-          git clone ${PipelineName}
+          git clone ${PipelineName} pipeline
+          cd pipeline
+
+          echo ${PipelineName} > PipelineRepo.TXT 
+
+          NEXTFLOW_CONFIG=nextflow.config
+          
+          NEXTFLOW_OUTPUT_PARAMS='\nparams.outdir="${OutputDataLocation}"'
+          
+          echo -e $NEXTFLOW_OUTPUT_PARAMS >>$NEXTFLOW_CONFIG
+ 
           docker pull ${PipelineContainer}
           chown -R ec2-user:ec2-user /home/ec2-user/
           chown -R ec2-user:ec2-user /home/ec2-user/.[^.]*
@@ -605,3 +621,6 @@ Outputs:
     Description: >-
       EC2 Launch Template ID to use when creating AWS Batch compute environments
     Value: !Ref EC2LaunchTemplate
+  WorkDataLocation:
+    Value: !Sub ${S3Bucket}
+    
