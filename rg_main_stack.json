@@ -14,7 +14,7 @@
       "NoEcho": "true",
       "Type": "String",
       "Default": "",
-      "ConstraintDescription": "Admin password"
+      "ConstraintDescription": "User password"
     },
     "AccessFromCidr": {
       "Description": "Lockdown SSH and HTTPS access (default can be accessed from anywhere)",
@@ -28,7 +28,6 @@
     "RGUrl": {
       "Description": "URL at which this instance of Research Gateway can be reached. e.g. myrg.example.com",
       "Type": "String",
-      "Default": "enterprise-test2.rlcatalyst.com",
       "ConstraintDescription": "RG URL"
     },
     "UserPoolId": {
@@ -64,7 +63,6 @@
     "TGARN": {
       "Description": "Target Group ARN to which the RG Portal EC2 Instance is registered.",
       "Type": "String",
-      "Default": "arn:aws:elasticloadbalancing:us-east-2:045938549113:targetgroup/enterprise-test2/1ee95b3703738125",
       "ConstraintDescription": "Target Group"
     },
     "DatabaseType": {
@@ -79,6 +77,27 @@
     "DocumentDBInstanceURL": {
       "Description": "URL to connect to the DocumentDB (if DocumentDB chosen as the database type)",
       "Type": "String"
+    },
+    "Environment": {
+      "Description": "Choose between DEV QA STAGE or PROD",
+      "Type": "String",
+      "Default": "PROD",
+      "AllowedValues": [
+        "DEV",
+        "QA",
+        "STAGE",
+        "PROD"
+      ]
+    },
+    "BaseAccountPolicyName": {
+      "Description": "Name for RG Portal Base Account Policy",
+      "Type": "String"
+    },
+    "SourceBucketName": {
+      "Description": "Source Bucket to download artefacts from",
+      "Type": "String",
+      "Default": "",
+      "ConstraintDescription": "Bucket Name"
     }
   },
   "Conditions": {
@@ -113,7 +132,7 @@
       ]
     },
     "UseLocalMongoDB": {
-      "Fn::Not":[
+      "Fn::Not": [
         {
           "Condition": "DocumentDBSelected"
         }
@@ -168,7 +187,7 @@
     "ResearchGatewayRolePolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
-        "ManagedPolicyName": "RG-Portal-Base-Account-Policy",
+        "ManagedPolicyName": "BaseAccountPolicyName",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
@@ -176,6 +195,9 @@
               "Effect": "Allow",
               "Action": [
                 "config:*",
+                "ec2:DescribeImages",
+                "ec2:CopyImage",
+                "ec2:ModifyImageAttribute",
                 "ec2:ModifyInstanceMetadataOptions",
                 "iam:attachRolePolicy",
                 "iam:createPolicy",
@@ -235,8 +257,8 @@
     "RGEC2Instance": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
-        "ImageId": "ami-0da76ce58c196b0dc",
-        "InstanceType": "t2.medium",
+        "ImageId": "ami-0fb3fe843311c4412",
+        "InstanceType": "t2.large",
         "Monitoring": "true",
         "DisableApiTermination": "false",
         "IamInstanceProfile": {
@@ -245,6 +267,17 @@
         "KeyName": {
           "Ref": "KeyName1"
         },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "VolumeType": "gp2",
+              "VolumeSize": "30",
+              "DeleteOnTermination": "true",
+              "Encrypted": "true"
+            }
+          }
+        ],
         "SubnetId": {
           "Ref": "Subnet1"
         },
@@ -255,114 +288,25 @@
         ],
         "UserData": {
           "Fn::Base64": {
-            "Fn::Join": [
-              "\n",
-              [
-                "#!/bin/bash\n",
-                "exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n",
-                "export RG_HOME=/opt/deploy/sp2\n",
-                "aws s3 cp s3://rg-deployment-docs/updatescripts.sh /home/ubuntu\n",
-                "chmod +x /home/ubuntu/updatescripts.sh\n",
-                "/home/ubuntu/updatescripts.sh\n",
-                "fixips.sh\n",
-                {
-                  "Fn::If": [
-                    "UseLocalMongoDB",
-                    {
-                      "Fn::Join": [
-                        " ",
-                        [ 
-                          "fixmongo.sh",
-                          "PROD-cc",
-                          {
-                            "Ref": "AdminPassword"
-                          },
-                          "rguser",
-                          {
-                            "Ref": "UserPassword"
-                          },
-                          {
-                            "Ref": "RGUrl"
-                          },
-                          "\n"
-                        ]
-                      ]
-                    },
-                    {
-                      "Ref": "AWS::NoValue"
-                    }
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    " ",
-                    [
-                      "export RG_HOME='/opt/deploy/sp2' && fixconfigs.sh",
-                      {
-                        "Ref": "UserPoolId"
-                      },
-                      {
-                        "Ref": "ClientId"
-                      },
-                      {
-                        "Ref": "CFTBucketName"
-                      },
-                      "rguser",
-                      {
-                        "Ref": "UserPassword"
-                      },
-                      {
-                        "Ref": "RGUrl"
-                      },
-                      "\n"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::If": [
-                    "UseDocumentDB",
-                    {
-                      "Fn::Join": [
-                        " ",
-                        [
-                          "fixdocdb.sh",
-                          {
-                            "Ref": "DocumentDBInstanceURL"
-                          },
-                          "PROD-cc",
-                          "rguser",
-                          {
-                            "Ref": "UserPassword"
-                          },
-                          "\n"
-                        ]
-                      ]
-                    },
-                    { "Ref": "AWS::NoValue"} 
-                  ]
-                },
-                "fixsecrets.sh\n",
-                {
-                  "Fn::Join": [
-                    " ",
-                    [
-                      "start_server.sh",
-                      {
-                        "Ref": "RGUrl"
-                      },
-                      {
-                        "Ref": "TGARN"
-                      },
-                      "\n"
-                    ]
-                  ]
-                },
-                "\n"
-              ]
+            "Fn::If": [
+              "UseLocalMongoDB",
+              "#!/bin/bash\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\nexport RG_HOME=/opt/deploy/sp2\nexport RG_ENV=${Environment}\nexport RG_SRC=/home/ubuntu\naws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu\nchmod +x /home/ubuntu/updatescripts.sh\n/home/ubuntu/updatescripts.sh\nfixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}\nfixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}\nstart_server.sh ${RGUrl} ${TGARN}\n/opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}\n",
+              "#!/bin/bash\nexec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\nexport RG_HOME=/opt/deploy/sp2\nexport RG_ENV=${Environment}\nexport RG_SRC=/home/ubuntu\naws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu\nchmod +x /home/ubuntu/updatescripts.sh\n/home/ubuntu/updatescripts.sh\nfixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}\nfixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}\nstart_server.sh ${RGUrl} ${TGARN}\n/opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}            \n"
             ]
           }
         }
+      },
+      "CreationPolicy": {
+        "ResourceSignal": {
+          "Timeout": "PT9M"
+        }
       }
+    }
+  },
+  "Outputs": {
+    "RGAccessURL": {
+      "Description": "URL to access Research Gateway",
+      "Value": "RGUrl"
     }
   }
 }

@@ -12,7 +12,7 @@ Parameters:
     NoEcho: "true"
     Type: String
     Default: ""
-    ConstraintDescription: Admin password
+    ConstraintDescription: User password
   AccessFromCidr:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
     Type: String
@@ -75,6 +75,11 @@ Parameters:
   BaseAccountPolicyName:
     Description: Name for RG Portal Base Account Policy
     Type: String
+  SourceBucketName:
+    Description: Source Bucket to download artefacts from 
+    Type: String
+    Default: ""
+    ConstraintDescription: Bucket Name    
 Conditions:
   DocumentDBSelected:
     Fn::Equals:
@@ -172,7 +177,7 @@ Resources:
   RGEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0b4b828dd7833db9b
+      ImageId: ami-0fb3fe843311c4412
       InstanceType: t2.large
       Monitoring: "true"
       DisableApiTermination: "false"
@@ -192,86 +197,35 @@ Resources:
       SecurityGroupIds:
         - Ref: RGPortalSG
       UserData:
-        Fn::Base64:
-          Fn::Join:
-            - "\n"
-            - - |
+        Fn::Base64: 
+          Fn::If:
+            - UseLocalMongoDB
+            - !Sub |
                 #!/bin/bash
-              - |
                 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-              - |
                 export RG_HOME=/opt/deploy/sp2
-              - |
-              - Fn::Join:
-                  - ''
-                  - - export RG_ENV=
-                    - Ref: Environment
-              - |
-                aws s3 cp s3://rg-deployment-docs/updatescripts.sh /home/ubuntu
-              - |
+                export RG_ENV=${Environment}
+                export RG_SRC=/home/ubuntu
+                aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
-              - |
                 /home/ubuntu/updatescripts.sh
-              - |
-              - Fn::If:
-                  - UseLocalMongoDB
-                  - Fn::Join:
-                      - ' '
-                      - - fixmongo.sh
-                        - Fn::Join:
-                            - '-'
-                            - - Ref: Environment
-                              - cc 
-                        - Ref: AdminPassword 
-                        - rguser 
-                        - Ref: UserPassword 
-                        - Ref: RGUrl
-                        - "\n"
-                  - Ref: AWS::NoValue
-              - Fn::Join:
-                  - ' '
-                  - - export RG_HOME='/opt/deploy/sp2' && fixconfigs.sh
-                    - Ref: UserPoolId
-                    - Ref: ClientId
-                    - Ref: CFTBucketName
-                    - rguser
-                    - Ref: UserPassword
-                    - Ref: RGUrl
-                    - "\n"
-              - Fn::If:
-                  - UseDocumentDB
-                  - Fn::Join:
-                      - ' '
-                      - - fixdocdb.sh
-                        - Ref: DocumentDBInstanceURL
-                        - Fn::Join:
-                            - '-'
-                            - - Ref: Environment
-                              - cc
-                        - rguser 
-                        - Ref: UserPassword
-                        - Ref: RGUrl
-                        - "\n"
-                  - Ref: AWS::NoValue
-              - |
-              - Fn::Join:
-                  - ' '
-                  - - start_server.sh
-                    - Ref: RGUrl
-                    - Ref: TGARN
-                    - "\n"
-              - "\n"
-              - |
-              # Signal the status
-              - Fn::Join:
-                  - ' '
-                  - - /opt/aws/bin/cfn-signal -e 0
-                    - --stack 
-                    - Ref: AWS::StackName
-                    - --resource RGEC2Instance
-                    - --region
-                    - Ref: AWS::Region
-              - |
+                fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
+                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}
+                start_server.sh ${RGUrl} ${TGARN}
+                /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
+            - !Sub |
+                #!/bin/bash
+                exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+                export RG_HOME=/opt/deploy/sp2
+                export RG_ENV=${Environment}
+                export RG_SRC=/home/ubuntu
+                aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
+                chmod +x /home/ubuntu/updatescripts.sh
+                /home/ubuntu/updatescripts.sh
+                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}
+                fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}
+                start_server.sh ${RGUrl} ${TGARN}
+                /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}            
     CreationPolicy:
       ResourceSignal:
         Timeout: PT9M

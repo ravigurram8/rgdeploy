@@ -39,6 +39,7 @@ if [ "$1" == "-f" ]; then
   appuser=$(jq -r '.appuser' <<< ${myinput})
   appuserpassword=$(jq -r '.appuserpassword' <<< ${myinput})
   adminpassword=$(jq -r '.adminpassword' <<< ${myinput})
+  S3_SOURCE=$(jq -r '.s3src' <<< ${myinput})
   echo "Run ID: $runid"
   echo "APPUSER: $appuser"
   echo "APPUSERPWD: $appuserpassword"
@@ -52,6 +53,7 @@ if [ "$1" == "-f" ]; then
   echo "KEYPAIR: $keypairname"
   echo "RGURL: $rgurl"
   echo "TGARN: $tgarn"
+  echo "S3_SOURCE: $S3_SOURCE"
 
 elif [ $# -lt 9 ]; then
   echo 'Usage: deploy.sh <amiid> <bucketname> <rgurl> '
@@ -64,8 +66,8 @@ elif [ $# -lt 9 ]; then
   echo '       Param 6:  The Subnet3 in which to launch the Research Gateway DocumentDB'
   echo '       Param 7:  The Key Pair to use for launching the EC2 instance.'
   echo '       Param 8:  The Environment DEV / QA / STAGE / PROD to deploy DB instance.'
-  echo '       Param 9:  (Optional) The URL at which Research Gateway will be accessed'
-  echo '       Param 10:  (Optional) The Target Group to which the Portal EC2 instance should be added'
+  echo '       Param 9:  The URL at which Research Gateway will be accessed'
+  echo '       Param 10: The Target Group to which the Portal EC2 instance should be added'
   exit 1
 else
   echo "New run"
@@ -93,6 +95,7 @@ else
     "appuser": "$appuser",
     "appuserpassword": "$appuserpassword",
     "adminpassword": "$adminpassword",
+    "s3src": "$S3_SOURCE"
     "params": {
       "amiid":  "$amiid",
       "bucketname":  "$bucketname",
@@ -291,6 +294,7 @@ function create_main_stack() {
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
                             DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env" \
+                            SourceBucketName="${S3_SOURCE}" \
                           --capabilities CAPABILITY_NAMED_IAM
         echo "Waiting for stack $1 to finish deploying..."
         aws cloudformation wait stack-create-complete --stack-name "$mainstackname"

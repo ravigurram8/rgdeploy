@@ -21,6 +21,8 @@ mydbname=$1
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
+[ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
+echo "S3_SOURCE=$S3_SOURCE"
 
 # First check if the IP at which mongod is listening is correct
 mymongoip=`cat /etc/mongod.conf | sed -n -e 's/bindIp: \([^,]*\).*/\1/p' | sed -e 's/\s*//'`
@@ -57,7 +59,7 @@ fi
 # Seed the database with static information
 if [ ! -f "$RG_SRC/dump.tar.gz" ]; then
    echo "No seed DB in $RG_SRC. Downloading..."
-   aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
+   aws s3 cp s3://${S3_SOURCE}/dump.tar.gz "$RG_SRC"
 fi
 tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
 
