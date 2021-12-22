@@ -95,7 +95,7 @@ else
     "appuser": "$appuser",
     "appuserpassword": "$appuserpassword",
     "adminpassword": "$adminpassword",
-    "s3src": "$S3_SOURCE"
+    "s3src": "$S3_SOURCE",
     "params": {
       "amiid":  "$amiid",
       "bucketname":  "$bucketname",
