@@ -228,7 +228,7 @@ aws s3 sync $localhome/rg-cft-templates/ s3://$bucketname
 function get_stack_status() {
     stackname=$1
     stack_status=0
-    jqcmd='.StackSummaries[] | select(.StackName=='"\"$stackname\""')'
+    jqcmd='.StackSummaries | map(select(.StackName=='"\"$stackname\""')|  .u=(.LastUpdatedTime[:16] | strptime("%Y-%m-%dT%H:%M") | mktime)) | sort_by(.u)| .[-1]'
     #echo $jqcmd
     stack_exists=`echo $stack_summaries | jq -r "$jqcmd"`
 
@@ -236,6 +236,7 @@ function get_stack_status() {
     # stack does not exist    
 	    return 0
     fi
+    #echo $stack_exists | jq -r
     stack_status=`echo $stack_exists | jq -r '.StackStatus'`
     echo $stack_status
     #if [ "$stack_status" == "CREATE_COMPLETE" ]; then
