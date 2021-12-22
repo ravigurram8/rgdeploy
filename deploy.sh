@@ -351,6 +351,11 @@ echo "Obtaining user pool outputs"
 userpoolclient_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPoolClient | jq -r '.StackResources [] | .PhysicalResourceId')
 #Capture User Pool ID
 userpool_id=$(aws cloudformation describe-stack-resources --stack-name "$userpoolstackname" --logical-resource-id CognitoUserPool | jq -r '.StackResources [] | .PhysicalResourceId')
+if [ -z $userpoolclient_id ] || [ -z $userpool_id ]; then
+  echo "Unable to extract user pool outputs. Exiting."
+  exit 1
+fi
+
 #===============================================================================================================
 #Creating DocumentDB stack
 echo "Creating DocumentDB stack"
@@ -379,6 +384,10 @@ fi
 echo "Obtaining DocDB outputs"
 #Capture DocumentDB Instance Id
 docdburl=$(aws cloudformation describe-stacks --stack-name $docdbstackname | jq -r '.Stacks[] | .Outputs[] | select(.OutputKey=="InstanceEndpoint")|.OutputValue')
+if [ -z $docdburl ]; then
+  echo "Unable to extract DocumentDB outputs. Exiting."
+  exit 1
+fi
 #===============================================================================================================
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
