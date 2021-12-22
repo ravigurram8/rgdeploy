@@ -288,6 +288,23 @@ function create_main_stack() {
        echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
        sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" $localhome/rg_main_stack.yml
     fi
+    echo "UserPool Id: $userpool_id"
+    echo "UserPool ClientId: $userpoolclient_id"
+    echo "BucketName $bucketname"
+    echo "RG URL: $rgurl"
+    if [ ! -z $appuserpassword ]; then
+      echo "UserPassword is not a blank string"
+    fi
+    if [ ! -z $adminpassword ]; then
+      echo "AdminPassword is not a blank string"
+    fi
+    echo "VPC Id: $vpcid"
+    echo "subnet1id: subnet1id"
+    echo "Key Pair: $keypairname"
+    echo "TGARN: $rgarn"
+    echo "DocDBURL: $docdburl"
+    echo "Env: $env"
+    echo "Source Bucket: $S3_SOURCE"
     aws cloudformation deploy --template-file $localhome/rg_main_stack.yml \
                           --stack-name "$mainstackname" \
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
