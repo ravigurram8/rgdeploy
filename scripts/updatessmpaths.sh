@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -lt 1 ]; then
-  echo " Usage: updatessmpaths.sh <repo-dir> <aws-region>"
+  echo " Usage: updatessmpaths.sh <aws-region> <repo-dir>"
   echo "    Param 1: AWS Region where the Research Gateway is deployed e.g us-east-2"
   echo "    Param 2: (Optional) Full path to rgdeploy repo. e.g. /home/ubuntu/rgdeploy"
   exit 0
