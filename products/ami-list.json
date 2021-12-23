@@ -30,7 +30,7 @@
         {
             "Key": "ap-southeast-2",
             "Value": "ami-0cdcce7966c66cd6b"
-        },
+        }
     ],
     "ami_path" : "/RL/RG/StandardCatalog/nextflow-latest"
    }
