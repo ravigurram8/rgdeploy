@@ -9,7 +9,7 @@ fi
 region=$1
 xtrargs="--region $region"
 
-if [ $# -gt 1 ] && [ -d $1 ]; then
+if [ $# -gt 1 ] && [ -d $2 ]; then
   DEPL_HOME=$2
 else
   echo "Invalid folder $2 passed."
