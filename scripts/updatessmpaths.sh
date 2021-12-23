@@ -41,11 +41,9 @@ do
     echo "aws ssm put-parameter --name \"${param_name}\" --value \"${param_val}\""
     aws ssm put-parameter --name "${param_name}" --value "${param_val}" --type String $xtrargs
   else
-    echo "Path $param_name exists. Deleting and recreating"
-    echo "aws ssm delete-parameter --name \"$param_name\""
-    aws ssm delete-parameter --name "$param_name" $xtrargs
-    echo "aws ssm put-parameter --name \"${param_name}\" --value \"${param_val}\""
-    aws ssm put-parameter --name "${param_name}" --value "${param_val}" --type String $xtrargs
+    echo "Path $param_name exists. Creating new version."
+    echo "aws ssm put-parameter --name \"${param_name}\" --value \"${param_val}\" --overwrite"
+    aws ssm put-parameter --name "${param_name}" --value "${param_val}" --overwrite --type String $xtrargs
   fi
   echo "-----------------------------------------------------------"
 done
