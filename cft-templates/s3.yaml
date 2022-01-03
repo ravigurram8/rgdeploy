@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: create a single S3 bucket
+
+Resources:
+  SampleBucket:
+    Type: AWS::S3::Bucket
+
+Outputs:
+  BucketArn:
+    Value: !GetAtt [SampleBucket, Arn]
+    Description: URL for website hosted on S3
+  BucketName:
+    Value: !Ref SampleBucket
+    Description: Name of S3 bucket

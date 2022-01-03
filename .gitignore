@@ -1,0 +1,5 @@
+.vscode
+*.tar.gz
+rg-deployment-docs
+rg-cft-templates
+

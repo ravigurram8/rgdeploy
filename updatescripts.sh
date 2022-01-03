@@ -6,13 +6,15 @@ echo "updatescripts.sh version: $version"
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
+[ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
+echo "S3_SOURCE=$S3_SOURCE"
 echo "Fetching latest scripts"
-aws s3 cp s3://rg-deployment-docs/scripts.tar.gz $RG_SRC
+aws s3 cp s3://${S3_SOURCE}/scripts.tar.gz $RG_SRC
 mkdir -p $RG_SRC/scripts
 tar -xvf $RG_SRC/scripts.tar.gz -C $RG_SRC/scripts
 
 echo "Fetching latest configs"
-aws s3 cp s3://rg-deployment-docs/config.tar.gz $RG_SRC
+aws s3 cp s3://${S3_SOURCE}/config.tar.gz $RG_SRC
 tar --keep-newer-files -xvf $RG_SRC/config.tar.gz -C $RG_HOME
 tar -xvf $RG_SRC/config.tar.gz -C $RG_SRC
 

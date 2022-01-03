@@ -32,6 +32,8 @@ err='Success'
 echo "RG_HOME=$RG_HOME"
 [ -z $RG_SRC ] && RG_SRC='/home/ubuntu'
 echo "RG_SRC=$RG_SRC"
+[ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
+echo "S3_SOURCE=$S3_SOURCE"
 
 if [ -z "$myurl" ]; then
     if [ -z $public_host_name ]; then
@@ -60,7 +62,7 @@ else
    mv "$RG_SRC/dump.tar.gz" "$RG_SRC/dump.old.tar.gz"
 fi
 echo "Downloading new dump file..."
-aws s3 cp s3://rg-deployment-docs/dump.tar.gz "$RG_SRC"
+aws s3 cp s3://${S3_SOURCE}/dump.tar.gz "$RG_SRC"
 tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
 if [ ! -d "$RG_SRC/dump/PROD-cc" ]; then
     echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."

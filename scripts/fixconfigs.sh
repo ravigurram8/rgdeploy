@@ -29,6 +29,8 @@ echo "RG_HOME=$RG_HOME"
 echo "RG_SRC=$RG_SRC"
 [ -z $RG_ENV ] && RG_ENV='PROD'
 echo "RG_ENV=$RG_ENV"
+[ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
+echo "S3_SOURCE=$S3_SOURCE"
 
 mypubip=$(wget -q -O - http://169.254.169.254/latest/meta-data/public-ipv4)
 echo "Public IP : $mypubip"
@@ -158,7 +160,7 @@ cat "$mytemp/trustPolicy.json" |\
         jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV\"" > "${RG_HOME}/config/trustPolicy.json"
 
 echo "Fetching latest docker-compose.yml"
-aws s3 cp s3://rg-deployment-docs/docker-compose.yml $RG_SRC
+aws s3 cp s3://${S3_SOURCE}/docker-compose.yml $RG_SRC
 
 # Fix the Redis host and APP_ENV in the docker compose file.
 # DB_HOST will be set later in the fixmongo.sh or fixdocdb.sh scripts.
