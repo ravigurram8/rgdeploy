@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Verify that utilities we use in this script are installed on the machine
 echo "Verifying utilities are installed"
 apps=(jq aws)
@@ -112,54 +113,62 @@ else
 EOT
 fi
 aws ec2 describe-images --image-id "$amiid" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The AMI $amiid does not exist. Exiting"
    exit 1
 fi
 
-if ! [ $(echo "$bucketname" | grep -P '(?=^.{3,63}$)(?!^xn\-\-)(?!.*s3alias$)(?!^(\d+\.)+\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$)') ]; then
+if ! echo "$bucketname" | grep -q -P '(?=^.{3,63}$)(?!^xn\-\-)(?!.*s3alias$)(?!^(\d+\.)+\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$)'; then
   echo "Invalid bucketname passed"
   echo "See https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html"
   exit 1
 fi
 
 aws ec2 describe-vpcs --vpc-id "$vpcid" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The VPC $vpcid does not exist. Exiting."
    exit 1
 fi
 
 aws ec2 describe-subnets --filters Name=vpc-id,Values="$vpcid" --subnet-ids "$subnet1id" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet1id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
 aws ec2 describe-subnets --filters Name=vpc-id,Values="$vpcid" --subnet-ids "$subnet2id" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet2id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
 aws ec2 describe-subnets --filters Name=vpc-id,Values="$vpcid" --subnet-ids "$subnet3id" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The subnet $subnet3id does not belong to $vpcid. Exiting."
    exit 1
 fi
 
 aws ec2 describe-key-pairs --key-name "$keypairname" >/dev/null 2>&1
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The KeyPair provided is not found. Exiting."
    exit 1
 fi
 
 echo "$rgurl" | grep -i -e '^http'
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The URL $rgurl must begin with http. Exiting."
    exit 1
 fi
 
 aws elbv2 describe-target-groups --target-group-arns "$tgarn" > /dev/null
+# trunk-ignore(shellcheck/SC2181)
 if [ $? -gt 0 ]; then
    echo "The Target Group ARN $tgarn does not exists. Exiting."
    exit 1
@@ -169,6 +178,7 @@ function calculate_duration() {
    mylabel=$1
    mystarttime=$2
    myelapsedtime=$(( SECONDS - mystarttime ))
+   # trunk-ignore(shellcheck/SC2016)
    eval "echo $mylabel Elapsed time: $(date -ud "@$myelapsedtime" +'$((%s/3600/24)) %M min %S sec')"
 }
 
@@ -177,15 +187,14 @@ bucketstackname="RG-PortalStack-Bucket-$runid"
 start_time=$SECONDS
 
 echo "Update Parameter Store"
-source scripts/updatessmpaths.sh
+source scripts/updatessmpaths.sh $region $(pwd)
 
 BUCKET_TEST=$(aws s3api head-bucket --bucket "$bucketname" 2>&1)
 if [ -z "$BUCKET_TEST" ]; then
   echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
-  read a && echo "Copying files to bucket $bucketname"
+  read -r a && echo "Copying files to bucket $bucketname"
 else
   echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
-  bucketname="$bucketname"
 
   # Create S3 bucket to copy RG Deployment files, ensure --stack-name 'name'
   # should be unique and it does not exist as part of current stacks.
@@ -232,7 +241,7 @@ function get_stack_status() {
     #echo $jqcmd
     stack_exists=$(echo "$stack_summaries" | jq -r "$jqcmd")
 
-    if [ -z "$stack_exists" ]; then
+    if [ -z "$stack_exists" ] || [ "$stack_exists" == "null" ]; then
     # stack does not exist    
 	    return 0
     fi
@@ -256,6 +265,7 @@ function get_stack_status() {
 function delete_stack() {
     echo "Deleting stack $1"
     aws cloudformation delete-stack --stack-name "$1"
+    aws cloudformation wait stack-delete-complete --stack-name "$1"
 }
 
 function create_cognito_pool() {
@@ -269,11 +279,22 @@ function create_cognito_pool() {
     aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
 }
 
+function create_doc_db() {
+    echo "Creating new stack $1"
+    aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$1" \
+                          --parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
+                            DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
+                            Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
+                            SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid"
+        echo "Waiting for stack $1 to finish deploying..."
+        aws cloudformation wait stack-create-complete --stack-name "$1"
+}
+
 function create_main_stack() {
     echo "Creating new stack $1"
     #update the AMI id in the RGMainStack CFT
-    echo "$amiid" | grep -E '^ami-[0-9a-zA-Z]+'
-    if [ $? -eq 0 ]; then
+    if echo "$amiid" | grep -E '^ami-[0-9a-zA-Z]+'
+    then
        echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
        sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" "$localhome"/rg_main_stack.yml
     fi
@@ -281,10 +302,10 @@ function create_main_stack() {
     echo "UserPool ClientId: $userpoolclient_id"
     echo "BucketName $bucketname"
     echo "RG URL: $rgurl"
-    if [ ! -z "$appuserpassword" ]; then
+    if [ -n "$appuserpassword" ]; then
       echo "UserPassword is not a blank string"
     fi
-    if [ ! -z "$adminpassword" ]; then
+    if [ -n "$adminpassword" ]; then
       echo "AdminPassword is not a blank string"
     fi
     echo "VPC Id: $vpcid"
@@ -299,7 +320,7 @@ function create_main_stack() {
                           --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
-                            DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env" \
+                            DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env-$runid" \
                             SourceBucketName="${S3_SOURCE}" \
                           --capabilities CAPABILITY_NAMED_IAM
         echo "Waiting for stack $1 to finish deploying..."
@@ -323,8 +344,8 @@ if [ $stack_status -eq 3 ]; then
     exit 1
 fi
 if [ $stack_status -eq 2 ]; then
-    delete_stack "$userpoolstackname"
-    if [ $? -gt 0 ]; then
+    if ! delete_stack "$userpoolstackname"
+    then
        echo "Could not delete stack $userpoolstackname"
        exit 1
     fi
@@ -359,8 +380,8 @@ if [ $stack_status -eq 3 ]; then
     exit 1
 fi
 if [ $stack_status -eq 2 ]; then
-    delete_stack "$docdbstackname"
-    if [ $? -gt 0 ]; then
+    if ! delete_stack "$docdbstackname"
+    then
        echo "Could not delete stack $docdbstackname"
        exit 1
     fi
@@ -379,30 +400,32 @@ if [ -z "$docdburl" ]; then
 fi
 #===============================================================================================================
 #Creating Main stack
-#update the AMI id in the RGMainStack CFT
-echo "$amiid" | grep -E '^ami-[0-9a-zA-Z]+'
-if [ $? -eq 0 ]; then
-  echo "Valid AMI Id $amiid passed. Replacing in RGMainStack"
-  sed -i -E "s/ami-[0-9a-zA-Z]+/$amiid/" "$localhome"/rg_main_stack.yml
-fi
-
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstack_start_time=$SECONDS
 mainstackname="RG-PortalStack-$runid"
-aws cloudformation deploy --template-file "$localhome"/rg_main_stack.yml \
-                          --stack-name "$mainstackname" \
-                          --parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
-                            CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
-                            VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
-                            DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env" \
-                          --capabilities CAPABILITY_NAMED_IAM
-aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
-if [ $? -gt 0 ]; then
-   echo " $mainstackname Stack Failed to Create "
-   exit 1
-else
-   portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
-   echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"
+echo "$mainstackname"
+eval "get_stack_status $mainstackname"
+stack_status=$?
+echo $stack_status
+if [ $stack_status -eq 3 ]; then
+    exit 1
 fi
+if [ $stack_status -eq 2 ]; then
+    delete_stack $mainstackname
+    if [ $? -gt 0 ]; then
+       echo "Could not delete stack $mainstackname"
+       exit 1
+    fi
+    stack_status=0
+fi
+if [ $stack_status -eq 0 ]; then
+    create_main_stack $mainstackname
+fi
+echo "Obtaining MainStack outputs"
+portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
+echo "Research Gateway has been successfully deployed. You can access the EC2 instance using $portalinstance_id"
+#===============================================================================================================
+
+
 calculate_duration "MainStack Creation" $mainstack_start_time
 calculate_duration "Research Gateway Deployment" $start_time
