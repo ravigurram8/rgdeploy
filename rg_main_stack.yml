@@ -211,6 +211,7 @@ Resources:
                 export RG_HOME=/opt/deploy/sp2
                 export RG_ENV=${Environment}
                 export RG_SRC=/home/ubuntu
+                export S3_SOURCE="${SourceBucketName}"
                 aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
@@ -224,6 +225,7 @@ Resources:
                 export RG_HOME=/opt/deploy/sp2
                 export RG_ENV=${Environment}
                 export RG_SRC=/home/ubuntu
+                export S3_SOURCE="${SourceBucketName}"
                 aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
