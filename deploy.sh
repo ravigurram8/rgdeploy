@@ -187,7 +187,7 @@ bucketstackname="RG-PortalStack-Bucket-$runid"
 start_time=$SECONDS
 
 echo "Update Parameter Store"
-source scripts/updatessmpaths.sh $region $(pwd)
+scripts/updatessmpaths.sh "$region" "$localhome"
 
 BUCKET_TEST=$(aws s3api head-bucket --bucket "$bucketname" 2>&1)
 if [ -z "$BUCKET_TEST" ]; then
@@ -281,7 +281,7 @@ function create_cognito_pool() {
 
 function create_doc_db() {
     echo "Creating new stack $1"
-    aws cloudformation deploy --template-file $localhome/rg_document_db.yml --stack-name "$1" \
+    aws cloudformation deploy --template-file "$localhome"/rg_document_db.yml --stack-name "$1" \
                           --parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
                             DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
                             Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
@@ -321,7 +321,7 @@ function create_main_stack() {
                             CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
                             VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
                             DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env-$runid" \
-                            SourceBucketName="${S3_SOURCE}" \
+                            SourceBucketName="${S3_SOURCE}" StackRunId="$runid"\
                           --capabilities CAPABILITY_NAMED_IAM
         echo "Waiting for stack $1 to finish deploying..."
         aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
@@ -411,7 +411,7 @@ if [ $stack_status -eq 3 ]; then
     exit 1
 fi
 if [ $stack_status -eq 2 ]; then
-    delete_stack $mainstackname
+    delete_stack "$mainstackname"
     if [ $? -gt 0 ]; then
        echo "Could not delete stack $mainstackname"
        exit 1
@@ -419,7 +419,7 @@ if [ $stack_status -eq 2 ]; then
     stack_status=0
 fi
 if [ $stack_status -eq 0 ]; then
-    create_main_stack $mainstackname
+    create_main_stack "$mainstackname"
 fi
 echo "Obtaining MainStack outputs"
 portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')

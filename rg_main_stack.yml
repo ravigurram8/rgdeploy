@@ -79,7 +79,12 @@ Parameters:
     Description: Source Bucket to download artefacts from 
     Type: String
     Default: ""
-    ConstraintDescription: Bucket Name    
+    ConstraintDescription: Bucket Name 
+  StackRunId:
+    Description: Run Id to make the config unique
+    Type: String
+    Default: ""
+    ConstraintDescription: Run ID         
 Conditions:
   DocumentDBSelected:
     Fn::Equals:
@@ -210,7 +215,7 @@ Resources:
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
                 fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
-                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}
+                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${StackRunId} ${RGUrl} 
                 start_server.sh ${RGUrl} ${TGARN}
                 /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
             - !Sub |
@@ -222,7 +227,7 @@ Resources:
                 aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
-                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${RGUrl}
+                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${StackRunId} ${RGUrl} 
                 fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}
                 start_server.sh ${RGUrl} ${TGARN}
                 /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}            
