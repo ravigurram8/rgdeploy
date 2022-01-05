@@ -18,12 +18,12 @@ if [ "$1" = "-f" ]; then
     echo "Need a filename with -f option"
     exit 1
   fi
-  if ! [ -f $2 ]; then
+  if ! [ -f "$2" ]; then
     echo "Could not find file $2"
     exit 1
   fi
   echo "Reading past run details from $2"
-  myinput=`cat $2`
+  myinput=`cat "$2"`
   amiid=$(jq -r '.params.amiid' <<< ${myinput})
   bucketname=$(jq -r '.params.bucketname' <<< ${myinput})
   vpcid=$(jq -r '.params.vpcid' <<< ${myinput})
@@ -266,7 +266,8 @@ function create_cognito_pool() {
                             Function1Name="UserManagementAfterSuccessSignup-$runid" Function2Name="UserManagement-$runid" \
                           --capabilities CAPABILITY_IAM
 
-aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
+    aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
+}
 
 function create_main_stack() {
     echo "Creating new stack $1"
