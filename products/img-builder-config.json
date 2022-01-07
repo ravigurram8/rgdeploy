@@ -1,0 +1,12 @@
+[
+    {
+        "product": "Nextflow Advanced",
+        "pipeline": "RL_RG_Nextflow_Advanced",
+        "path": "/RL/RG/StandardCatalog/nextflow-latest"
+    },
+    {
+        "product": "RStudio",
+        "pipeline": "RL_RG_RStudio",
+        "path": "/RL/RG/StandardCatalog/RStudio"
+    }
+]
