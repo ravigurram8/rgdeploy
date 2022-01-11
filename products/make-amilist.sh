@@ -1,14 +1,18 @@
 #!/bin/bash
-
+xtrargs='default'
+if [ $# -gt 0 ]; then
+	xtrargs="$1"
+fi
 function get_arn_for_pipeline() {
 	pipeline="$1"
 	jqcmd='.imagePipelineList | map(select(.name=='"\"$pipeline\""'))'
-	aws imagebuilder list-image-pipelines | jq -r "$jqcmd" | jq -r '.[0].arn'
+	aws imagebuilder list-image-pipelines --profile "$xtrargs" | jq -r "$jqcmd" | jq -r '.[0].arn'
 }
 
 function get_ami_list_for_pipeline() {
 	pipeline_arn=$1
-	aws imagebuilder list-image-pipeline-images --image-pipeline-arn "$pipeline_arn" |
+	[ -z "$pipeline" ] && return
+	aws imagebuilder list-image-pipeline-images --image-pipeline-arn "$pipeline_arn" --profile "$xtrargs" |
 		jq -r '.imageSummaryList' |
 		jq -r 'map(select(.state.status=="AVAILABLE")|  .u=(.dateCreated[:16] | strptime("%Y-%m-%dT%H:%M") | mktime))' |
 		jq -r 'sort_by(.u)| .[-1] | .outputResources.amis | map({(.|.region):(.|.image)})'
@@ -22,8 +26,8 @@ jq -c '.[]' img-builder-config.json |
 		ami_path=$(echo "$c" | jq -r '.path')
 		product_arn=$(get_arn_for_pipeline "$pipeline")
 		amilist=$(get_ami_list_for_pipeline "$product_arn")
-		jqcmd='.+=[{Name:'"\"$product\""',ami_id_list:'"[$amilist]"',ami_path:'"\"$ami_path\""'}]'
+		jqcmd='.+=[{Name:'"\"$product\""',ami_id_list:'"$amilist"',ami_path:'"\"$ami_path\""'}]'
 		tmp=$(echo "$tmp" | jq -r "$jqcmd")
 		# trunk-ignore(shellcheck/SC2086)
 		echo $tmp
-	done | tail -1 | jq -r
+	done | tail -1 | jq -r '{EventType: "UPDATE_AMI_ID", Products: (.)}'
