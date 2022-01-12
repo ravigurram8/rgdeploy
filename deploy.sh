@@ -245,6 +245,13 @@ aws s3 sync "$localhome"/rg-cft-templates/ s3://"$bucketname"
 rm -rf "$localhome"/rg-cft-templates/
 rm -rf "$localhome"/rg-deployment-docs
 
+cd "$localhome"/lambdas || exit
+zip -j pre_verification_custom_message.zip pre_verification_custom_message/index.js
+zip -j post_verification_send_message.zip post_verification_send_message/index.js
+aws s3 cp ./pre_verification_custom_message.zip s3://"$bucketname"
+aws s3 cp ./post_verification_send_message.zip s3://"$bucketname"
+rm -f ./pre_verification_custom_message.zip ./post_verification_send_message.zip
+
 cd "$localhome"/products || exit
 tar -czf nextflow-advanced.tar.gz Nextflow-Advanced/*
 aws s3 cp ./nextflow-advanced.tar.gz s3://"$bucketname/"
@@ -293,7 +300,7 @@ function create_cognito_pool() {
 	aws cloudformation deploy --template-file "$localhome"/rg_userpool.yml \
 		--stack-name "$1" \
 		--parameter-overrides UserPoolNameParam="$1" PortalURLParam="$rgurl" \
-		Function1Name="UserManagementAfterSuccessSignup-$runid" Function2Name="UserManagement-$runid" \
+		Function1Name="post_verification_send_message-$runid" Function2Name="pre_verification_custom_message-$runid" \
 		--capabilities CAPABILITY_IAM
 
 	aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
