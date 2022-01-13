@@ -245,6 +245,7 @@ aws s3 sync "$localhome"/rg-cft-templates/ s3://"$bucketname"
 rm -rf "$localhome"/rg-cft-templates/
 rm -rf "$localhome"/rg-deployment-docs
 
+echo "Copying lambda files to new bucket"
 cd "$localhome"/lambdas || exit
 zip -j pre_verification_custom_message.zip pre_verification_custom_message/index.js
 zip -j post_verification_send_message.zip post_verification_send_message/index.js
@@ -252,6 +253,7 @@ aws s3 cp ./pre_verification_custom_message.zip s3://"$bucketname"
 aws s3 cp ./post_verification_send_message.zip s3://"$bucketname"
 rm -f ./pre_verification_custom_message.zip ./post_verification_send_message.zip
 
+echo "Copying Image Builder files to new bucket"
 cd "$localhome"/products || exit
 tar -czf nextflow-advanced.tar.gz Nextflow-Advanced/*
 aws s3 cp ./nextflow-advanced.tar.gz s3://"$bucketname/"
@@ -259,6 +261,13 @@ rm -f nextflow-advanced.tar.gz
 tar -czf rstudio.tar.gz RStudio/*
 aws s3 cp ./rstudio.tar.gz s3://"$bucketname/"
 rm -f rstudio.tar.gz
+
+echo "Copying Database seed-data files to new bucket"
+cd "$localhome" || exit
+zip dump.zip dump/*
+unzip -l dump.zip
+aws s3 cp dump.zip s3://"$bucketname/"
+rm -f dump.zip
 
 #=====================================================================================================
 function get_stack_status() {

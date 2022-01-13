@@ -62,25 +62,43 @@ else
    mv "$RG_SRC/dump.tar.gz" "$RG_SRC/dump.old.tar.gz"
 fi
 echo "Downloading new dump file..."
-aws s3 cp s3://${S3_SOURCE}/dump.tar.gz "$RG_SRC"
-tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
-if [ ! -d "$RG_SRC/dump/PROD-cc" ]; then
-    echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."
-    rm -rf "$RG_SRC/dump"
-    mv "$RG_SRC/dump.old.tar.gz" "$RG_SRC/dump.tar.gz"
-    tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+# aws s3 cp s3://${S3_SOURCE}/dump.tar.gz "$RG_SRC"
+# tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+# if [ ! -d "$RG_SRC/dump/PROD-cc" ]; then
+#     echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."
+#     rm -rf "$RG_SRC/dump"
+#     mv "$RG_SRC/dump.old.tar.gz" "$RG_SRC/dump.tar.gz"
+#     tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
+# fi
+aws s3 cp s3://${S3_SOURCE}/dump.zip "$RG_SRC"
+echo "Extracting seed data from dump file."
+unzip "$RG_SRC/dump.zip" -C "$RG_SRC"
+if [ ! "$(ls -A $RG_SRC/dump)" ]; then
+    echo "Error: No files found in dump folder. Your database cannot be seeded."
+else
+mongoimport --host "$mydocdburl:27017" --ssl \
+             --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+             --username "$mydbuser" --password "$mydbuserpwd"  \
+             --db "${mydbname}" --collection=standardcatalogitems \
+             "$RG_SRC/dump/standardcatalogitems.json" 
+mongoimport --host "$mydocdburl:27017" --ssl \
+             --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+             --username "$mydbuser" --password "$mydbuserpwd"  \
+             --db "${mydbname}" --collection=configs \
+             "$RG_SRC/dump/configs.json"
+mongoimport --host "$mydocdburl:27017" --ssl \
+             --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+             --username "$mydbuser" --password "$mydbuserpwd"  \
+             --db "${mydbname}" --collection=studies \
+             "$RG_SRC/dump/studies.json"                        
+
 fi
 
-
-mongorestore --host "$mydocdburl:27017" --noIndexRestore --ssl \
-             --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-             --username $mydbuser --password $mydbuserpwd  --gzip \
-             --db "${mydbname}" "$RG_SRC/dump/PROD-cc" 
-if [ -z $baseurl ]; then
+if [ -z "$baseurl" ]; then
     echo "WARNING: Base URL is not passed. Skipping snsUrl configuration in DB."
 else             
 mongo --ssl --host "$mydocdburl:27017" --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-      --username $mydbuser --password $mydbuserpwd <<EOF
+      --username "$mydbuser" --password "$mydbuserpwd" <<EOF
 use $mydbname
 db.configs.remove({"key":"snsUrl"});
 db.configs.insert({"key":"snsUrl","value":"$baseurl"});
