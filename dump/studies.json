@@ -1,0 +1,446 @@
+{
+  "_id": {
+    "$oid": "5ff440486ae1c429994084d3"
+  },
+  "description": "The 1000 Genomes Project is an international collaboration which has established the most detailed catalogue of human genetic variation, including SNPs, structural variants, and their haplotype context. The final phase of the project sequenced more than 2500 individuals from 26 different populations around the world and produced an integrated set of phased haplotypes with more than 80 million variants for these individuals.",
+  "tags": [
+    "aws-pds",
+    "genetic",
+    "genomic",
+    "life-sciences"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "1000 Genomes",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License: Data from the 1000 Genomes Project is now available without embargo, following the final publication from the project. Use of the data should be cited in the usual way, with current details available at http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project",
+  "createdBy": "",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "isLinked": false,
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff441b56ae1c429994084d5"
+  },
+  "description": "Excerpts of electronic Form 990 and 990-EZ filings, converted to spreadsheet form. Additional fields being added regularly.",
+  "tags": [
+    "aws-pds",
+    "regulatory",
+    "statistics",
+    "us",
+    "economics"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "IRS 990 Filings (Spreadsheets)",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:Attribution 4.0 International [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
+  "__v": 0,
+  "isDeleted": false,
+  "linkedResources": [],
+  "isLinked": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff442596ae1c429994084d6"
+  },
+  "description": "ChEMBL is a manually curated database of bioactive molecules with drug-like properties. It brings together chemical, bioactivity and genomic data to aid the translation of genomic information into effective new drugs. This representation of ChEMBL is stored in Parquet format and most easily utilized through Amazon Athena. Follow the documentation for install instructions (< 2 minute install). New ChEMBL releases occur sporadically; the most up to date information on ChEMBL releases can be found [here](https://chembl.gitbook.io/chembl-interface-documentation/downloads).",
+  "tags": [
+    "chemistry",
+    "genomic",
+    "molecule",
+    "life sciences",
+    "biotech blueprint",
+    "parquet"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "ChEMBL",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:https://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_attributions.txt",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "isLinked": false,
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff444806ae1c429994084d7"
+  },
+  "description": "This a Parquet representation of the Open Targets Platform's [2020-06 export](https://www.targetvalidation.org/downloads/data). The Open Targets Platform integrates evidence from genetics, genomics, transcriptomics, drugs, animal models and scientific literature to score and rank target-disease associations for drug target identification. The Open Targets Platform (https://www.targetvalidation.org) is a freely available resource for the integration of genetics, genomics, and chemical data to aid systematic drug target identification and prioritisation.",
+  "tags": [
+    "chemistry",
+    "genetic",
+    "genomic",
+    "molecule",
+    "life sciences",
+    "biotech blueprint",
+    "parquet"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "Open Targets",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:https://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_attributions.txt",
+  "__v": 0,
+  "isDeleted": false,
+  "linkedResources": [],
+  "isLinked": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff446206ae1c429994084d9"
+  },
+  "description": "An open multi-sensor dataset for autonomous driving research. This dataset comprises semantically segmented images, semantic point clouds, and 3D bounding boxes. In addition, it contains unlabelled 360 degree camera images, lidar, and bus data for three sequences. We hope this dataset will further facilitate active research and development in AI, computer vision, and robotics for autonomous driving.",
+  "tags": [
+    "autonomous vehicles",
+    "deep learning",
+    "computer vision",
+    "lidar",
+    "mapping",
+    "machine learning",
+    "robotics",
+    "aws-pds"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "A2D2: Audi Autonomous Driving Dataset",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:https://creativecommons.org/licenses/by-nd/4.0/",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "linkedResources": [],
+  "isLinked": false,
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff449e36ae1c429994084de"
+  },
+  "description": "The Allen Mouse Brain Atlas is a genome-scale collection of cellular resolution gene expression profiles using in situ hybridization (ISH). Highly methodical data production methods and comprehensive anatomical coverage via dense, uniformly spaced sampling facilitate data consistency and comparability across >20,000 genes. The use of an inbred mouse strain with minimal animal-to-animal variance allows one to treat the brain essentially as a complex but highly reproducible three-dimensional tissue array. The entire Allen Mouse Brain Atlas dataset and associated tools are available through an unrestricted web-based viewing application (http://mouse.brain-map.org). The collection of > 650,000 images have been made available in this Open Data bucket to enable efficient access and analysis of the this dataset.\n",
+  "tags": [
+    "aws-pds",
+    "biology",
+    "genetic",
+    "gene expression",
+    "imaging",
+    "neurobiology",
+    "image processing",
+    "life sciences",
+    "machine learning",
+    "transcriptomics",
+    "Mus musculus"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "Allen Mouse Brain Atlas",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:http://www.alleninstitute.org/legal/terms-use/",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "isLinked": false,
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff441226ae1c429994084d4"
+  },
+  "description": "The 3000 Rice Genome Project is an international effort to sequence the genomes of 3,024 rice varieties from 89 countries.",
+  "tags": [
+    "agriculture",
+    "food security",
+    "aws-pds",
+    "genetic",
+    "genomic",
+    "life sciences"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "3000 Rice Genomes Project",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License: This data is available for anyone to use under the terms of the Toronto Statement, which is available [here](http://www.nature.com/nature/journal/v461/n7261/box/461168a_BX1.html)",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "isLinked": false,
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff4453a6ae1c429994084d8"
+  },
+  "description": "By constructing a virtual constellation of complementary types of satellites, we integrated the merit of high spatial resolution Landsat data with that of high temporal frequency MODIS data, to produce a high spatial-resolution and temporally consistent, better data set overcoming a number of shortcomings that conventional Earth observation (EO) data have, including cloud effects, data damage or loss. To do so, we developed a spatial-temporal remote sensing data reconstruction and fusion framework with an automated, serverless production chain on the AWS. Based on it, we produced the seamless data cube (SDC) at a 30 m spatial resolution and daily interval in an analysis-ready-data (ARD) format. The constructed fine-grained SDC will significantly reduce the preprocessing burden of users, broaden the use of remotely sensed data to a wider range of communities, and give us the capacity of near-real-time EO. Such kind of data is a long-term dream in the remote sensing and application community, that has never been realized before. The data set will promote new knowledge discovery on patterns, and benefit the land science community for biophysical, and socio-economic information extraction from the ARD data, making it easy and convenient to assess various policy goals such as conservation of protected areas, supporting international policy making on climate change mitigation, and raising awareness on environmental issues. The knowledge gained from this uniquely comprehensive data set will form a new foundation for achieving the United Nations (UN) Sustainable Develop Goals (SDGs).",
+  "tags": [
+    "agriculture",
+    "cities",
+    "disaster response",
+    "earth observation",
+    "environmental",
+    "geospatial",
+    "land",
+    "machine learning",
+    "mapping",
+    "natural resource",
+    "satellite imagery",
+    "sustainability",
+    "urban",
+    "water"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "21st Century Daily Global Seamless Remote Sensing Data Cubes (SDCs)",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:Open to non-commercial uses.",
+  "__v": 0,
+  "createdBy": "",
+  "accountId": "",
+  "isDeleted": true,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "isLinked": false
+}
+{
+  "_id": {
+    "$oid": "5ff447456ae1c429994084da"
+  },
+  "description": "This dataset contains soil infrared spectral data and paired soil property\nreference measurements for georeferenced soil samples that were collected\nthrough the Africa Soil Information Service (AfSIS) project, which lasted\nfrom 2009 through 2018. In this release, we include data collected during\nPhase I (2009-2013.) Georeferenced samples were collected from 19 countries\nin Sub-Saharan African using a statistically sound sampling scheme,\nand their soil properties were analyzed using *both* conventional soil\ntesting methods and spectral methods (infrared diffuse reflectance\nspectroscopy). The two types of data can be paired to form a training\ndataset for machine learning, such that certain soil properties can be\nwell-predicted through less expensive spectral techniques.\n",
+  "tags": [
+    "agriculture",
+    "aws-pds",
+    "environmental",
+    "food security",
+    "machine learning",
+    "life sciences",
+    "sustainability"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "Africa Soil Information Service (AfSIS) Soil Chemistry",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:ODC Open Database License (\"[ODbL](https://opendatacommons.org/licenses/odbl/summary/index.html)\") version 1.0, with attribution to AfSIS",
+  "__v": 0,
+  "isDeleted": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "linkedResources": [],
+  "isLinked": false,
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff447c86ae1c429994084db"
+  },
+  "description": "Dataset associated with the paper \"Agriculture-Vision: A Large Aerial Image Database for Agricultural Pattern Analysis\". Agriculture-Vision aims to be a publicly available large-scale aerial agricultural image dataset that is high-resolution, multi-band, and with multiple types of patterns annotated by agronomy experts. In its current stage, we have captured 94,986 512x512images sampled from 3,432 farmlands with nine types of annotations: double plant, drydown, endrow, nutrient deficiency, planter skip, storm damage, water, waterway and weed cluster. All of these patterns have substantial impacts on field conditions and the final yield. These farmland images were captured between 2017 and 2019 across multiple growing seasons in numerous farming locations in the US. Each field image contains four color channels: Near-infrared (NIR), Red, Green and Blue.  We first randomly split the 3,432 farmland images with a 6/2/2 train/val/test ratio. We then assign each sampled image to the split of the farmland image they are cropped from. This guarantees that no cropped images from the same farmland will appear in multiple splits in the final dataset. The generated Agriculture-Vision dataset thus contains 56,944/18,334/19,708 train/val/test images.",
+  "tags": [
+    "aerial imagery",
+    "agriculture",
+    "computer vision",
+    "deep learning"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "AgricultureVision",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:Provided in the bucket.",
+  "__v": 0,
+  "isDeleted": false,
+  "linkedResources": [],
+  "isLinked": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff448606ae1c429994084dc"
+  },
+  "description": "The Allen Brain Observatory – Visual Coding is a large-scale, standardized survey of physiological activity across the mouse visual cortex, hippocampus, and thalamus. It includes datasets collected with both two-photon imaging and Neuropixels probes, two complementary techniques for measuring the activity of neurons in vivo. The two-photon imaging dataset features visually evoked calcium responses from GCaMP6-expressing neurons in a range of cortical layers, visual areas, and Cre lines. The Neuropixels dataset features spiking activity from distributed cortical and subcortical brain regions, collected under analogous conditions to the two-photon imaging experiments. We hope that experimentalists and modelers will use these comprehensive, open datasets as a testbed for theories of visual information processing.\n",
+  "tags": [
+    "aws-pds",
+    "neurobiology",
+    "neuroimaging",
+    "image processing",
+    "machine learning",
+    "life sciences",
+    "signal processing",
+    "electrophysiology",
+    "Mus musculus"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "Allen Brain Observatory - Visual Coding AWS Public Data Set",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:http://www.alleninstitute.org/legal/terms-use/",
+  "__v": 0,
+  "isDeleted": false,
+  "linkedResources": [],
+  "isLinked": false,
+  "repositoryName": "Registry of Open Data on AWS",
+  "isShared": false,
+  "createdBy": "",
+  "accountId": ""
+}
+{
+  "_id": {
+    "$oid": "5ff449546ae1c429994084dd"
+  },
+  "description": "his bucket contains multiple datasets (as Quilt packages) created by the\nAllen Institute for Cell Science (AICS). The imaging data in this bucket contains\neither of the following:\n\n1) field of view images from glass plates\n2) cell membrane, DNA, and structure segmentations\n3) cell membrane, DNA and structure contours\n4) machine learning imaging predictions of the previously listed modalities.\n\nIn addition, many of the datasets include CSVs that contain feature sets\nrelated to that data.\n",
+  "tags": [
+    "aws-pds",
+    "life sciences",
+    "biology",
+    "cell imaging",
+    "cell biology",
+    "microscopy",
+    "image processing",
+    "machine learning",
+    "Homo sapiens"
+  ],
+  "bookmarkedBy": [],
+  "projectId": [],
+  "createdAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "updatedAt": {
+    "$date": "2021-01-05T09:30:15.208Z"
+  },
+  "levelOfSharing": 0,
+  "sharedTo": [],
+  "name": "Allen Cell Imaging Collections",
+  "studyType": "Public",
+  "resourceDetails": [],
+  "moreInformation": "License:https://www.allencell.org/terms-of-use.html",
+  "__v": 0,
+  "createdBy": "",
+  "accountId": "",
+  "isDeleted": false,
+  "listOfLinkedProducts": [],
+  "isLinked": false,
+  "isShared": false,
+  "linkedResources": [],
+  "repositoryName": "Registry of Open Data on AWS"
+}
