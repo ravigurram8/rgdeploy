@@ -10,8 +10,7 @@ echo "RG_SRC=$RG_SRC"
 echo "S3_SOURCE=$S3_SOURCE"
 echo "Fetching latest scripts"
 aws s3 cp s3://${S3_SOURCE}/scripts.tar.gz $RG_SRC
-mkdir -p $RG_SRC/scripts
-tar -xvf $RG_SRC/scripts.tar.gz -C $RG_SRC/scripts
+tar -xvf $RG_SRC/scripts.tar.gz -C $RG_SRC
 
 echo "Fetching latest configs"
 aws s3 cp s3://${S3_SOURCE}/config.tar.gz $RG_SRC
