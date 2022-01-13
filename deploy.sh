@@ -219,31 +219,31 @@ else
 fi
 # Populate the new S3 bucket with RG Deployment files default source bucketname rg-newdeployment-docs
 echo "Synching RG Deployment Files to new S3 bucket $bucketname"
-s3_sync_start_time=$SECONDS
-aws s3 sync s3://$S3_SOURCE s3://"$bucketname"
-calculate_duration "S3 Sync" $s3_sync_start_time
+#s3_sync_start_time=$SECONDS
+#aws s3 sync s3://$S3_SOURCE s3://"$bucketname"
+#calculate_duration "S3 Sync" $s3_sync_start_time
 
 #Create local folder to store RG Deployment Files and a subfolder for cft templates and scripts
-mkdir -p "$localhome/rg-cft-templates"
+#mkdir -p "$localhome/rg-cft-templates"
 
 #Download RG Deployment files from S3 to the local folder created above,
 echo "Copying RG Deployment Files to local folder"
-s3_copy_start_time=$SECONDS
-aws s3 cp s3://$S3_SOURCE/ "$localhome"/rg-deployment-docs --recursive
-calculate_duration "S3 Copy" $s3_copy_start_time
+#s3_copy_start_time=$SECONDS
+#aws s3 cp s3://$S3_SOURCE/ "$localhome"/rg-deployment-docs --recursive
+#calculate_duration "S3 Copy" $s3_copy_start_time
 
 # Extract cft templates locally
-echo "Extracting CFTs locally"
-tar -xvf "$localhome"/rg-deployment-docs/rg-cft-templates.tar.gz -C "$localhome"/rg-cft-templates/
+#echo "Extracting CFTs locally"
+#tar -xvf "$localhome"/rg-deployment-docs/rg-cft-templates.tar.gz -C "$localhome"/rg-cft-templates/
 
 #Modify file rg_userpool.yml to refer new S3 bucket
 sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" "$localhome"/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
-aws s3 sync "$localhome"/rg-cft-templates/ s3://"$bucketname"
-rm -rf "$localhome"/rg-cft-templates/
-rm -rf "$localhome"/rg-deployment-docs
+aws s3 cp "$localhome"/cft-templates/ s3://"$bucketname"
+# rm -rf "$localhome"/rg-cft-templates/
+# rm -rf "$localhome"/rg-deployment-docs
 
 echo "Copying lambda files to new bucket"
 cd "$localhome"/lambdas || exit
@@ -365,8 +365,7 @@ function create_main_stack() {
 		CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
 		VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
 		DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env-$runid" \
-		SourceBucketName="${S3_SOURCE}" StackRunId="$runid" \
-		--capabilities CAPABILITY_NAMED_IAM
+		StackRunId="$runid" --capabilities CAPABILITY_NAMED_IAM
 	echo "Waiting for stack $1 to finish deploying..."
 	aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 }

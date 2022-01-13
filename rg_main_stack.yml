@@ -75,11 +75,6 @@ Parameters:
   BaseAccountPolicyName:
     Description: Name for RG Portal Base Account Policy
     Type: String
-  SourceBucketName:
-    Description: Source Bucket to download artefacts from 
-    Type: String
-    Default: ""
-    ConstraintDescription: Bucket Name 
   StackRunId:
     Description: Run Id to make the config unique
     Type: String
@@ -211,8 +206,8 @@ Resources:
                 export RG_HOME=/opt/deploy/sp2
                 export RG_ENV=${Environment}
                 export RG_SRC=/home/ubuntu
-                export S3_SOURCE="${SourceBucketName}"
-                aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
+                export S3_SOURCE="${CFTBucketName}"
+                aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
                 fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
@@ -225,8 +220,8 @@ Resources:
                 export RG_HOME=/opt/deploy/sp2
                 export RG_ENV=${Environment}
                 export RG_SRC=/home/ubuntu
-                export S3_SOURCE="${SourceBucketName}"
-                aws s3 cp s3://${SourceBucketName}/updatescripts.sh /home/ubuntu
+                export S3_SOURCE="${CFTBucketName}"
+                aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
                 chmod +x /home/ubuntu/updatescripts.sh
                 /home/ubuntu/updatescripts.sh
                 fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${StackRunId} ${RGUrl} 
