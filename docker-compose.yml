@@ -33,6 +33,7 @@ services:
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM URL where it has been placed
+      - CC_HOST=cc-3102:3002
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/logs:/rlc/cc/server/app/logs
@@ -55,7 +56,7 @@ services:
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM_URL
-      - CC_HOST=cc-3102
+      - CC_HOST=cc-3102:3002
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/slogs:/rlc/cc/server/app/logs
