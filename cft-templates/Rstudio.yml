@@ -1,8 +1,22 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
 
 Description: Sets up RStudio environment on AWS
 
 Parameters:
+  Namespace:
+    Type: String
+    Description: An environment name that will be prefixed to resource names
+  S3Mounts:
+    Type: String
+    Description: A JSON array of objects with name, bucket, and prefix properties used to mount data
+  IamPolicyDocument:
+    Type: String
+    Description: The IAM policy to be associated with the launched workstation
+  EnvironmentInstanceFiles:
+    Type: String
+    Description: >-
+      An S3 URI (starting with "s3://") that specifies the location of files to be copied to
+      the environment instance, including any bootstrap scripts
   InstanceType:
     Type: String
     Description: Instance type for RStudio. Default is t2.medium.
@@ -30,7 +44,39 @@ Parameters:
     Type: "AWS::EC2::KeyPair::KeyName"
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
   
+Conditions:
+  IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
+
 Resources:
+  IAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join ['-', [Ref: Namespace, 'rstudio-role']]
+      Path: '/'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service:
+                - 'ec2.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - !If
+          - IamPolicyEmpty
+          - !Ref 'AWS::NoValue'
+          - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
+            PolicyDocument: !Ref IamPolicyDocument
+
+  InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: !Join ['-', [Ref: Namespace, 'rstudio-profile']]
+      Path: '/'
+      Roles:
+        - Ref: IAMRole
+
   RstudioEC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -53,25 +99,35 @@ Resources:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT9M
+        Timeout: PT10M
     Properties:
       ImageId : '{{resolve:ssm:/RL/RG/StandardCatalog/RStudio}}'
       InstanceType: !Ref 'InstanceType'
       SecurityGroups: [!Ref 'RstudioEC2SecurityGroup']
       KeyName: !Ref 'KeyPair'
-      UserData: !Base64
+      IamInstanceProfile: !Ref InstanceProfile
       Tags:
-      - Key: Name
-        Value: !Join ["-", [!Ref "AWS::StackName", "RStudio"]]
+        - Key: Name
+          Value: !Join ['-', [Ref: Namespace, 'rstudio-server']]
+        - Key: Description
+          Value: EC2 linux based Rstudio server
       UserData: 
         Fn::Base64: !Sub |
           #!/bin/bash 
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
+          sudo yum update -y --security
+          
           #add user(s)
           sudo useradd -m -s /bin/bash ${InitialUser}
           sudo echo ${InitialUser}:${InitialPassword} | chpasswd
-            /opt/aws/bin/cfn-signal --exit-code 0 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
+          
+          #Download and execute bootstrap script
+          aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
+          chmod 500 "/tmp/get_bootstrap.sh"
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
+          
+          /opt/aws/bin/cfn-signal --exit-code 0 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
 
 Outputs:
   InstanceDNSName:
