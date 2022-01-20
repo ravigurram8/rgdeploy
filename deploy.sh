@@ -231,7 +231,7 @@ sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" "$localhome"/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
-aws s3 cp "$localhome"/cft-templates/* s3://"$bucketname/cft-templates/"
+aws s3 cp "$localhome"/cft-templates/* s3://"$bucketname/"
 
 echo "Copying config files to new bucket"
 tar -czf config.tar.gz config/*
@@ -244,6 +244,9 @@ tar -czf scripts.tar.gz scripts/*
 tar -tf scripts.tar.gz
 aws s3 cp "$localhome"/scripts.tar.gz s3://"$bucketname"
 rm -f scripts.tar.gz
+
+echo "Copying bootstrap scripts to new bucket"
+aws s3 cp "$localhome"/scripts/bootstrap-scripts/ s3://"$bucketname/"bootstrap-scripts --recursive
 
 
 echo "Copying lambda files to new bucket"
