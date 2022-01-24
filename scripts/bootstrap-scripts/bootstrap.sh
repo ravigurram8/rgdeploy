@@ -37,8 +37,8 @@ chmod +x "/usr/local/bin/goofys"
 sudo yum install ec2-instance-connect-1.1
 
 # Create S3 mount script and config file
-chmod +x "${FILES_DIR}/mount_s3.sh"
-ln -s "${FILES_DIR}/mount_s3.sh" "/usr/local/bin/mount_s3.sh"
+chmod +x "${FILES_DIR}/bin/mount_s3.sh"
+ln -s "${FILES_DIR}/bin/mount_s3.sh" "/usr/local/bin/mount_s3.sh"
 printf "%s" "$S3_MOUNTS" > "/usr/local/etc/s3-mounts.json"
 
 # Apply updates to environments based on environment type
