@@ -18,7 +18,7 @@ services:
       - sp2net
   
   cc-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.8.5_b896
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.0_b954
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
@@ -44,7 +44,7 @@ services:
     command: /bin/bash start.sh 
 
   scheduler-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.8.5_b896
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.0_b954
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
@@ -66,7 +66,7 @@ services:
     command: node ./app/scheduler/app.js
     
   notificationsink:  
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.8.1_b4
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.9.0_b2
     secrets:
       - source: sp2prod-config.json
         target: /opt/app/config/config.json
