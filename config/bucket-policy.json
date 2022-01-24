@@ -1,9 +1,62 @@
-{
-  "Sid": "id-1",
-  "Effect": "Allow",
-  "Principal": {
-    "AWS": ""
+[
+  {
+      "Sid": "Get:Artifacts",
+      "Effect": "Allow",
+      "Principal": {
+          "AWS": "{principalArns}"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "{artifactObjectsArn}"
   },
-  "Action": "s3:GetObject",
-  "Resource": "arn:aws:s3:::REPLACE-WITH-S3-BUCKET-NAME/*"
-}
+  {
+      "Sid": "Get:BootstrapScripts",
+      "Effect": "Allow",
+      "Principal": {
+          "AWS": "{accountArns}"
+      },
+      "Action": [
+          "s3:GetObject"
+      ],
+      "Resource": "{bootstrapObjectsArn}"
+  },
+  {
+      "Sid": "List:BootstrapScripts",
+      "Effect": "Allow",
+      "Principal": {
+          "AWS": "{accountArns}"
+      },
+      "Action": [
+          "s3:ListBucket"
+      ],
+      "Resource": "{artifactBucketArn}",
+      "Condition": {
+          "StringLike": {
+              "s3:prefix": "{bootstrapPrefix}"
+          }
+      }
+  },
+  {
+      "Sid": "Deny requests that do not use TLS",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": "{artifactObjectsArn}",
+      "Condition": {
+          "Bool": {
+              "aws:SecureTransport": false
+          }
+      }
+  },
+  {
+      "Sid": "Deny requests that do not use SigV4",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": "{artifactObjectsArn}",
+      "Condition": {
+          "StringNotEquals": {
+              "s3:signatureversion": "AWS4-HMAC-SHA256"
+          }
+      }
+  }
+]
