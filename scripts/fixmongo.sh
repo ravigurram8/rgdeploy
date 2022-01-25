@@ -112,7 +112,7 @@ echo "Roles Created. Enabling authorization in mongod.conf"
 if [ -f /etc/mongod.conf ]; then
 	echo "mongod.conf exists"
 	sed -i -e '/Enable ssl/, +4 s/^#//' -e "s/authorization:.*/authorization: enabled /" -e "s#PEMKeyFile:.*#PEMKeyFile: $RG_HOME/config/mongodb.pem#" -e "s#CAFile:.*#CAFile: $rlca#" /etc/mongod.conf
-	cat /etc/mongod.conf | grep -e 'authorization' -e 'PEMKeyFile' -e 'CAFile'
+	grep -e 'authorization' -e 'PEMKeyFile' -e 'CAFile' /etc/mongod.conf
 	echo "Restarting MongoD"
 	service mongod restart
 	sleep 10
@@ -121,7 +121,7 @@ else
 	exit 1
 fi
 
-cd "$RG_HOME" || exit 
+cd "$RG_HOME" || exit
 if [ -f "$RG_HOME/docker-compose.yml" ]; then
 	echo "docker-compose.yml exists"
 	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" "$RG_HOME/docker-compose.yml"
