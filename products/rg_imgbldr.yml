@@ -316,7 +316,7 @@ Resources:
   NextflowAdvancedImagePipeline:
     Type: "AWS::ImageBuilder::ImagePipeline"
     Properties:
-      Name: "RL_RG_Nextflow_Advanced"
+      Name: !Sub "${AWS::StackName}-Pipeline_Nextflow_Advanced"
       Description: "Pipeline to build Nextflow_Advanced AMI for RLCatalyst Research Gateway"
       ImageRecipeArn: !Ref NextflowAdvancedImageRecipe
       InfrastructureConfigurationArn: !Ref NextflowAdvancedInfraConfig
@@ -331,7 +331,7 @@ Resources:
   RStudioImagePipeline:
     Type: "AWS::ImageBuilder::ImagePipeline"
     Properties:
-      Name: "RL_RG_RStudio"
+      Name: !Sub "${AWS::StackName}-Pipeline_RStudio"
       Description: "Pipeline to build RStudio AMI for RLCatalyst Research Gateway"
       ImageRecipeArn: !Ref RStudioImageRecipe
       InfrastructureConfigurationArn: !Ref RStudioInfraConfig
