@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
+
 Description: 'AWS CloudFormation Sample Template Sample template EIP_With_Association:
   This template shows how to associate an Elastic IP address with an Amazon EC2 instance
   - you can use this same technique to associate an EC2 instance with an Elastic IP
@@ -6,6 +7,7 @@ Description: 'AWS CloudFormation Sample Template Sample template EIP_With_Associ
   the AWS::EC2::EIPAssoication resource type with the IP address of the external EIP.
   **WARNING** This template creates an Amazon EC2 instance and an Elastic IP Address.
   You will be billed for the AWS resources used if you create a stack from this template.'
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -37,6 +39,7 @@ Metadata:
           - ProjectId
     ALB: true
     ProductName: nextflow
+
 Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
@@ -50,7 +53,6 @@ Parameters:
     Default: 16
   PipelineContainer:
     Type: String
-    Default: nextflow/rnaseq-nf:latest
     Description: Public Docker container image of the pipeline to be executed. If you are using a custom pipeline, ensure that the custom container image is publicly available on Docker Hub
   InputDataLocation:
     Description: >-
@@ -61,7 +63,7 @@ Parameters:
     Description: >-
       The full path on the local disk where outputs of the pipeline should be stored. The default path above will enable you to view the outputs via the browser. The path should be accessible to the user ec2-user.
       Alternately, provide an S3 bucket for storing analysis results. The bucket name must respect the S3 bucket naming conventions
-      (can contain lowercase letters, numbers, periods and hyphens). Eg: s3://<BucketName>
+      (can contain lowercase letters, numbers, periods and hyphens).
     Default: /home/ec2-user/nextflow/outputs/  
     Type: String
   ComputeEnvMinvCpus:
@@ -111,6 +113,23 @@ Parameters:
     Type: String
   ProjectId:
     Type: String
+  Namespace:
+    Type: String
+    Description: An environment name that will be prefixed to resource names
+  S3Mounts:
+    Type: String
+    Description: A JSON array of objects with name, bucket, and prefix properties used to mount data
+  IamPolicyDocument:
+    Type: String
+    Description: The IAM policy to be associated with the launched workstation
+  EnvironmentInstanceFiles:
+    Type: String
+    Description: >-
+      An S3 URI (starting with "s3://") that specifies the location of files to be copied to
+      the environment instance, including any bootstrap scripts
+
+Conditions:
+  IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
 
 Resources:
   IamInstanceProfile:
@@ -118,9 +137,11 @@ Resources:
     Properties:
       Roles:
         - Ref: EcsInstanceRole
+  
   EcsInstanceRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Join ['-', [Ref: Namespace, 'nextflow-head-role']]
       AssumeRolePolicyDocument:
         Version: '2008-10-17'
         Statement:
@@ -129,6 +150,12 @@ Resources:
             Principal:
               Service: ec2.amazonaws.com
             Action: sts:AssumeRole
+      Policies:
+        - !If
+          - IamPolicyEmpty
+          - !Ref 'AWS::NoValue'
+          - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
+            PolicyDocument: !Ref IamPolicyDocument
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
@@ -137,6 +164,7 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
         - arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
         - arn:aws:iam::aws:policy/AmazonSSMFullAccess
+  
   EC2LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
@@ -218,6 +246,7 @@ Resources:
       GroupDescription: SG for nextflow workflows on Batch
       VpcId:
         Ref: VpcId
+  
   S3Bucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
@@ -339,6 +368,7 @@ Resources:
                 - "ecs-tasks.amazonaws.com"
             Action:
               - "sts:AssumeRole"
+  
   BatchInstanceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -410,11 +440,13 @@ Resources:
       - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
       - "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
       - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  
   BatchInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
         - Ref: BatchInstanceRole
+  
   BatchSpotFleetRole:
     Type: AWS::IAM::Role
     Properties:
@@ -429,6 +461,7 @@ Resources:
               - "sts:AssumeRole"
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole"
+  
   BatchServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -494,15 +527,31 @@ Resources:
         - Order: 1
           ComputeEnvironment: !Ref SpotComputeEnv
 
-
   EC2Instance:
     Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
     Properties:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           
+          sudo yum update -y --security
           cd /root/ 
+  
+          getFirstChar=`echo $OutputDataLocation | cut -c1-1`
+            
+          if [ "$getFirstChar" == "/" ] 
+          then :
+              echo "Ngnix URL"
+              echo $OutputDataLocation
+          else
+              echo "S3 Path"
+              OutputDataLocation="s3://"${OutputDataLocation}
+              echo $OutputDataLocation 
+          fi
 
           cd .nextflow/ 
           PROJECT_NF_CONFIG=config 
@@ -549,8 +598,14 @@ Resources:
           chown -R ec2-user:ec2-user /home/ec2-user/.[^.]*
 
           usermod -aG docker ec2-user
-          gpasswd -a $USER docker
+          gpasswd -a ec2-user docker
           systemctl restart docker
+
+          #Download and execute bootstrap script
+          aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
+          chmod 500 "/tmp/get_bootstrap.sh"
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
+          /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
           
       InstanceType: !Ref 'InstanceType'
       SecurityGroupIds:
@@ -565,11 +620,12 @@ Resources:
             Encrypted: true
       Tags:
         - Key: Name
-          Value: !Join ['-', ['nextflow-head-node', !Ref "AWS::StackName"]]
+          Value: !Join ['-', [Ref: Namespace, 'nextflow-head-node']]
         - Key: cost_resource
           Value: !Ref "AWS::StackName"
         - Key: Description
           Value: EC2 workspace instance
+  
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -592,20 +648,14 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: !Ref 'AllowedSSHLocation'
-  IPAddress:
-    Type: AWS::EC2::EIP
-  IPAssoc:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      InstanceId: !Ref 'EC2Instance'
-      EIP: !Ref 'IPAddress'
+
 Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
     Value: !Ref 'EC2Instance'
   InstanceIPAddress:
     Description: IP address of the newly created EC2 instance
-    Value: !Ref 'IPAddress'
+    Value: !GetAtt [EC2Instance, PublicIp]
   InstanceDNSName:
     Description: DNS name of the newly created EC2 instance
     Value: !GetAtt [EC2Instance, PublicDnsName]
@@ -627,4 +677,3 @@ Outputs:
     Value: !Ref EC2LaunchTemplate
   WorkDataLocation:
     Value: !Sub ${S3Bucket}
-    
