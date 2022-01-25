@@ -85,7 +85,6 @@ fi
 mytemp=$(mktemp -d -p "${RG_HOME}/tmp" -t "config.old.XXX")
 echo "$mytemp"
 cp "${RG_HOME}/config/config.json" "$mytemp"
-cp "${RG_HOME}/config/dashboard-settings.json" "$mytemp"
 cp "${RG_HOME}/config/snsConfig.json" "$mytemp"
 cp "${RG_HOME}/config/mongo-config.json" "$mytemp"
 cp "${RG_HOME}/config/global-config.json" "$mytemp"
