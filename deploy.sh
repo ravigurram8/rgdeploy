@@ -400,6 +400,10 @@ if [ $stack_status -eq 2 ]; then
 fi
 if [ $stack_status -eq 0 ]; then
 	create_cognito_pool "$userpoolstackname"
+	if ! create_cognito_pool "$userpoolstackname"; then
+		aws cloudformation describe-stack-events --stack-name "$userpoolstackname"
+		exit 1
+	fi	
 fi
 
 #Capture User Pool Client ID
@@ -434,7 +438,10 @@ if [ $stack_status -eq 2 ]; then
 	stack_status=0
 fi
 if [ $stack_status -eq 0 ]; then
-	create_doc_db "$docdbstackname"
+	if ! create_doc_db "$docdbstackname"; then
+		aws cloudformation describe-stack-events --stack-name "$docdbstackname"
+		exit 1
+	fi		
 fi
 calculate_duration "DocumentDB Instance Creation" "$docdb_start_time"
 
@@ -467,7 +474,10 @@ if [ $stack_status -eq 2 ]; then
 	stack_status=0
 fi
 if [ $stack_status -eq 0 ]; then
-	create_image_builder "$imgbldrstackname"
+	if ! create_image_builder "$imgbldrstackname"; then
+		aws cloudformation describe-stack-events --stack-name "$imgbldrstackname"
+		exit 1
+	fi	
 fi
 calculate_duration "Image Builder Stack Creation" "$imgbldr_start_time"
 
@@ -496,7 +506,10 @@ if [ $stack_status -eq 2 ]; then
 	stack_status=0
 fi
 if [ $stack_status -eq 0 ]; then
-	create_main_stack "$mainstackname"
+	if ! create_main_stack "$mainstackname"; then
+		aws cloudformation describe-stack-events --stack-name "$mainstackname"
+		exit 1
+	fi
 fi
 echo "Obtaining MainStack outputs"
 portalinstance_id=$(aws cloudformation describe-stack-resources --stack-name "$mainstackname" --logical-resource-id "RGEC2Instance" | jq -r '.StackResources[] | .PhysicalResourceId')
