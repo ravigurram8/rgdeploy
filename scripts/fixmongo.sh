@@ -93,6 +93,7 @@ db.createUser({user: "admin",pwd: "$2",roles: [ { role: "userAdminAnyDatabase", 
 db.createUser({user: "$3", pwd: "$4", roles: [{role: 'readWriteMinusDropRole', db: "$1"}]})
 EOF
 
+# trunk-ignore(shellcheck/SC2181)
 [ $? -gt 0 ] && echo "Could not create roles and configs. Exiting!" && exit 1
 rootca="${RG_HOME}/config/rootCA.key"
 rlca="${RG_HOME}/config/RL-CA.pem"
@@ -121,7 +122,6 @@ else
 	exit 1
 fi
 
-cd "$RG_HOME" || exit
 if [ -f "$RG_HOME/docker-compose.yml" ]; then
 	echo "docker-compose.yml exists"
 	sed -i -e "s/DB_HOST.*/DB_HOST=$myip/" "$RG_HOME/docker-compose.yml"

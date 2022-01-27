@@ -349,9 +349,9 @@ Outputs:
     Description: Nextflow_Advanced Image Builder Pipeline
     Value: !Ref NextflowAdvancedImagePipeline
     Export:
-      Name: "NextflowAdvancedImagePipeline"
+      Name: !Sub "${AWS::StackName}-NextflowAdvancedImagePipeline"
   RStudioImagePipeline:
     Description: RStudio Image Builder Pipeline
     Value: !Ref RStudioImagePipeline
     Export:
-      Name: "RStudioPipelineName"
+      Name: !Sub "${AWS::StackName}-RStudioPipelineName"
