@@ -6,7 +6,7 @@ echo "Fixing secrets...(fixsecrets.sh v$version)"
 echo "RG_HOME=$RG_HOME"
 
 old_secrets=$(docker secret ls | grep -i sp2prod | awk '{print $1}')
-if [ ! -z "$old_secrets" ]; then
+if [ -n "$old_secrets" ]; then
 	echo "Found old secrets. Removing..."
 	echo "$old_secrets" |
 		while IFS=$'\n' read -r mysecret; do

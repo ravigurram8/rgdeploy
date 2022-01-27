@@ -25,7 +25,7 @@ echo "RG_SRC=$RG_SRC"
 echo "S3_SOURCE=$S3_SOURCE"
 
 # First check if the IP at which mongod is listening is correct
-mymongoip=$(cat /etc/mongod.conf | sed -n -e 's/bindIp: \([^,]*\).*/\1/p' | sed -e 's/\s*//')
+mymongoip=$(sed -n -e 's/bindIp: \([^,]*\).*/\1/p' /etc/mongod.conf | sed -e 's/\s*//')
 echo "Mongod configured to listen at $mymongoip"
 myip=$(wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4)
 echo "Private IP of this machine is $myip"
