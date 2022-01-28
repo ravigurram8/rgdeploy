@@ -154,7 +154,7 @@ echo "Copying docker-compose.yml from $RG_SRC to $RG_HOME"
 # trunk-ignore(shellcheck/SC2016)
 repcmd='s#\${PWD}#'$RG_HOME'#'
 sed -e "$repcmd" "$RG_SRC/docker-compose.yml" >"$RG_HOME/docker-compose.yml"
-cd $RG_HOME || echo "Could not cd to $RG_HOME" && exit 1
+cd $RG_HOME || exit 1
 if [ -f docker-compose.yml ]; then
 	echo "docker-compose.yml exists"
 	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
