@@ -231,7 +231,7 @@ sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" "$localhome"/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
-aws s3 cp "$localhome/cft-templates/*" s3://"$bucketname/"
+aws s3 sync "$localhome/cft-templates/" s3://"$bucketname/"
 
 echo "Copying config files to new bucket"
 tar -czf config.tar.gz config/*
