@@ -69,13 +69,13 @@ If an AMI with the pre-requisites has been shared with you, you can skip this se
 
 You can create the AMI with pre-requisites yourself by following these steps:
 - Install packer
-- Create a Role and attach a policy which permits ECR and EC2 actions and Replace it in builders section        
 - Export AWS Access Keys and Secret Keys 
    - export AWS_ACCESS_KEY_ID="your_Access_Key"
    - export AWS_SECRET_ACCESS_KEY="your_Secret_Key"
    - export AWS_DEFAULT_REGION="Your_Region"
-- Download dump.tar.gz to your local rdeploy folder from s3://rg-deployment-docs
-- Run packer build package-rg.json.
+- Clone this repo on a machine.
+- Create a Role and attach a policy which permits ECR and EC2 actions and Replace the "iam-instance_profile" :"<your_rolename>" in builders section which is in the packer-rg.json.
+- Run packer build packer-rg.json
 - packer build -var 'awsRegion=your_region' -var 'vpcId=your_VPCID' -var 'subnetId=your_SubnetID' packer-rg.json
 - At Run time pass VPCID, SubnetID, AWSRegion as variables declared in packer-rg.json
 - Note that AMI id from the output
