@@ -21,15 +21,18 @@
   "sharedTo": [],
   "name": "1000 Genomes",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "http://www.internationalgenome.org/formats",
+		"type": "s3",
+		"arn": "arn:aws:s3:::1000genomes",
+		"region": "us-east-1"
+	}],
   "moreInformation": "License: Data from the 1000 Genomes Project is now available without embargo, following the final publication from the project. Use of the data should be cited in the usual way, with current details available at http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project",
-  "createdBy": "",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "isShared": false,
-  "isLinked": false,
-  "accountId": ""
+  "isLinked": false
 }
 {
   "_id": {
@@ -55,16 +58,19 @@
   "sharedTo": [],
   "name": "IRS 990 Filings (Spreadsheets)",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Excerpts of electronic Form 990 and 990-EZ filings, converted to spreadsheet form",
+		"type": "s3",
+		"arn": "arn:aws:s3:::irs-990-spreadsheets",
+		"region": "us-east-1"
+	}],
   "moreInformation": "License:Attribution 4.0 International [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)",
   "__v": 0,
   "isDeleted": false,
   "linkedResources": [],
   "isLinked": false,
   "repositoryName": "Registry of Open Data on AWS",
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
+  "isShared": false
 }
 {
   "_id": {
@@ -91,15 +97,19 @@
   "sharedTo": [],
   "name": "ChEMBL",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails" : [{
+            "description" : "ChEMBL 27",
+            "type" : "s3",
+            "arn" : "arn:aws:s3:::aws-roda-hcls-datalake",
+            "region" : "us-east-1"
+  }],
   "moreInformation": "License:https://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_attributions.txt",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "isShared": false,
   "createdBy": "",
-  "isLinked": false,
-  "accountId": ""
+  "isLinked": false
 }
 {
   "_id": {
@@ -127,16 +137,19 @@
   "sharedTo": [],
   "name": "Open Targets",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails" : [{
+            "description" : "Open Targets 20.06. Information onOpen Targets releases can be found [here](https://www.targetvalidation.org/downloads/data).",
+            "type" : "s3",
+            "arn" : "arn:aws:s3:::aws-roda-hcls-datalake",
+            "region" : "us-east-1"
+    }],
   "moreInformation": "License:https://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_attributions.txt",
   "__v": 0,
   "isDeleted": false,
   "linkedResources": [],
   "isLinked": false,
   "repositoryName": "Registry of Open Data on AWS",
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
+  "isShared": false
 }
 {
   "_id": {
@@ -165,16 +178,19 @@
   "sharedTo": [],
   "name": "A2D2: Audi Autonomous Driving Dataset",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "http://a2d2.audi",
+		"type": "s3",
+		"arn": "arn:aws:s3:::aev-autonomous-driving-dataset",
+		"region": "eu-central-1"
+	}],
   "moreInformation": "License:https://creativecommons.org/licenses/by-nd/4.0/",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "linkedResources": [],
   "isLinked": false,
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
+  "isShared": false
 }
 {
   "_id": {
@@ -206,15 +222,18 @@
   "sharedTo": [],
   "name": "Allen Mouse Brain Atlas",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Project data files in a public bucket",
+		"type": "s3",
+		"arn": "arn:aws:s3:::allen-mouse-brain-atlas",
+		"region": "us-west-2"
+	}]
   "moreInformation": "License:http://www.alleninstitute.org/legal/terms-use/",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "isShared": false,
-  "createdBy": "",
-  "isLinked": false,
-  "accountId": ""
+  "isLinked": false
 }
 {
   "_id": {
@@ -241,15 +260,18 @@
   "sharedTo": [],
   "name": "3000 Rice Genomes Project",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "http://s3.amazonaws.com/3kricegenome/README-snp_pipeline.txt",
+		"type": "s3",
+		"arn": "arn:aws:s3:::3kricegenome",
+		"region": "us-east-1"
+	}],
   "moreInformation": "License: This data is available for anyone to use under the terms of the Toronto Statement, which is available [here](http://www.nature.com/nature/journal/v461/n7261/box/461168a_BX1.html)",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "isShared": false,
-  "createdBy": "",
-  "isLinked": false,
-  "accountId": ""
+  "isLinked": false
 }
 {
   "_id": {
@@ -284,11 +306,14 @@
   "sharedTo": [],
   "name": "21st Century Daily Global Seamless Remote Sensing Data Cubes (SDCs)",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Daily Seamless Remote Sensing Data Cube (SDC).",
+		"type": "s3",
+		"arn": "arn:aws:s3:::sdc-daily-thu",
+		"region": "us-west-2"
+	}]
   "moreInformation": "License:Open to non-commercial uses.",
   "__v": 0,
-  "createdBy": "",
-  "accountId": "",
   "isDeleted": true,
   "repositoryName": "Registry of Open Data on AWS",
   "isShared": false,
@@ -320,16 +345,19 @@
   "sharedTo": [],
   "name": "Africa Soil Information Service (AfSIS) Soil Chemistry",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Paired wet and dry chemistry measurements for georeferenced soils\ncollected by the Africa Soil Information Service (AfSIS), stored\nas CSV and OPUS files.\n",
+		"type": "s3",
+		"arn": "arn:aws:s3:::afsis",
+		"region": "us-east-1"
+	}],
   "moreInformation": "License:ODC Open Database License (\"[ODbL](https://opendatacommons.org/licenses/odbl/summary/index.html)\") version 1.0, with attribution to AfSIS",
   "__v": 0,
   "isDeleted": false,
   "repositoryName": "Registry of Open Data on AWS",
   "linkedResources": [],
   "isLinked": false,
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
+  "isShared": false
 }
 {
   "_id": {
@@ -354,16 +382,20 @@
   "sharedTo": [],
   "name": "AgricultureVision",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Terms of use and paper provided.  Dataset provided as a series of tar.gz files with data foreach year and an associated json file dscribing the train/validation/test split.",
+		"type": "s3",
+		"arn": "arn:aws:s3:::agriculture-vision",
+		"region": "us-east-1",
+		"RequesterPays": true
+	}],
   "moreInformation": "License:Provided in the bucket.",
   "__v": 0,
   "isDeleted": false,
   "linkedResources": [],
   "isLinked": false,
   "repositoryName": "Registry of Open Data on AWS",
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
+  "isShared": false
 }
 {
   "_id": {
@@ -393,54 +425,17 @@
   "sharedTo": [],
   "name": "Allen Brain Observatory - Visual Coding AWS Public Data Set",
   "studyType": "Public",
-  "resourceDetails": [],
+  "resourceDetails": [{
+		"description": "Project data files in a public bucket",
+		"type": "s3",
+		"arn": "arn:aws:s3:::allen-brain-observatory",
+		"region": "us-west-2"
+	}],
   "moreInformation": "License:http://www.alleninstitute.org/legal/terms-use/",
   "__v": 0,
   "isDeleted": false,
   "linkedResources": [],
   "isLinked": false,
   "repositoryName": "Registry of Open Data on AWS",
-  "isShared": false,
-  "createdBy": "",
-  "accountId": ""
-}
-{
-  "_id": {
-    "$oid": "5ff449546ae1c429994084dd"
-  },
-  "description": "his bucket contains multiple datasets (as Quilt packages) created by the\nAllen Institute for Cell Science (AICS). The imaging data in this bucket contains\neither of the following:\n\n1) field of view images from glass plates\n2) cell membrane, DNA, and structure segmentations\n3) cell membrane, DNA and structure contours\n4) machine learning imaging predictions of the previously listed modalities.\n\nIn addition, many of the datasets include CSVs that contain feature sets\nrelated to that data.\n",
-  "tags": [
-    "aws-pds",
-    "life sciences",
-    "biology",
-    "cell imaging",
-    "cell biology",
-    "microscopy",
-    "image processing",
-    "machine learning",
-    "Homo sapiens"
-  ],
-  "bookmarkedBy": [],
-  "projectId": [],
-  "createdAt": {
-    "$date": "2021-01-05T09:30:15.208Z"
-  },
-  "updatedAt": {
-    "$date": "2021-01-05T09:30:15.208Z"
-  },
-  "levelOfSharing": 0,
-  "sharedTo": [],
-  "name": "Allen Cell Imaging Collections",
-  "studyType": "Public",
-  "resourceDetails": [],
-  "moreInformation": "License:https://www.allencell.org/terms-of-use.html",
-  "__v": 0,
-  "createdBy": "",
-  "accountId": "",
-  "isDeleted": false,
-  "listOfLinkedProducts": [],
-  "isLinked": false,
-  "isShared": false,
-  "linkedResources": [],
-  "repositoryName": "Registry of Open Data on AWS"
+  "isShared": false
 }
