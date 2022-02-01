@@ -11,3 +11,4 @@ sudo cp ${RG_SRC}/nginx.conf  ${RG_HOME}
 sudo echo -e "RG_HOME='/opt/deploy/sp2'\n" >> sudo /etc/environment
 cd ${RG_SRC}
 sudo tar -czf config.tar.gz config
+sudo zip dump.zip dump/*
