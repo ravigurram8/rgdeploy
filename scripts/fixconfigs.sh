@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.9"
+version="0.1.10"
 echo "Fixing configs...(fixconfig.sh v$version)"
 # Ensure right number of params
 if [ $# -lt 5 ]; then
@@ -24,7 +24,6 @@ myappuser=$4
 myapppwd=$5
 myrunid=$6
 myurl=$7
-err='Success'
 [ -z "$RG_HOME" ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
 [ -z "$RG_SRC" ] && RG_SRC='/home/ubuntu'
@@ -49,10 +48,8 @@ echo "Instance-id : $instanceid"
 if [ -z "$myurl" ]; then
 	public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"
 	if [ -z "$public_host_name" ]; then
-		echo "ERROR: No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs."
-		baseurl=''
-		snsprotocol=''
-		err='Error'
+		echo "FATAL: No RG URL passed. Instance does not have public hostname. One of the two is required. Not modifying configs."
+		exit 1
 	else
 		baseurl="http://$public_host_name/"
 		snsprotocol="http"
@@ -153,17 +150,9 @@ aws s3 cp s3://${S3_SOURCE}/docker-compose.yml $RG_SRC
 echo "Copying docker-compose.yml from $RG_SRC to $RG_HOME"
 # trunk-ignore(shellcheck/SC2016)
 repcmd='s#\${PWD}#'$RG_HOME'#'
+echo "Modifying docker-compose.yml"
 sed -e "$repcmd" "$RG_SRC/docker-compose.yml" >"$RG_HOME/docker-compose.yml"
-cd $RG_HOME || exit 1
-if [ -f docker-compose.yml ]; then
-	echo "docker-compose.yml exists"
-	sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" docker-compose.yml
-	sed -i -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" docker-compose.yml
-	echo "Modified docker-compose.yml with APP_ENV=$RG_ENV and REDIS_HOST=$myip"
-fi
+sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" "$RG_HOME/docker-compose.yml"
+echo "Modified docker-compose.yml with APP_ENV=$RG_ENV and REDIS_HOST=$myip"
 
-if [ $err == 'Error' ]; then
-	echo 'Completed with Errors. Service may not work correctly. Please review the configuration files.'
-else
-	echo 'Configuration changed successfully'
-fi
+echo 'Configuration changed successfully'
