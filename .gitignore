@@ -1,0 +1,10 @@
+.vscode
+*.tar.gz
+rg-deployment-docs
+rg-cft-templates
+.trunk
+.trunk/*
+.isort.cfg
+.markdownlint.yaml
+.flake8
+.shellcheckrc

@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.7"
+version="0.1.8"
 echo "Starting server....(start_server.sh v$version)"
 if [ "$1" == "-h" ]; then
   echo "Usage: `basename $0` application_url"
@@ -30,7 +30,7 @@ docker pull $(cat "$RG_HOME/docker-compose.yml" | grep -i image | grep -i notifi
 
 echo 'Modifying HttpResponseHopLimit'
 ec2instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-aws ec2 modify-instance-metadata-options --instance-id "$ec2instanceid" --http-put-response-hop-limit 2
+aws ec2 modify-instance-metadata-options --instance-id "$ec2instanceid" --http-put-response-hop-limit 2 --http-endpoint enabled
 
 if [ -z $myurl ]; then
     public_host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/public-hostname)"

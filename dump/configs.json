@@ -1,0 +1,320 @@
+{
+  "_id": {
+    "$oid": "601bfa30a130c6255886823c"
+  },
+  "key": "snsUrl",
+  "value": "https://rpqa-np.rlcatalyst.com/"
+}
+{
+  "_id": {
+    "$oid": "603623aa5fa691d0e712e95c"
+  },
+  "key": "TypeOfCatalogProduct",
+  "value": [
+    "All",
+    "Research",
+    "IT Applications"
+  ]
+}
+{
+  "_id": {
+    "$oid": "60f6d697710884c5a1b12ef5"
+  },
+  "key": "region",
+  "helpText": [
+    {
+      "key": "US East (N. Virginia) us-east-1",
+      "value": "us-east-1"
+    },
+    {
+      "key": "US East (Ohio) us-east-2",
+      "value": "us-east-2"
+    },
+    {
+      "key": "US West (N. California) us-west-1",
+      "value": "us-west-1"
+    },
+    {
+      "key": "US West (Oregon) us-west-2",
+      "value": "us-west-2"
+    },
+    {
+      "key": "Asia Pacific (Mumbai) ap-south-1",
+      "value": "ap-south-1"
+    },
+    {
+      "key" : "Asia Pacific (Singapore) ap-southeast-1",
+      "value" : "ap-southeast-1"
+    }, 
+    {
+      "key" : "Asia Pacific (Sydney) ap-southeast-2",
+      "value" : "ap-southeast-2"
+    }
+  ],
+  "configType": "region"
+}
+{
+  "_id": {
+    "$oid": "6103f9875259157a97b4413c"
+  },
+  "helpText": [
+    {
+      "key": "Why do I need to create a organization?",
+      "value": "An Organizational Unit represents a department or business unit within your organization. Create an O.U. to group projects together. A Principal Investigator owns the O.U. and can administer all aspects of the O.U. You will be able to get an overview of the budget and costs for this group."
+    },
+    {
+      "key": "Do I have to add an account to my organization?",
+      "value": "Yes. All AWS resources in your organization are created in the linked AWS account. Without an account, Research Gateway will not be able to create resources for your organization."
+    },
+    {
+      "key": "Organization Name : Enter a unique and descriptive organization name.",
+      "value": "Example : Medical Research",
+      "tags": [
+        "organizationName"
+      ]
+    },
+    {
+      "key": "Organization Description: Add your organization description",
+      "value": "Example : This organization has projects that uses remotely sensed data products and measurements for studying processes.",
+      "tags": [
+        "organizationDescription"
+      ]
+    },
+    {
+      "key": "Account Details: Select the account from the list",
+      "value": "Example : Choose any of the account id from the list. If list is empty, you can add account by clicking add account button",
+      "tags": [
+        "add_accounts"
+      ]
+    },
+    {
+      "key": "Add Users: Select principal users who can create and manage projects within this organizational unit",
+      "value": "Example : Choose any user from the list. If list is empty, you can add new user by clicking add users button",
+      "tags": [
+        "add_users"
+      ]
+    }
+  ],
+  "configType": "create_org_helpText"
+}
+{
+  "_id": {
+    "$oid": "61124d2eca692c1c641fa2da"
+  },
+  "helpText": [
+    {
+      "key": "Why do I need to create a project?",
+      "value": "A project helps you to bring together resources, catalog items, accounts and collaborators easily. You can set a budget for the project and Pause or Stop the project at any time. \n\nResources created from within a project are tagged to that project. This helps in cost and budget management.\n\nResearchers added to a project can share resources."
+    },
+    {
+      "key": "Do I have to add an account to my project?",
+      "value": "Yes. All AWS resources in your project are created in the linked AWS account. Without an account, Research Gateway will not be able to create resources for your project."
+    },
+    {
+      "key": "I already manage my own Service Catalog portfolio. Do I have to still use the Standard Catalog from Research Gateway?",
+      "value": "No. You are free to `Bring your own catalog`. While creating your project, choose the option `Bring your own catalog` to sync your catalog portfolio to Research Gateway."
+    },
+    {
+      "key": "Project Name : Enter a unique and descriptive project name.",
+      "value": "Example : Medical Research Project",
+      "tags": [
+        "project_name"
+      ]
+    },
+    {
+      "key": "Project Description: Add your project description",
+      "value": "Example : This project uses remotely sensed data products and measurements for studying processes.",
+      "tags": [
+        "project_desc"
+      ]
+    },
+    {
+      "key": "Budget Available : Budget should be greater then 0",
+      "value": "Example : 1000",
+      "tags": [
+        "project_budget"
+      ]
+    },
+    {
+      "key": "Account Details: Select the account from the list",
+      "value": "Example : Choose any one of the account id from the list. If list is empty, you can add account by clicking add account button",
+      "tags": [
+        "add_accounts"
+      ]
+    },
+    {
+      "key": "Add Users: Select researchers from the list",
+      "value": "Example : Choose any one of the user from the list. If list is empty, you can add new user by clicking add users button",
+      "tags": [
+        "add_users"
+      ]
+    },
+    {
+      "key": "Add Products : Select catalog type from the list",
+      "value": "Example : Choose any one of the catalog type from the list.",
+      "tags": [
+        "add_products"
+      ]
+    },
+    {
+      "key": "What products can I get from the Standard Catalog",
+      "value": "The RLCatalyst Research Gateway standard catalog brings in many of the products commonly used in scientific research computing. The products span many different categories like compute, storage, databases etc. For a full list click https://researchgateway.readthedocs.io/en/latest/Appendices.html#appendix-b",
+      "tags": [
+        "add_products"
+      ]
+    }
+  ],
+  "configType": "create_project_helpText"
+}
+{
+  "_id": {
+    "$oid": "611525242f8746728471aa5b"
+  },
+  "helpText": [
+    {
+      "key": "What should I do prior to 'Add Account'?",
+      "value": "Arrange for AWS Credentials which will consist of an Account number, the AWS Region to use, an Access Key and a Secret Key. For Research Gateway to create the roles required to manage resources on your behalf, the credentials need to have IAMFullAccess permissions. Your AWS Administrator should be able to create an IAM User with programmatic access and the IAMFullAccess permission. Research Gateway does not store these credentials. It only uses these credentials to create the appropriate roles. You are free to delete the credentials or deactivate them once the account has been added."
+    },
+    {
+      "key": "Are my credentials secure?",
+      "value": "Absolutely. We encrypt all data before transmitting to the server. The credentials are used to set up the roles that are required for Research Gateway to manage resources on your behalf. We do not store your credentials beyond this transaction."
+    },
+    {
+      "key": "My credentials are not working.",
+      "value": "Check if the credentials are valid. \n\nCheck that you are entering the credentials correctly.\nThe Access Key is typically at least 20 characters long and begin with AKIA.\nThe Secret Key is at least 40 characters long.\n\nCheck that the credentials supplied are from the same account whose Account Number is entered in the form.\n\nFor Research Gateway to create the roles required to manage resources on your behalf, the credentials need to have IAMFullAccess permissions. If you are unable to Add Account successfully, please try with credentials that have this AWS Managed Policy attached to the user or group. You can also use credentials of a user who has AdminAccess AWS managed policy attached to the user or group."
+    },
+    {
+      "key": "Why do I need to specify a region?",
+      "value": "Research Gateway is built on AWS Service Catalog and the products and portfolios in each region are separate.\nThe AWS Services available in each region may also vary from region to region. Hence, Research Gateway aligns the projects with AWS regions."
+    },
+    {
+      "key": "Can I delete my credentials after entering them in this screen?",
+      "value": "Yes. The credentials are used to set up the roles that are required for Research Gateway to manage resources on your behalf.\nWe do not store your credentials beyond this transaction. You can deactivate or delete this set of credentials once the Account has been added successfully in Research Gateway."
+    },
+    {
+      "key": "I am not comfortable adding my credentials. Can I still use Research Gateway?",
+      "value": "Yes. You can create the roles outside of Research Gateway and then use our professional services to seed the database.\nPlease contact our support or sales team."
+    },
+    {
+      "key": "Account Name : Enter a unique and descriptive account name.",
+      "value": "Example : Research account",
+      "tags": [
+        "account_name"
+      ]
+    },
+    {
+      "key": "Access Key: Add access key of your AWS account.",
+      "value": "Example : AKIAIOSFODNN7EXAMPLE.",
+      "tags": [
+        "access_key"
+      ]
+    },
+    {
+      "key": "Secret Key: Add secret key of your AWS account.",
+      "value": "Example : wJalrXUtnFEMI/K7M/bPxRfiCYEXAMPLEKEY",
+      "tags": [
+        "secret_key"
+      ]
+    },
+    {
+      "key": "Region: Select a region of your AWS account.",
+      "value": "Example : us-east-1",
+      "tags": [
+        "region"
+      ]
+    },
+    {
+      "key": "Account Number: Add your AWS account number.",
+      "value": "Example : 071938519317",
+      "tags": [
+        "account_number"
+      ]
+    },
+    {
+      "key": "Use default VPC",
+      "value": "Research Gateway uses the default VPC for provisioning resources from the Standard Catalog. If you check this option, Research Gateway will check if a default VPC exists and will create one if it does not exist. If you do not check this option, provisioning resources from Standard Catalog may fail. You may still be able to provision resources which allow explicit selection of networking parameters like VPC, Subnets, Security Groups etc.",
+      "tags": [
+        "vpc"
+      ]
+    }
+  ],
+  "configType": "add_account_helpText"
+}
+{
+  "_id": {
+    "$oid": "61c5589a197ac502f3133c9f"
+  },
+  "key": "projectStorage",
+  "value": {
+    "productList": [
+      "ec2",
+      "rstudio",
+      "nextflow"
+    ],
+    "s3Mounts": {
+      "ProjectStorage": {
+        "id": "ProjectStorage",
+        "prefix": "Shared/"
+      }
+    },
+    "iamPolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "S3StudyReadWriteAccess",
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:GetObjectTagging",
+            "s3:GetObjectTorrent",
+            "s3:GetObjectVersion",
+            "s3:GetObjectVersionTagging",
+            "s3:GetObjectVersionTorrent",
+            "s3:AbortMultipartUpload",
+            "s3:ListMultipartUploadParts",
+            "s3:PutObject",
+            "s3:PutObjectAcl",
+            "s3:PutObjectTagging",
+            "s3:PutObjectVersionTagging",
+            "s3:DeleteObject",
+            "s3:DeleteObjectTagging",
+            "s3:DeleteObjectVersion",
+            "s3:DeleteObjectVersionTagging"
+          ],
+          "Resource": []
+        },
+        {
+          "Sid": "studyListS3Access1",
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:ListBucketVersions"
+          ],
+          "Resource": "",
+          "Condition": {
+            "StringLike": {
+              "s3:prefix": []
+            }
+          }
+        },
+        {
+          "Sid": "S3ScriptsReadAccess",
+          "Action": "s3:GetObject",
+          "Resource": "",
+          "Effect": "Allow"
+        },
+        {
+          "Sid": "S3ScriptsListAccess",
+          "Condition": {
+            "StringLike": {
+              "s3:prefix": ""
+            }
+          },
+          "Action": "s3:ListBucket",
+          "Resource": "",
+          "Effect": "Allow"
+        }
+      ]
+    }
+  }
+}

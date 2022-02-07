@@ -5,32 +5,32 @@
     "ami_id_list": [
         {
             "Key": "us-east-1",
-            "Value": "ami-02161943742b2f0e1"
+            "Value": "ami-0a8dafdc0a2c73758"
         },
         {
             "Key": "us-east-2",
-            "Value" : "ami-06a28664a50da1083"
+            "Value" : "ami-097d50f268b771b71"
         },
         {
             "Key": "us-west-1", 
-            "Value": "ami-083064b2ce8cff688"
+            "Value": "ami-0a0d7b3e688579f63"
         },
         {
             "Key": "us-west-2",
-            "Value": "ami-02a57220b3320a450"
+            "Value": "ami-0bb26be3dcaccc868"
         },
         {
             "Key": "ap-south-1",
-            "Value": "ami-0922d7f6b2b855794"
+            "Value": "ami-0f020601c8099e4fb"
         },
         {
             "Key": "ap-southeast-1",
-            "Value": "ami-0ee126c404d54fc5b"
+            "Value": "ami-0a71ffd4401b44eef"
         },        
         {
             "Key": "ap-southeast-2",
-            "Value": "ami-0cdcce7966c66cd6b"
-        },
+            "Value": "ami-06503b1085e9dd8d1"
+        }
     ],
     "ami_path" : "/RL/RG/StandardCatalog/nextflow-latest"
    }
@@ -40,31 +40,31 @@
         "ami_id_list" : [
             {
                 "Key": "us-east-1",
-                "Value": "ami-087c17d1fe0178315"
+                "Value": "ami-0cbd245bc3829aa3e"
             },
             {
                 "Key": "us-east-2",
-                "Value":  "ami-00dfe2c7ce89a450b"
+                "Value":  "ami-03b28acc1af8d1338"
             },
             {
                 "Key": "us-west-1",
-                "Value": "ami-038c15c04e38f2829"
+                "Value": "ami-08eca68ba14465cf4"
             },
             {
                 "Key": "us-west-2",
-                "Value": "ami-0e1e279ee72698766"
+                "Value": "ami-02e453ee9820af0c7"
             },
             {
                 "Key": "ap-south-1",
-                "Value": "ami-0a05747d7b5e577bc"
+                "Value": "ami-0b534e9bf30c13f3c"
             },
             {
                 "Key": "ap-southeast-1",
-                "Value": "ami-09901df6afc33ca1c"
+                "Value": "ami-0f4234b1a7b168533"
             },
             {
                 "Key": "ap-southeast-2",
-                "Value": "ami-08fa44231c6415b53"
+                "Value": "ami-00aee2571d19699b6"
             }
         ],
         "ami_path" : "/RL/RG/StandardCatalog/RStudio"

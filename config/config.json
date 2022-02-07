@@ -14,7 +14,10 @@
     "secretID": "portaldevsecret"
   },
   "cryptSetting": {
-    "password": "pass@!@#"
+    "algorithm": "aes192",
+    "password": "pass@!@#",
+    "encryptionEncoding": "ascii",
+    "decryptionEncoding": "base64"
   },
   "enableB2CMode": true,
   "capthca": {
@@ -144,5 +147,42 @@
   "route53": {
         "domainName": "REPLACE_WITH_DOMAIN_NAME",
         "hostedZoneId": "REPLACE_WITH_HOSTED_ZONE_ID"
+  },
+  "tempDashboardHome": "/rlc/cc/server/dashboard/temp/",
+  "dashboardHome": "/rlc/cc/server/dashboard/config/",
+  "scheduler_express": {
+    "port": 3004,
+    "host": "localhost"
+  },
+  "constantData": {
+    "sort_order": "asc",
+    "sortReferanceData": {
+      "assets": "state",
+      "incidents": "priority",
+      "alerts": "priority",
+      "services": "state",
+      "settings": "created_on",
+      "businessService": "created_on",
+      "groups": "createdAt"
+    },
+    "business_service_pageSize": "20",
+    "skip_Records": 1,
+    "max_record_limit": 200,
+    "record_limit": 10,
+    "incidents": {
+      "p1ResponseTime": 300,
+      "p1ResolutionTime": 3600,
+      "p2ResponseTime": 1200,
+      "p2ResolutionTime": 25200,
+      "p3ResponseTime": 1200,
+      "p3ResolutionTime": 86400,
+      "p5ResponseTime": 900,
+      "p5ResolutionTime": 14400
+    }
+  },
+  "db": {
+    "dbName": "cc",
+    "host": "localhost",
+    "port": "27017"
   }
 }

@@ -23,20 +23,20 @@ Parameters:
     MinLength: 16
     MaxLength: 256
     ConstraintDescription: "The URL at which this instance of Research Gateway will be available to the user"
-  Function1Name: 
-    Description: Function Name for LambdaFunction1
+  Function1Name:
+    Description: Function Name for Lambda function called post-verification.
     Type: String
     MinLength: 4
-    MaxLength: 40
+    MaxLength: 64
     Default: UserManagementAfterSuccessSignup
     ConstraintDescription: A Name to identify LambdaFunction1
-  Function2Name: 
-    Description: Function Name for LambdaFunction2
+  Function2Name:
+    Description: Function Name for lambda which handles pre-verification custom message.
     Type: String
     MinLength: 4
-    MaxLength: 32
+    MaxLength: 64
     Default: UserManagement
-    ConstraintDescription: A Name to identify LambdaFunction2    
+    ConstraintDescription: A Name to identify LambdaFunction2
 Resources:
   UserPoolCustomMessageLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -327,28 +327,28 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-          Action:
-          - sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
       Path: "/"
       Policies:
-      - PolicyName: root
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - logs:*
-            Resource: arn:aws:logs:*:*:*
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
   LambdaFunction1:
     Type: "AWS::Lambda::Function"
     Properties:
-      Description: ""
+      Description: "This trigger is invoked after a user is confirmed, allowing you to send custom messages or to add custom logic, for example for analytics."
       Environment:
         Variables:
           PORTAL_LINK: !Ref PortalURLParam
@@ -356,8 +356,8 @@ Resources:
       Handler: "index.handler"
       Code:
         S3Bucket: rg-deployment-docs
-        S3Key: UserManagementAfterSuccessSignup.zip
-      Role: !GetAtt 'LambdaExecutionRole.Arn'
+        S3Key: post_verification_send_message.zip
+      Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
       Runtime: "nodejs12.x"
       Timeout: 3
@@ -367,7 +367,7 @@ Resources:
   LambdaFunction2:
     Type: "AWS::Lambda::Function"
     Properties:
-      Description: ""
+      Description: "This trigger is invoked before a verification or MFA message is sent, allowing you to customize the message dynamically."
       Environment:
         Variables:
           PORTAL_LINK: !Ref PortalURLParam
@@ -375,8 +375,8 @@ Resources:
       Handler: "index.handler"
       Code:
         S3Bucket: rg-deployment-docs
-        S3Key: rg_lambda.zip
-      Role: !GetAtt 'LambdaExecutionRole.Arn'
+        S3Key: pre_verification_custom_message.zip
+      Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
       Runtime: "nodejs12.x"
       Timeout: 3
@@ -386,8 +386,8 @@ Resources:
 Outputs:
   UserPoolId:
     Value: !Ref CognitoUserPool
-#    Export:
-#      Name: "CognitoUserPool::Id"
+  #    Export:
+  #      Name: "CognitoUserPool::Id"
   UserPoolClientId:
     Value: !Ref CognitoUserPoolClient
 #    Export:
