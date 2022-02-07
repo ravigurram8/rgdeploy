@@ -16,7 +16,8 @@ Metadata:
         Parameters:
           - PipelineName
           - PipelineContainer
-          - InputDataLocation 
+          - InputDataLocation
+          - InputDataPattern 
           - OutputDataLocation
       - Label:
           default: Head Node Configuration
@@ -58,7 +59,12 @@ Parameters:
     Description: >-
       An S3 bucket which holds input data for the Nextflow pipeline. The bucket name must respect the S3 bucket naming conventions
       (can contain lowercase letters, numbers, periods and hyphens).
-    Type: String 
+    Type: String
+  InputDataPattern:
+    Description: >-
+      The pattern to match samples to be processed as inputs to the pipeline. E.g. data/ggal/*_{1,2}.fq. It can also point to a csv or tsv file that contains details of the files to be processed.
+    Type: String
+    Default: samplesheet.csv 
   OutputDataLocation:
     Description: >-
       The full path on the local disk where outputs of the pipeline should be stored. The default path above will enable you to view the outputs via the browser. The path should be accessible to the user ec2-user.
@@ -539,13 +545,15 @@ Resources:
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           
           sudo yum update -y --security
-          cd /root/ 
-  
-          getFirstChar=`echo $OutputDataLocation | cut -c1-1`
+          cd /root/  
+          
+          getOutputData=${OutputDataLocation}
+          getFirstChar=`echo $getOutputData | cut -c1-1`
             
           if [ "$getFirstChar" == "/" ] 
           then :
-              echo "Ngnix URL"
+              echo "Ngnix URL" 
+              OutputDataLocation=${OutputDataLocation}
               echo $OutputDataLocation
           else
               echo "S3 Path"
@@ -558,13 +566,13 @@ Resources:
 
           cat << EOF >> $PROJECT_NF_CONFIG                                                                                                                                                                                                                                                                                                                                                                
           process.container = '${PipelineContainer}'
-          docker.runOptions='-u 0:0'
           plugins {
             id 'nf-amazon'
           }
           docker.enabled = true
-          params.outdir='${OutputDataLocation}'
-          params.reads='s3://${InputDataLocation}'
+          params.outdir='$OutputDataLocation'
+          params.reads='s3://${InputDataLocation}/${InputDataPattern}'
+          params.input='s3://${InputDataLocation}/${InputDataPattern}'
           profiles {
             standard {
               process.container = '${PipelineContainer}'
@@ -589,10 +597,10 @@ Resources:
 
           NEXTFLOW_CONFIG=nextflow.config
           
-          NEXTFLOW_OUTPUT_PARAMS='\nparams.outdir="${OutputDataLocation}"'
-          
-          echo -e $NEXTFLOW_OUTPUT_PARAMS >>$NEXTFLOW_CONFIG
- 
+          cat << EOF >> $NEXTFLOW_CONFIG
+          params.outdir='$OutputDataLocation'
+          EOF
+  
           docker pull ${PipelineContainer}
           chown -R ec2-user:ec2-user /home/ec2-user/
           chown -R ec2-user:ec2-user /home/ec2-user/.[^.]*
