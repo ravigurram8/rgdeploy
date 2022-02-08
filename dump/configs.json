@@ -318,3 +318,33 @@
     }
   }
 }
+{
+  "_id": {
+    "$oid": "61fa15c4bd4d148afe2155dc"
+  },
+  "key": "readTheDocsUrl",
+  "value": "https://researchgateway.readthedocs.io/"
+}
+{
+  "_id": {
+    "$oid": "61fbd4239fab988868a9d00e"
+  },
+  "key": "rgSetupVideo",
+  "value": {
+    "fullVideo": {
+      "link": "https://youtu.be/zDksIb1n9zI"
+    },
+    "addAccount": {
+      "link": "https://youtu.be/zDksIb1n9zI?t=60"
+    },
+    "addProject": {
+      "link": "https://youtu.be/zDksIb1n9zI?t=100"
+    },
+    "assignProducts": {
+      "link": "https://youtu.be/zDksIb1n9zI?t=100"
+    },
+    "users": {
+      "link": "https://youtu.be/zDksIb1n9zI?t=100"
+    }
+  }
+}
