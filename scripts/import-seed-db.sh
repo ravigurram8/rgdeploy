@@ -41,31 +41,31 @@ if [ -z "$mydocdburl" ]; then
 	exit 1
 fi
 if [ "$mycollection" == "ALL" ]; then
-	echo "Importing all 3 collections into $mydocdburl"
-	mongoimport --host "$mydocdburl:27017" --ssl \
-		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=studies \
-		"$RG_SRC/dump/studies.json"
-	mongoimport --host "$mydocdburl:27017" --ssl \
-		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=studies \
-		"$RG_SRC/dump/standardcatalogitems.json"
-	mongoimport --host "$mydocdburl:27017" --ssl \
-		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=studies \
-		"$RG_SRC/dump/configs.json"
+        echo "Importing all 3 collections into $mydocdburl"
+        mongoimport --host "$mydocdburl:27017" --ssl \
+                --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+                --username "$mydbuser" --password "$mydbuserpwd" \
+                --db "${mydbname}" --collection=studies \
+                "$RG_SRC/dump/studies.json"
+        mongoimport --host "$mydocdburl:27017" --ssl \
+                --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+                --username "$mydbuser" --password "$mydbuserpwd" \
+                --db "${mydbname}" --collection=standardcatalogitems\
+                "$RG_SRC/dump/standardcatalogitems.json"
+        mongoimport --host "$mydocdburl:27017" --ssl \
+                --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+                --username "$mydbuser" --password "$mydbuserpwd" \
+                --db "${mydbname}" --collection=configs\
+                "$RG_SRC/dump/configs.json"
 else
-	# trunk-ignore(shellcheck/SC2060)
-	mycollection=$(echo "$mycollection" | tr [:upper:] [:lower:])
-	if [ "$mycollection" != "studies" ] && [ "$mycollection" != "standardcatalogitems" ] && [ "$mycollection" != "configs" ]; then
-		echo "Unknown collection $mycollection" && exit 1
-	fi
-	mongoimport --host "$mydocdburl:27017" --ssl \
-		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
-		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=studies \
-		"$RG_SRC/dump/$mycollection.json"
+        # trunk-ignore(shellcheck/SC2060)
+        mycollection=$(echo "$mycollection" | tr [:upper:] [:lower:])
+        if [ "$mycollection" != "studies" ] && [ "$mycollection" != "standardcatalogitems" ] && [ "$mycollection" != "configs" ]; then
+                echo "Unknown collection $mycollection" && exit 1
+        fi
+        mongoimport --host "$mydocdburl:27017" --ssl \
+                --sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
+                --username "$mydbuser" --password "$mydbuserpwd" \
+                --db "${mydbname}" --collection=$mycollection \
+                "$RG_SRC/dump/$mycollection.json"
 fi
