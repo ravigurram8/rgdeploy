@@ -57,8 +57,8 @@ Parameters:
     Description: Public Docker container image of the pipeline to be executed. If you are using a custom pipeline, ensure that the custom container image is publicly available on Docker Hub
   InputDataLocation:
     Description: >-
-      An S3 bucket which holds input data for the Nextflow pipeline. The bucket name must respect the S3 bucket naming conventions
-      (can contain lowercase letters, numbers, periods and hyphens).
+      The path to the location which holds the Input data files. This can point to a local path on the head node or to an S3 bucket. Eg /home/ec2-user/studies/ProjectStorage/Shared or mys3bucket.   
+      Type in the search box to find s3 buckets created through Research Gateway.
     Type: String
   InputDataPattern:
     Description: >-
@@ -67,9 +67,9 @@ Parameters:
     Default: samplesheet.csv 
   OutputDataLocation:
     Description: >-
-      The full path on the local disk where outputs of the pipeline should be stored. The default path above will enable you to view the outputs via the browser. The path should be accessible to the user ec2-user.
-      Alternately, provide an S3 bucket for storing analysis results. The bucket name must respect the S3 bucket naming conventions
-      (can contain lowercase letters, numbers, periods and hyphens).
+      The path to the location which holds the Output data files. This can point to a local path on the head node or to an S3 bucket. 
+      A local path should be accessible to the user ec2-user. Alternately, provide an S3 bucket for storing analysis results. 
+      Type in the search box to find s3 buckets created through Research Gateway.
     Default: /home/ec2-user/nextflow/outputs/  
     Type: String
   ComputeEnvMinvCpus:
@@ -91,7 +91,7 @@ Parameters:
     AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium]
     ConstraintDescription: Must be a valid EC2 instance type.
   KeyPair:
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the Head Node. Please create a key pair from the key pair screen if they are not available in the dropdown.
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the Head Node. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: Must be the name of an existing EC2 KeyPair.
   AllowedSSHLocation:
@@ -544,15 +544,22 @@ Resources:
           #!/bin/bash -xe
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           
+          cd /usr/bin
+          curl -s https://get.nextflow.io | bash
+
           sudo yum update -y --security
-          cd /root/  
+          cd /root/ 
           
+          pattern=${InputDataPattern}
+          pattern=$(echo $pattern | sed -e 's#^/*##')
+          echo $pattern
+
           getOutputData=${OutputDataLocation}
           getFirstChar=`echo $getOutputData | cut -c1-1`
             
           if [ "$getFirstChar" == "/" ] 
           then :
-              echo "Ngnix URL" 
+              echo "Ngnix URL"
               OutputDataLocation=${OutputDataLocation}
               echo $OutputDataLocation
           else
@@ -561,18 +568,34 @@ Resources:
               echo $OutputDataLocation 
           fi
 
+
+          getInputData=${InputDataLocation}
+          getIFirstChar=`echo $getInputData | cut -c1-1`
+            
+          if [ "$getIFirstChar" == "/" ] 
+          then :
+              echo "Ngnix URL"
+              InputDataLocation=${InputDataLocation}
+              echo $InputDataLocation
+          else
+              echo "S3 Path"
+              InputDataLocation="s3://"${InputDataLocation}
+              echo $InputDataLocation 
+          fi
+
           cd .nextflow/ 
           PROJECT_NF_CONFIG=config 
 
-          cat << EOF >> $PROJECT_NF_CONFIG                                                                                                                                                                                                                                                                                                                                                                
+          cat << EOF >> $PROJECT_NF_CONFIG
+
           process.container = '${PipelineContainer}'
           plugins {
             id 'nf-amazon'
           }
           docker.enabled = true
           params.outdir='$OutputDataLocation'
-          params.reads='s3://${InputDataLocation}/${InputDataPattern}'
-          params.input='s3://${InputDataLocation}/${InputDataPattern}'
+          params.reads='$InputDataLocation/$pattern'
+          params.input='$InputDataLocation/$pattern'
           profiles {
             standard {
               process.container = '${PipelineContainer}'
@@ -587,6 +610,7 @@ Resources:
               aws.batch.cliPath = '/home/ec2-user/miniconda/bin/aws'
             }
           }
+
           EOF
           
           cd /home/ec2-user/
@@ -598,7 +622,9 @@ Resources:
           NEXTFLOW_CONFIG=nextflow.config
           
           cat << EOF >> $NEXTFLOW_CONFIG
+
           params.outdir='$OutputDataLocation'
+          
           EOF
   
           docker pull ${PipelineContainer}
