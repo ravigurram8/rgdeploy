@@ -18,12 +18,10 @@ services:
       - sp2net
   
   cc-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.8.5_b896
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.1_b982
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
-      - source: sp2prod-dashboard-settings.json
-        target: /rlc/cc/server/app/config/dashboard-settings.json
     depends_on:
      - scheduler-3102
     environment:
@@ -33,6 +31,8 @@ services:
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM URL where it has been placed
+      - CC_HOST=cc-3102:3002
+      - NS_HOST=notificationsink:3005
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/logs:/rlc/cc/server/app/logs
@@ -43,19 +43,17 @@ services:
     command: /bin/bash start.sh 
 
   scheduler-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.8.5_b896
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.1_b982
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
-      - source: sp2prod-dashboard-settings.json
-        target: /rlc/cc/server/app/config/dashboard-settings.json
     environment:
       - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
       - REDIS_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM_URL
-      - CC_HOST=cc-3102
+      - CC_HOST=cc-3102:3002
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/slogs:/rlc/cc/server/app/logs
@@ -65,12 +63,10 @@ services:
     command: node ./app/scheduler/app.js
     
   notificationsink:  
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.8.1_b4
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.9.0_b2
     secrets:
       - source: sp2prod-config.json
         target: /opt/app/config/config.json
-      - source: sp2prod-dashboard-settings.json
-        target: /opt/app/config/dashboard-settings.json
       - source: sp2prod-alert-config.json
         target: /opt/app/config/alert-config.json
     environment:
@@ -85,8 +81,6 @@ services:
 
 secrets:
   sp2prod-config.json:
-    external: true
-  sp2prod-dashboard-settings.json:
     external: true
   sp2prod-alert-config.json:
     external: true

@@ -50,6 +50,6 @@
   "snsTopicName": "Research-Product-Events",
   "snsProtocol": "REPLACE_WITH_HTTP_HTTPS",
   "endpoint": "notificationsink/productProvisioningUpdates",
-  "notificationSinkCleanUpRoute": "notificationsink/unlinkAccount",
+  "notificationSinkCleanUpRoute": "unlinkAccount",
   "snsUrlKey": "snsUrl"
 }

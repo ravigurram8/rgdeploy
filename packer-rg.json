@@ -44,7 +44,7 @@
     },
     {
       "type": "file",
-      "source": "dump.tar.gz",
+      "source": "dump",
       "destination": "{{user `RG_SRC`}}/"
     },
     {
@@ -79,6 +79,12 @@
        "type": "file",
         "source": "config",
         "destination": "{{user `RG_SRC`}}/config"
+    },
+    {
+      "type": "shell",
+      "inline": [
+         "sudo apt install zip -y"
+        ]
     },
     {
       "type": "shell",
