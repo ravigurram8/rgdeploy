@@ -1,6 +1,6 @@
 #!/bin/bash
 # Download the latest scripts
-version='0.1.4'
+version='0.1.5'
 echo "updatescripts.sh version: $version"
 [ -z "$RG_HOME" ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
@@ -69,6 +69,11 @@ if [ ! -f /usr/local/sbin/import-seed-db.sh ] || [ $RG_SRC/scripts/import-seed-d
 	cp $RG_SRC/scripts/import-seed-db.sh /usr/local/sbin/
 fi
 
-grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh /usr/local/sbin/import-seed-db.sh /usr/local/sbin/updatessmpaths.sh
+if [ ! -f /usr/local/sbin/connect-db.sh ] || [ $RG_SRC/scripts/connect-db.sh -nt /usr/local/sbin/connect-db.sh ]; then
+	echo "Found newer version of connect-db.sh. Updating"
+	cp $RG_SRC/scripts/connect-db.sh /usr/local/sbin/
+fi
+
+grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh /usr/local/sbin/import-seed-db.sh /usr/local/sbin/updatessmpaths.sh /usr/local/sbin/connect-db.sh
 rm -rf $RG_SRC/scripts
 echo "Done updating scripts"
