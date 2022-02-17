@@ -69,6 +69,7 @@ elif [ $# -lt 7 ]; then
 	echo '       Param 8:  The Environment DEV / QA / STAGE / PROD to deploy DB instance.'
 	echo '       Param 9:  The URL at which Research Gateway will be accessed'
 	echo '       Param 10: The Target Group to which the Portal EC2 instance should be added'
+	echo '       Param 11: The hosted-zone ID for URL in param 9.'
 	exit 1
 else
 	echo "New run"
@@ -487,6 +488,12 @@ aws cloudformation describe-stacks --stack-name "$imgbldrstackname" | jq -r '.St
 
 #===============================================================================================================
 #Creating Main stack
+ac_name=$(aws sts get-caller-identity --query "Account" --output text)
+r53_domain_name="${rgurl//http[s]*:\/\//}"
+jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
+hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
+makeconfigs.sh "$userpoolclient_id" "$userpool_id" "$bucketname" "$appuser" "$appuserpassword" \
+            "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone"
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstack_start_time=$SECONDS
 mainstackname="RG-PortalStack-$runid"
