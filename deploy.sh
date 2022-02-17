@@ -492,7 +492,7 @@ ac_name=$(aws sts get-caller-identity --query "Account" --output text)
 r53_domain_name="${rgurl//http[s]*:\/\//}"
 jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
 hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
-makeconfigs.sh "$userpoolclient_id" "$userpool_id" "$bucketname" "$appuser" "$appuserpassword" \
+./makeconfigs.sh "$userpoolclient_id" "$userpool_id" "$bucketname" "$appuser" "$appuserpassword" \
             "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone"
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstack_start_time=$SECONDS
