@@ -12,16 +12,16 @@
       {
         "description": "http://www.internationalgenome.org/formats",
         "arn": "arn:aws:s3:::1000genomes",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Data from the 1000 Genomes Project is now available without embargo, following the final publication from the project. Use of the data should be cited in the usual way, with current details available at http://www.internationalgenome.org/faq/how-do-i-cite-1000-genomes-project.\nhttps://github.com/awslabs/open-data-docs/tree/main/docs/1000genomes\nhttp://www.internationalgenome.org/contact",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -43,16 +43,16 @@
       {
         "description": "http://s3.amazonaws.com/3kricegenome/README-snp_pipeline.txt",
         "arn": "arn:aws:s3:::3kricegenome",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "This data is available for anyone to use under the terms of the Toronto Statement, which is available [here](http://www.nature.com/nature/journal/v461/n7261/box/461168a_BX1.html)\nhttps://github.com/awslabs/open-data-docs/tree/main/docs/3kricegenome\nhttp://iric.irri.org/contact-us",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -75,16 +75,16 @@
       {
         "description": "Released and archived 4DNucleome data",
         "arn": "arn:aws:s3:::4dn-open-data-public",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "External data users may freely download, analyze, and publish results based on any 4DN data provided here without restrictions.\nhttps://data.4dnucleome.org\nsupport@4dnucleome.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -111,16 +111,16 @@
       {
         "description": "Project data files in a public bucket",
         "arn": "arn:aws:s3:::allen-mouse-brain-atlas",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "http://www.alleninstitute.org/legal/terms-use/\nhttp://help.brain-map.org/display/mousebrain/Documentation\nawspds@alleninstitute.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -145,22 +145,22 @@
       {
         "description": null,
         "arn": "arn:aws:s3:::threatenedspecies",
-        "region": null,
+        "region": "ap-southeast-2",
         "type": "s3"
       },
       {
         "description": null,
         "arn": "arn:aws:s3:::koalagenomes",
-        "region": null,
+        "region": "ap-southeast-2",
         "type": "s3"
       }
     ],
     "moreInformation": "https://threatenedspeciesinitiative.com/threatened-species-initiative-data-policy-v1-0-june-2020/\nhttps://awgg-lab.github.io/australasiangenomes/\nsoles.wildlife-genomics@sydney.edu.au",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -188,16 +188,16 @@
       {
         "description": "AWS-iGenomes S3 Bucket",
         "arn": "arn:aws:s3:::ngi-igenomes",
-        "region": null,
+        "region": "eu-west-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Multiple - please see [data origins](https://github.com/ewels/AWS-iGenomes#data-origin).\nhttps://ewels.github.io/AWS-iGenomes/\nhttps://github.com/ewels/AWS-iGenomes/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -220,28 +220,28 @@
       {
         "description": "BEATAML1.0-COHORT RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-beataml1-cohort-phs001657-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "BEATAML1.0-CRENOLANIB Clinical Supplement",
         "arn": "arn:aws:s3:::gdc-beataml1.0-crenolanib-phs001628-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "WXS/RNA-Seq Aligned Reads, WXS Annotated Somatic Mutation, WXS Raw Somatic Mutation, RNA-Seq\nSplice Junction Quantification\n",
         "arn": "arn:aws:s3:::gdc-beataml1-cohort-phs001657-2-controlled",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://www.cancer.gov/about-nci/organization/ccg/blog/2019/beataml\n\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -266,16 +266,16 @@
       {
         "description": "gnomAD summary data aggregated from large-scale human genome and exome sequencing projects.",
         "arn": "arn:aws:s3:::gnomad-public-us-east-1",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[MIT](https://github.com/broadinstitute/gnomad_methods/blob/master/LICENSE); [terms of use](https://gnomad.broadinstitute.org/terms)\nhttps://gnomad.broadinstitute.org/about\ngnomad@broadinstitute.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -297,16 +297,16 @@
       {
         "description": "Summary statistics from Genome Wide Association Studies (GWASes) of multiple ancestries in the UK Biobank, in TSV and Hail formats",
         "arn": "arn:aws:s3:::pan-ukb-us-east-1",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "CC BY-4.0 (usage may be restricted by UK Biobank, more details on the \"[Downloads page](https://pan.ukbb.broadinstitute.org/downloads)\")\nhttps://pan.ukbb.broadinstitute.org\nukb.diverse.gwas@gmail.com",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -331,16 +331,16 @@
       {
         "description": "This dataset includes two human genome references assembled by the Genome Reference Consortium: Hg19 and Hg38.",
         "arn": "arn:aws:s3:::broad-references",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\nhttps://s3.amazonaws.com/broad-references/broad-references-readme.html\nhensonc@broadinstitute.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -365,16 +365,16 @@
       {
         "description": "RNA-Seq Alligned Reads, WXS Alligned Reads, WGS Alligned Reads",
         "arn": "arn:aws:s3:::gdc-ccle-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://portals.broadinstitute.org/ccle/about\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -396,28 +396,28 @@
       {
         "description": "Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq\nIsoform Expression Quantification, miRNA-Seq miRNA Expression Quantification \n",
         "arn": "arn:aws:s3:::gdc-cgci-blgsp-phs000235-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq\nIsoform Expression Quantification, miRNA-Seq miRNA Expression Quantification \n",
         "arn": "arn:aws:s3:::gdc-cgci-phs000235-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "WGS/Targeted Sequencing/RNA-Seq/miRNA-Seq Aligned Reads, RNA-Seq Splice Junction\nQuantification \n",
         "arn": "arn:aws:s3:::gdc-cgci-phs000235-2-controlled",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://ocg.cancer.gov/programs/cgci\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -438,16 +438,16 @@
       {
         "description": "Monthly CIViC data dumps including gene, variant, assertion, and evidence tables.",
         "arn": "arn:aws:s3:::civic-aws-opendata",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "[CC0](https://creativecommons.org/publicdomain/zero/1.0/)\nhttps://docs.civicdb.org/\nhelp@civicdb.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -469,16 +469,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification, miRNA-Seq Isoform Expression Quantification, miRNA-Seq\nmiRNA Expression Quantification\n",
         "arn": "arn:aws:s3:::gdc-cptac-2-phs000892-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://cptac-data-portal.georgetown.edu/cptac/public?scope=Phase+II+%2525\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -500,16 +500,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-cptac-phs001287-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://cptac-data-portal.georgetown.edu/cptac/public?scope=Phase+III\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -532,16 +532,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-ctsp-phs001175-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs001175.v2.p2\n\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -567,16 +567,16 @@
       {
         "description": "Live-cell confocal fluorescence microscopy images of the OpenCell library of fluorescently tagged cell lines",
         "arn": "arn:aws:s3:::czb-opencell",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "https://github.com/czbiohub/opencell/blob/master/LICENSE\nhttps://opencell.czbiohub.org/download\nopencell@czbiohub.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -609,16 +609,16 @@
       {
         "description": "SARS-CoV-2 raw sequencing and output data (FASTQ, BAM, FASTA, VCF)",
         "arn": "arn:aws:s3:::dnastack-covid-19-sra-data",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "[DNAstack terms of use](https://dnastack.com/terms-of-use/)\nhttps://github.com/DNAstack/dnastack-open-data\n[DNAstack](bioinformatics@dnastack.com)",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -642,16 +642,16 @@
       {
         "description": "Released and archived ENCODE data",
         "arn": "arn:aws:s3:::encode-public",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "External data users may freely download, analyze, and publish results based on any ENCODE data without restrictions.\nhttps://www.encodeproject.org\nencode-help@lists.stanford.edu",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -670,16 +670,16 @@
       {
         "description": "Biospecimen Supplement, Clinical Supplement",
         "arn": "arn:aws:s3:::gdc-fm-ad-phs001179-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://gdc.cancer.gov/about-gdc/contributed-genomic-data-cancer-research/foundation-medicine/foundation-medicine\n\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -702,16 +702,16 @@
       {
         "description": "The contents of this dataset is multi-modal and includes various types of genomic data, such as CRAMs/BAMs, whole-genome sequencing (WGS) data, exome data, RNA data, etc.",
         "arn": "arn:aws:s3:::gatk-test-data",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\nhttps://s3.amazonaws.com/gatk-test-data/gatk-test-data-readme.html\nhttps://gatkforums.broadinstitute.org/gatk",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -735,16 +735,16 @@
       {
         "description": "https://vgp.github.io",
         "arn": "arn:aws:s3:::genomeark",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[G10K Data Use Policy](https://genome10k.soe.ucsc.edu/data-use-policies/)\nhttps://vertebrategenomesproject.org\n[Dr. Erich Jarvis](ejarvis@rockefeller.edu)",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -766,16 +766,16 @@
       {
         "description": "GIAB release data, last updated 11/12/2020.",
         "arn": "arn:aws:s3:::giab",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "There are no restrictions on the use of this data. More information on citation is available [here](https://www.nist.gov/programs-projects/genome-bottle).\n\nhttps://github.com/awslabs/open-data-docs/tree/main/docs/giab\nhttp://genomeinabottle.org/",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -795,16 +795,16 @@
       {
         "description": "https://gmsdata.s3.amazonaws.com/index.html",
         "arn": "arn:aws:s3:::gmsdata",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "GNU Lesser General Public License v3.0 https://github.com/genome/gms/blob/ubuntu-12.04/LICENSE\nhttps://github.com/genome/gms/wiki\nhttps://github.com/genome/gms/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -826,16 +826,16 @@
       {
         "description": "VEP and LOFTEE data",
         "arn": "arn:aws:s3:::hail-vep-pipeline",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[VEP](https://uswest.ensembl.org/info/about/publications.html) use is governed by the Apache 2.0 licenses, and [LOFTEE](https://github.com/konradjk/loftee/blob/master/LICENSE) use is governed by the MIT license.\n\nhttps://privoit.github.io/hail-vep-pipeline/\nhttps://www.privoit.com/contact-us",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -857,16 +857,16 @@
       {
         "description": "Biospecimen Supplement, RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-hcmi-cmdc-phs001486-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy https://gdc.cancer.gov/access-data/data-access-policies\nhttps://ocg.cancer.gov/programs/hcmi/nci-cancer-model-development\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -890,16 +890,16 @@
       {
         "description": "Hecatomb Database Resources",
         "arn": "arn:aws:s3:::hecatombdatabases",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "[MIT](https://opensource.org/licenses/MIT)\nhttps://hecatomb.readthedocs.io/en/latest/\nshandley@wustl.edu",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -922,16 +922,16 @@
       {
         "description": "Human PanGenomics Project",
         "arn": "arn:aws:s3:::human-pangenomics",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "[Creative Commons CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/deed.en)\nhttps://github.com/human-pangenomics/hpgp-data\nhttps://github.com/human-pangenomics/hpgp-data/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -956,16 +956,16 @@
       {
         "description": "https://aws.amazon.com/datasets/human-microbiome-project/",
         "arn": "arn:aws:s3:::human-microbiome-project",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "The data is publicly available to the community free of charge.\nhttps://commonfund.nih.gov/hmp\nhttps://commonfund.nih.gov/hmp/related_activities",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -989,22 +989,22 @@
       {
         "description": "BAM, SNV-vcf, SNV-gvcf, STR-vcf, STR-bam, SV-vcf, ROH-vcf, CNV-vcf, CNV-bw, metrics  and other supporting files from DRAGEN v3.5.6b analyses in a public S3 bucket.",
         "arn": "arn:aws:s3:::1000genomes-dragen",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       },
       {
         "description": "BAM, SNV-vcf, SNV-gvcf, STR-vcf, STR-bam, SV-vcf, ROH-vcf, CNV-vcf, CNV-bw, cyp2d6-tsv, metrics and other supporting files from DRAGEN v3.7.6 analyses in a public S3 bucket.",
         "arn": "arn:aws:s3:::1000genomes-dragen-3.7.6",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "TBD\n[DRAGEN Support Resources](https://support.illumina.com/sequencing/sequencing_software/dragen-bio-it-platform.html)\n[Illumina, Inc.](mailto:support@illumina.com)",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1028,16 +1028,16 @@
       {
         "description": "This bucket contains genomic indexes for Bowtie, Kraken, HISAT, and Centrifuge.",
         "arn": "arn:aws:s3:::genome-idx",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Public Domain\nhttps://benlangmead.github.io/aws-indexes/\nhttps://github.com/BenLangmead/aws-indexes/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1059,16 +1059,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-mmrf-commpass-phs000748-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://gdc.cancer.gov/about-gdc/contributed-genomic-data-cancer-research/foundation-medicine/multiple-myeloma-research-foundation-mmrf\n\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1087,16 +1087,16 @@
       {
         "description": "Nanopore Reference Human Genome",
         "arn": "arn:aws:s3:::nanopore-human-wgs",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Nanopore Human Reference data is released under the Creative Commons CC-BY license and allows free, full and open access to all. For more details please refer to the data reuse and license section of the documentation.\nhttps://github.com/nanopore-wgs-consortium/NA12878\nhttps://github.com/nanopore-wgs-consortium/NA12878/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1122,16 +1122,16 @@
       {
         "description": "BLAST databases with associated files in a public S3 bucket",
         "arn": "arn:aws:s3:::ncbi-blast-databases",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "\"[NIH Genomic Data Sharing Policy](https://osp.od.nih.gov/scientific-sharing/genomic-data-sharing/)\"\nhttps://github.com/ncbi/blast_plus_docs\nhttps://support.nlm.nih.gov/support/create-case/",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1165,22 +1165,22 @@
       {
         "description": "Genomic sequence reads of SARS-CoV-2 and related coronaviridae, organized by NCBI accession. Files in the `sra-src` folder are in FASTQ, BAM, or CRAM format (original submission); files in the  `run` folder are in .sra format and require the [SRA Toolkit](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit)",
         "arn": "arn:aws:s3:::sra-pub-sars-cov2",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "Metadata for sra-pub-sars-cov2 in an Athena-queryable format",
         "arn": "arn:aws:s3:::sra-pub-sars-cov2-metadata-us-east-1",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[NIH Genomic Data Sharing Policy](https://osp.od.nih.gov/scientific-sharing/genomic-data-sharing/)\nhttps://www.ncbi.nlm.nih.gov/sra/docs/sra-aws-download/\nhttps://support.nlm.nih.gov/support/create-case/",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1207,34 +1207,34 @@
       {
         "description": ".bam, .cram, and .fastq files in a public S3 bucket. This is the first of two S3 buckets for source submissions from sequencing methodologies such as PacBio, Oxford Nanopore Technologies, and 10X Genomics.",
         "arn": "arn:aws:s3:::sra-pub-src-1",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": ".bam, .cram, and .fastq files in a public S3 bucket. This is the second of two S3 buckets for source submissions from sequencing methodologies such as PacBio, Oxford Nanopore Technologies, and 10X Genomics.",
         "arn": "arn:aws:s3:::sra-pub-src-2",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": ".sra files in a public S3 bucket. This bucket contains all open access SRA submissions in the SRA Normalized format with full base quality scores. The SRA Toolkit will be required to convert these objects into FASTQ or SAM files. Note that this bucket is updated on a daily basis, however, there may be a one to two day lag between accessions being findable via the [SRA Search](https://www.ncbi.nlm.nih.gov/sra/advanced) and being accessible in this S3 bucket.",
         "arn": "arn:aws:s3:::sra-pub-run-odp",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "Metadata files for the Sequence Read Archive, ready to load into [AWS Glue](https://aws.amazon.com/glue/) and query with [Amazon Athena](https://aws.amazon.com/athena/).",
         "arn": "arn:aws:s3:::sra-pub-metadata-us-east-1/sra/metadata",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[NCBI Policy](https://www.ncbi.nlm.nih.gov/home/about/policies/) and [NIH Genomic Data Sharing Policy ](https://osp.od.nih.gov/scientific-sharing/genomic-data-sharing/)\nhttps://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud/\nsra@ncbi.nlm.nih.gov",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1253,16 +1253,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-nciccr-phs001444-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://gdc.cancer.gov/about-data/publications/DLBCL-2018\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1282,16 +1282,16 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-ohsu-cnl-phs001799-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs001799.v1.p1\n\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1316,22 +1316,22 @@
       {
         "description": "Oxford Nanopore Open Datasets",
         "arn": "arn:aws:s3:::ont-open-data",
-        "region": null,
+        "region": "eu-west-1",
         "type": "s3"
       },
       {
         "description": "Nanopore sequencing data of the Genome in a Bottle sample GM24385. Multiple PromethION flowcells using both the R9.4.1 and R10.3 nanopores. The direct sequencer output is included, raw signal data stored in  .fast5 files and basecalled data in .fastq file. Additional secondary analyses are included, notably alignments of sequence data to the  reference genome are provided along with statistics derived from these.\nThe following cell lines/DNA samples were obtained from the NIGMS Human Genetic Cell Repository at the Coriell Institute for Medical Research: GM24385.\n",
         "arn": "arn:aws:s3:::ont-open-data/gm24385_2020.09",
-        "region": null,
+        "region": "eu-west-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) https://creativecommons.org/licenses/by-nc/4.0/\nThe following cell lines/DNA samples were obtained from the NIGMS Human Genetic Cell Repository at the Coriell Institute for Medical Research: GM24385.\n\nhttps://labs.epi2me.io/category/data-releases/\nsupport@nanoporetech.com",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1354,28 +1354,28 @@
       {
         "description": "Latest Open Targets release. Updates within two weeks of new Open Targets version. Information on Open Targets releases can be found [here](https://www.targetvalidation.org/downloads/data).",
         "arn": "arn:aws:s3:::aws-roda-hcls-datalake/opentargets_latest/",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "Open Targets v20.06. Does not update.",
         "arn": "arn:aws:s3:::aws-roda-hcls-datalake/opentargets_20_06/",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "Open Targets v19.11. Does not update",
         "arn": "arn:aws:s3:::aws-roda-hcls-datalake/opentargets_1911/",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "https://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_attributions.txt\nhttps://github.com/aws-samples/data-lake-as-code/blob/roda/docs/roda_install.md\nhttps://github.com/aws-samples/data-lake-as-code/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1398,22 +1398,22 @@
       {
         "description": "RNA-Seq Gene Expression Quantification",
         "arn": "arn:aws:s3:::gdc-organoid-pancreatic-phs001611-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "WGS/WXS/RNA-Seq Aligned Reads, WXS Annotated Somatic Mutation, WXS Raw Somatic Mutation,\nRNA-Seq Splice Junction Quantification\n",
         "arn": "arn:aws:s3:::gdc-organoid-pancreatic-phs001611-2-controlled",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs001611.v1.p1\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1452,22 +1452,22 @@
       {
         "description": "PubSeq submitted datasets (FASTA and JSON metadata)",
         "arn": "arn:aws:s3:::pubseq-datasets",
-        "region": null,
+        "region": "us-east-2",
         "type": "s3"
       },
       {
         "description": "Pubseq output data (Arvados Keep)",
         "arn": "arn:aws:s3:::pubseq-output-data",
-        "region": null,
+        "region": "us-east-2",
         "type": "s3"
       }
     ],
     "moreInformation": "Creative Commons Attribution 4.0 International (CC BY 4.0) unless otherwise specified.\nhttps://covid19.genenetwork.org/about\nhttps://covid19.genenetwork.org/contact",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1495,16 +1495,16 @@
       {
         "description": "Rendered docs and tutorial data, as generated by https://github.com/qiime2/docs",
         "arn": "arn:aws:s3:::qiime2-data",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "BSD 3-Clause License\nhttps://docs.qiime2.org\nhttps://forum.qiime2.org",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1530,16 +1530,16 @@
       {
         "description": "Refgenie S3 Bucket",
         "arn": "arn:aws:s3:::awspds.refgenie.databio.org",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "Public domain\nhttp://refgenie.databio.org\nhttps://github.com/databio/refgenie/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1564,16 +1564,16 @@
       {
         "description": "Versioned and structured data releases from the Serratus project. Current version is v210225.",
         "arn": "arn:aws:s3:::lovelywater",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[CC-0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)\nhttps://github.com/ababaian/serratus/wiki/Access-Data-Release\nhttps://github.com/ababaian/serratus/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1595,16 +1595,16 @@
       {
         "description": "https://stdpopsim.readthedocs.io/en/latest/",
         "arn": "arn:aws:s3:::stdpopsim",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "Please see the individual datasets compiled here for licensing details and make sure to cite the original sources of any elements of this data that you use.\nhttps://stdpopsim.readthedocs.io/en/latest/catalog.html\nhttps://github.com/popsim-consortium/stdpopsim/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1629,50 +1629,16 @@
       {
         "description": "https://github.com/czbiohub/tabula-muris-senis",
         "arn": "arn:aws:s3:::czb-tabula-muris-senis",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "https://github.com/czbiohub/tabula-muris-senis/blob/master/LICENSE\nhttps://github.com/czbiohub/tabula-muris-senis/blob/master/tabula-muris-senis-on-aws.md\nIf you have questions about the data, you can create an Issue at https://github.com/czbiohub/tabula-muris-senis.",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
-    "__v": 0,
-    "isDeleted": false,
-    "repositoryName": "Registry of Open Data on AWS",
-    "isShared": false,
-    "isLinked": false
-  },
-  {
-    "name": "Tabula Muris Senis",
-    "description": "Tabula Muris Senis is a comprehensive compendium of single cell transcriptomic data from the model organism *Mus musculus* comprising more than 500,000 cells from 18 organs and tissues across the mouse lifespan. We discovered cell-specific changes occurring across multiple cell types and organs, as well as age related changes in the cellular composition of different organs. Using single-cell transcriptomic data we were able to assess cell type specific manifestations of different hallmarks of aging, such as senescence, changes in the activity of metabolic pathways, depletion of stem-cell populations, genomic instability and the role of inflammation as well as other changes in the organism’s immune system. Tabula Muris Senis provides a wealth of new molecular information about how the most significant hallmarks of aging are reflected in a broad range of tissues and cell types.See: https://www.biorxiv.org/content/10.1101/661728v1\n",
-    "tags": [
-      "aws-pds",
-      "biology",
-      "encyclopedic",
-      "genomic",
-      "health",
-      "life sciences",
-      "machine learning",
-      "medicine",
-      "single-cell transcriptomics"
-    ],
-    "resourceDetails": [
-      {
-        "description": "https://github.com/czbiohub/tabula-muris-senis",
-        "arn": "arn:aws:s3:::czb-tabula-muris-senis",
-        "region": null,
-        "type": "s3"
-      }
-    ],
-    "moreInformation": "https://github.com/czbiohub/tabula-muris-senis/blob/master/LICENSE\nhttps://github.com/czbiohub/tabula-muris-senis/blob/master/tabula-muris-senis-on-aws.md\nIf you have questions about the data, you can create an Issue at https://github.com/czbiohub/tabula-muris-senis.",
-    "bookmarkedBy": [],
-    "projectId": "",
-    "levelOfSharing": 0,
-    "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1696,16 +1662,16 @@
       {
         "description": "https://github.com/czbiohub/tabula-muris",
         "arn": "arn:aws:s3:::czb-tabula-muris",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "https://github.com/czbiohub/tabula-muris/blob/master/LICENSE\nhttps://github.com/czbiohub/tabula-muris/blob/master/tabula-muris-on-aws.md\nIf you have questions about the data, you can create an Issue at https://github.com/czbiohub/tabula-muris.",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1731,16 +1697,47 @@
       {
         "description": "http://tabula-sapiens-portal.ds.czbiohub.org",
         "arn": "arn:aws:s3:::czb-tabula-sapiens",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "http://tabula-sapiens-portal.ds.czbiohub.org/whereisthedata\nhttp://tabula-sapiens-portal.ds.czbiohub.org/\nhttps://github.com/czbiohub/tabula-muris-senis/issues",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
+    "__v": 0,
+    "isDeleted": false,
+    "repositoryName": "Registry of Open Data on AWS",
+    "isShared": false,
+    "isLinked": false
+  },
+  {
+    "name": "Therapeutically Applicable Research to Generate Effective Treatments (TARGET)",
+    "description": "Therapeutically Applicable Research to Generate Effective Treatments (TARGET) is the collaborative effort of a large, diverse consortium of extramural and NCI investigators. The goal of the effort is to accelerate molecular discoveries that drive the initiation and progression of hard-to-treat childhood cancers and facilitate rapid translation of those findings into the clinic.\nTARGET projects provide comprehensive molecular characterization to determine the genetic changes that drive the initiation and progression of childhood cancers.The dataset contains open Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq Isoform Expression Quantification, miRNA-Seq miRNA Expression Quantification data from Genomic Data Commons (GDC), and open data from GDC Legacy Archive.\n",
+    "tags": [
+      "aws-pds",
+      "cancer",
+      "genomic",
+      "life sciences",
+      "whole genome sequencing",
+      "STRIDES"
+    ],
+    "resourceDetails": [
+      {
+        "description": "Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq\nIsoform Expression Quantification, miRNA-Seq miRNA Expression Quantification, GDC Legacy      \nArchive\n",
+        "arn": "arn:aws:s3:::gdc-target-phs000218-2-open",
+        "region": "us-east-1",
+        "type": "s3"
+      }
+    ],
+    "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://ocg.cancer.gov/programs/target/\ndcf-support@datacommons.io",
+    "bookmarkedBy": [],
+    "projectId": [],
+    "levelOfSharing": 0,
+    "sharedTo": [],
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1764,47 +1761,16 @@
       {
         "description": "Released and archived TaRGET II data",
         "arn": "arn:aws:s3:::targetepigenomics",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "External data users may freely download, analyze, and publish results based on any TaRGET II data provided here without restrictions.\nhttps://data.targetepigenomics.org/\ntargetdcc16@gmail.com",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
-    "__v": 0,
-    "isDeleted": false,
-    "repositoryName": "Registry of Open Data on AWS",
-    "isShared": false,
-    "isLinked": false
-  },
-  {
-    "name": "Therapeutically Applicable Research to Generate Effective Treatments (TARGET)",
-    "description": "Therapeutically Applicable Research to Generate Effective Treatments (TARGET) is the collaborative effort of a large, diverse consortium of extramural and NCI investigators. The goal of the effort is to accelerate molecular discoveries that drive the initiation and progression of hard-to-treat childhood cancers and facilitate rapid translation of those findings into the clinic.\nTARGET projects provide comprehensive molecular characterization to determine the genetic changes that drive the initiation and progression of childhood cancers.The dataset contains open Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq Isoform Expression Quantification, miRNA-Seq miRNA Expression Quantification data from Genomic Data Commons (GDC), and open data from GDC Legacy Archive.\n",
-    "tags": [
-      "aws-pds",
-      "cancer",
-      "genomic",
-      "life sciences",
-      "whole genome sequencing",
-      "STRIDES"
-    ],
-    "resourceDetails": [
-      {
-        "description": "Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq\nIsoform Expression Quantification, miRNA-Seq miRNA Expression Quantification, GDC Legacy      \nArchive\n",
-        "arn": "arn:aws:s3:::gdc-target-phs000218-2-open",
-        "region": null,
-        "type": "s3"
-      }
-    ],
-    "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://ocg.cancer.gov/programs/target/\ndcf-support@datacommons.io",
-    "bookmarkedBy": [],
-    "projectId": "",
-    "levelOfSharing": 0,
-    "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1826,22 +1792,22 @@
       {
         "description": "Clinical Supplement, Biospecimen Supplement, RNA-Seq Gene Expression Quantification, miRNA-Seq\nIsoform Expression Quantification, miRNA Expression Quantification, Genotyping Array Copy\nNumber Segment, Genotyping Array Masked Copy Number Segment, Genotyping Array Gene Level Copy\nNumber Scores, WXS Masked Somatic Mutation\n",
         "arn": "arn:aws:s3:::tcga-2-open",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       },
       {
         "description": "WXS/RNA-Seq/miRNA-Seq/ATAC-Seq Aligned Reads, WXS Annotated Somatic Mutation, WXS Raw Somatic\nMutation, WXS Aggregated Somatic Mutation\n",
         "arn": "arn:aws:s3:::tcga-2-controlled",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "NIH Genomic Data Sharing Policy: https://gdc.cancer.gov/access-data/data-access-policies\nhttps://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga\ndcf-support@datacommons.io",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1867,16 +1833,16 @@
       {
         "description": "UBC Sunflower Genome Data 1",
         "arn": "arn:aws:s3:::ubc-sunflower-genome",
-        "region": null,
+        "region": "us-west-2",
         "type": "s3"
       }
     ],
     "moreInformation": "Public Domain\nhttps://rieseberglab.github.io/ubc-sunflower-genome/\nUBC Botany Sunflower <sunflower@botany.ubc.ca>",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",
@@ -1898,16 +1864,16 @@
       {
         "description": "https://genome.ucsc.edu/FAQ/FAQformat.html",
         "arn": "arn:aws:s3:::genome-browser",
-        "region": null,
+        "region": "us-east-1",
         "type": "s3"
       }
     ],
     "moreInformation": "[Public domain, some tracks require attribution](https://genome.ucsc.edu/license/)\nhttps://hgdownload.soe.ucsc.edu/downloads.html\nhttps://genome.ucsc.edu/contacts.html",
     "bookmarkedBy": [],
-    "projectId": "",
+    "projectId": [],
     "levelOfSharing": 0,
     "sharedTo": [],
-    "studytype": "Public",
+    "studyType": "Public",
     "__v": 0,
     "isDeleted": false,
     "repositoryName": "Registry of Open Data on AWS",

@@ -1,10 +1,10 @@
 #!/bin/bash
 while IFS=$'\n' read -r c; do
 	if [ "$c" == "q" ]; then
-		echo $c >&2
+		echo "$c" >&2
 		exit 0
 	fi
-	echo $c | yq -o=json eval '.' "$c" |
+	echo "$c" | yq -o=json eval '.' "$c" |
 		jq -r '{
             name: .Name,
             description: .Description,
@@ -13,16 +13,16 @@ while IFS=$'\n' read -r c; do
                 .Resources|map({
                     description: .Description,
                     arn: .ARN,
-                    region: .region,
+                    region: .Region,
                     type: (.Type|select(.=="S3 Bucket")| "s3")}
                     )
                 ),
             moreInformation: (.License+"\n"+.Documentation+"\n"+.Contact),
             bookmarkedBy: [],
-            projectId: "",
+            projectId: [],
             levelOfSharing: 0,
             sharedTo: [],
-            studytype: "Public",
+            studyType: "Public",
             __v: 0,
             isDeleted: false,
             repositoryName: "Registry of Open Data on AWS",
