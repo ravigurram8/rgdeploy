@@ -228,7 +228,7 @@ aws s3 cp "$localhome"/updatescripts.sh s3://"$bucketname"
 
 
 #Modify file rg_userpool.yml to refer new S3 bucket
-sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" "$localhome"/rg_userpool.yml
+#sed -i -e "s/S3Bucket:.*/S3Bucket: $bucketname/" "$localhome"/rg_userpool.yml
 
 #Copy extracted cft template to the new bucket
 echo "Copying deployment files to new bucket"
@@ -315,7 +315,7 @@ function create_cognito_pool() {
 		--stack-name "$1" \
 		--parameter-overrides UserPoolNameParam="$1" PortalURLParam="$rgurl" \
 		Function1Name="post_verification_send_message-$runid" Function2Name="pre_verification_custom_message-$runid" \
-		--capabilities CAPABILITY_IAM
+		CFTBucketName="$bucketname" --capabilities CAPABILITY_IAM
 
 	aws cloudformation wait stack-create-complete --stack-name "$userpoolstackname"
 }
@@ -367,11 +367,11 @@ function create_main_stack() {
 	echo "Source Bucket: $S3_SOURCE"
 	aws cloudformation deploy --template-file "$localhome"/rg_main_stack.yml \
 		--stack-name "$mainstackname" \
-		--parameter-overrides ClientId="$userpoolclient_id" UserPoolId="$userpool_id" \
-		CFTBucketName="$bucketname" RGUrl="$rgurl" UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
+		--parameter-overrides CFTBucketName="$bucketname" RGUrl="$rgurl"\
+		UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
 		VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
 		DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env-$runid" \
-		StackRunId="$runid" --capabilities CAPABILITY_NAMED_IAM
+		--capabilities CAPABILITY_NAMED_IAM
 	echo "Waiting for stack $1 to finish deploying..."
 	aws cloudformation wait stack-create-complete --stack-name "$mainstackname"
 }
@@ -487,13 +487,18 @@ echo "Image Builder stack outputs"
 aws cloudformation describe-stacks --stack-name "$imgbldrstackname" | jq -r '.Stacks[] | .Outputs[] | .OutputValue'
 
 #===============================================================================================================
-#Creating Main stack
+#Creating configs locally
 ac_name=$(aws sts get-caller-identity --query "Account" --output text)
 r53_domain_name="${rgurl//http[s]*:\/\//}"
 jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
 hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
+echo "Creating configs locally"
 ./makeconfigs.sh "$userpoolclient_id" "$userpool_id" "$bucketname" "$appuser" "$appuserpassword" \
             "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone"
+echo "Uploading configs to $bucketname"
+aws s3 cp "$localhome"/config.tar.gz s3://"$bucketname"
+#===============================================================================================================
+#Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
 mainstack_start_time=$SECONDS
 mainstackname="RG-PortalStack-$runid"

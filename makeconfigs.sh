@@ -126,6 +126,7 @@ jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$rol
 	jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV-$myrunid\"" |
 	jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV-$myrunid\"" >"${RG_HOME}/config/trustPolicy.json"
 
-tar -czf config.tar.gz "$RG_HOME/config"/*
+tar -C "$RG_HOME" -czf config.tar.gz "config"/*
 tar -tf config.tar.gz
+rm -rf "$RG_HOME"
 echo 'Configuration changed successfully'
