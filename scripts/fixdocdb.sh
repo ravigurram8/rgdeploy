@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.6"
+version="0.1.7"
 echo "Fixing DocumentDB....(fixdocdb.sh v$version)"
 
 if [ "$1" == "-h" ] || [ $# -lt 5 ]; then
@@ -60,17 +60,9 @@ else
 	mv "$RG_SRC/dump.tar.gz" "$RG_SRC/dump.old.tar.gz"
 fi
 echo "Downloading new dump file..."
-# aws s3 cp s3://${S3_SOURCE}/dump.tar.gz "$RG_SRC"
-# tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
-# if [ ! -d "$RG_SRC/dump/PROD-cc" ]; then
-#     echo "Could not find PROD-cc in downloaded file. Reverting to AMI version of dump."
-#     rm -rf "$RG_SRC/dump"
-#     mv "$RG_SRC/dump.old.tar.gz" "$RG_SRC/dump.tar.gz"
-#     tar -xvf "$RG_SRC/dump.tar.gz" -C "$RG_SRC"
-# fi
 aws s3 cp s3://${S3_SOURCE}/dump.zip "$RG_SRC"
 echo "Extracting seed data from dump file."
-unzip "$RG_SRC/dump.zip" -o -d "$RG_SRC"
+unzip -o "$RG_SRC/dump.zip" -d "$RG_SRC"
 if [ ! "$(ls -A $RG_SRC/dump)" ]; then
 	echo "Error: No files found in dump folder. Your database cannot be seeded."
 else
@@ -103,32 +95,32 @@ db.configs.insert({"key":"snsUrl","value":"$baseurl"});
 EOF
 fi
 
-rootca="${RG_HOME}/config/rootCA.key"
-rlca="${RG_HOME}/config/RL-CA.pem"
-mongodbkey="${RG_HOME}/config/mongodb.key"
-mongodbcsr="${RG_HOME}/config/mongodb.csr"
-mongodbcrt="${RG_HOME}/config/mongodb.crt"
-echo "Creating mongodb.pem file"
-host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname | sed -e 's/\..*//')"
-openssl genrsa -out "$rootca" 2048
-openssl req -x509 -new -nodes -key "$rootca" -sha256 -days 1024 -out "$rlca" -subj "/CN=."
-openssl genrsa -out "$mongodbkey" 2048
-openssl req -new -key "$mongodbkey" -out "$mongodbcsr" -subj "/CN=$host_name"
-openssl x509 -req -in "$mongodbcsr" -CA "$rlca" -CAkey "$rootca" -CAcreateserial -out "$mongodbcrt" -days 500 -sha256
-cat "$mongodbkey" "$mongodbcrt" >"$RG_HOME/config/mongodb.pem"
+# rootca="${RG_HOME}/config/rootCA.key"
+# rlca="${RG_HOME}/config/RL-CA.pem"
+# mongodbkey="${RG_HOME}/config/mongodb.key"
+# mongodbcsr="${RG_HOME}/config/mongodb.csr"
+# mongodbcrt="${RG_HOME}/config/mongodb.crt"
+# echo "Creating mongodb.pem file"
+# host_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/local-hostname | sed -e 's/\..*//')"
+# openssl genrsa -out "$rootca" 2048
+# openssl req -x509 -new -nodes -key "$rootca" -sha256 -days 1024 -out "$rlca" -subj "/CN=."
+# openssl genrsa -out "$mongodbkey" 2048
+# openssl req -new -key "$mongodbkey" -out "$mongodbcsr" -subj "/CN=$host_name"
+# openssl x509 -req -in "$mongodbcsr" -CA "$rlca" -CAkey "$rootca" -CAcreateserial -out "$mongodbcrt" -days 500 -sha256
+# cat "$mongodbkey" "$mongodbcrt" >"$RG_HOME/config/mongodb.pem"
 
-echo "Modifying mongo-config.json file"
-mytemp=$(mktemp -d -p "${RG_HOME}/tmp" -t "config.old.XXX")
-echo "$mytemp"
-cp "${RG_HOME}/config/mongo-config.json" "$mytemp"
-jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
-	jq -r ".db_auth_enable=true" |
-	jq -r ".db_documentdb_enable=true" |
-	jq -r '.db_ssl_config.CAFile="rds-combined-ca-bundle.pem"' |
-	jq -r '.db_ssl_config.PEMFile="mongodb.pem"' |
-	jq -r ".db_auth_config.username=\"$mydbuser\"" |
-	jq -r ".db_auth_config.password=\"$mydbuserpwd\"" |
-	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
+# echo "Modifying mongo-config.json file"
+# mytemp=$(mktemp -d -p "${RG_HOME}/tmp" -t "config.old.XXX")
+# echo "$mytemp"
+# cp "${RG_HOME}/config/mongo-config.json" "$mytemp"
+# jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
+# 	jq -r ".db_auth_enable=true" |
+# 	jq -r ".db_documentdb_enable=true" |
+# 	jq -r '.db_ssl_config.CAFile="rds-combined-ca-bundle.pem"' |
+# 	jq -r '.db_ssl_config.PEMFile="mongodb.pem"' |
+# 	jq -r ".db_auth_config.username=\"$mydbuser\"" |
+# 	jq -r ".db_auth_config.password=\"$mydbuserpwd\"" |
+# 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 
 echo "Modifying docker-compose.yml file"
 if [ -f "${RG_HOME}/docker-compose.yml" ]; then

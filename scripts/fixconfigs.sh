@@ -1,5 +1,5 @@
 #!/bin/bash
-version="0.1.10"
+version="0.1.11"
 echo "Fixing configs...(fixconfig.sh v$version)"
 
 [ -z "$RG_HOME" ] && RG_HOME='/opt/deploy/sp2'
@@ -11,8 +11,6 @@ echo "RG_ENV=$RG_ENV"
 [ -z "$S3_SOURCE" ] && S3_SOURCE=rg-deployment-docs
 echo "S3_SOURCE=$S3_SOURCE"
 
-myip=$(wget -q -O - http://169.254.169.254/latest/meta-data/local-ipv4)
-echo "Local IP : $myip"
 role_name="$(wget -q -O - http://169.254.169.254/latest/meta-data/iam/security-credentials/)"
 echo "Role name : $role_name"
 ac_name=$(wget -q -O - http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .accountId)
@@ -52,14 +50,13 @@ jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$rol
 echo "Fetching latest docker-compose.yml"
 aws s3 cp s3://${S3_SOURCE}/docker-compose.yml $RG_SRC
 
-# Fix the Redis host and APP_ENV in the docker compose file.
+# Fix the APP_ENV in the docker compose file.
 # DB_HOST will be set later in the fixmongo.sh or fixdocdb.sh scripts.
 echo "Copying docker-compose.yml from $RG_SRC to $RG_HOME"
 # trunk-ignore(shellcheck/SC2016)
 repcmd='s#\${PWD}#'$RG_HOME'#'
 echo "Modifying docker-compose.yml"
 sed -e "$repcmd" "$RG_SRC/docker-compose.yml" >"$RG_HOME/docker-compose.yml"
-sed -i -e "s/REDIS_HOST.*/REDIS_HOST=$myip/" -e "s/APP_ENV.*/APP_ENV=$RG_ENV/" "$RG_HOME/docker-compose.yml"
-echo "Modified docker-compose.yml with APP_ENV=$RG_ENV and REDIS_HOST=$myip"
+echo "Modified docker-compose.yml with APP_ENV=$RG_ENV"
 
 echo 'Configuration changed successfully'

@@ -125,7 +125,15 @@ echo "Modifying trustPolicy.json"
 jq -r ".trustPolicy.Statement[0].Principal.AWS=\"arn:aws:iam::$ac_name:role/$role_name\"" "$mytemp/trustPolicy.json" |
 	jq -r ".roleName=\"RG-Portal-ProjectRole-$RG_ENV-$myrunid\"" |
 	jq -r ".policyName=\"RG-Portal-ProjectPolicy-$RG_ENV-$myrunid\"" >"${RG_HOME}/config/trustPolicy.json"
-
+echo "Modifying mongo-config.json file"
+jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
+	jq -r ".db_auth_enable=true" |
+	jq -r ".db_documentdb_enable=true" |
+	jq -r '.db_ssl_config.CAFile="rds-combined-ca-bundle.pem"' |
+	jq -r '.db_ssl_config.PEMFile="mongodb.pem"' |
+	jq -r ".db_auth_config.username=\"$myappuser\"" |
+	jq -r ".db_auth_config.password=\"$myapppwd\"" |
+	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 tar -C "$RG_HOME" -czf config.tar.gz "config"/*
 tar -tf config.tar.gz
 rm -rf "$RG_HOME"
