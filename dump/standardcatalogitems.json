@@ -712,3 +712,88 @@
     "permission_required": {}
   }
 }
+{
+  "_id": {
+    "$oid": "611b96eb4548787205d67866"
+  },
+  "name": "Cromwell Advanced",
+  "description": "Use the scalability of AWS Batch to run Cromwell workflows. This is ideal for large workloads and larger data-sets.",
+  "fileName": "cromwell-advanced.yaml",
+  "tags": [
+    {
+      "Key": "EstimatedTimeToProvision",
+      "Value": "10 Minutes"
+    },
+    {
+      "Key": "DetailsLink",
+      "Value": "https://gatk.broadinstitute.org/hc/en-us/categories/360002302312"
+    },
+    {
+      "Key": "TypeOfProduct",
+      "Value": "Research"
+    },
+    {
+      "Key": "ALB",
+      "Value": "true"
+    },
+    {
+      "Key": "ApplicationPort",
+      "Value": "443"
+    },
+    {
+      "Key": "Service",
+      "Value": "Cromwell"
+    }
+  ],
+  "owner": "RL",
+  "portfolio": "RGPortfolio",
+  "availableRegions": [],
+  "assignedOU": [],
+  "metaData": {
+    "pre_provisioning": [
+      {
+        "code": "CFT_PARAMS",
+        "params": [
+          {
+            "name": "PipelineName",
+            "type": "RL::SC::PIPELINE"
+          },
+          {
+            "name": "InputDataLocation",
+            "type": "RL::SC::S3",
+            "productName": "Amazon S3"
+          },
+          {
+            "name": "OutputDataLocation",
+            "type": "RL::SC::S3",
+            "productName": "Amazon S3"
+          },
+          {
+            "name": "ResearcherName",
+            "type": "RL::SC::PARAM::HD"
+          },
+          {
+            "name": "ProjectId",
+            "type": "RL::SC::PARAM::HD"
+          },
+          {
+            "name": "Namespace",
+            "type": "RL::SC::PARAM::HD"
+          }
+        ]
+      }
+    ],
+    "post_provisioning": [],
+    "checks_before_assigning_product": [
+      {
+        "code": "AMI_ID_REQUIRED",
+        "is_ami_required": true,
+        "ami_id_list": [],
+        "ami_path": "/RL/RG/StandardCatalog/cromwell-latest"
+      }
+    ],
+    "checks_after_assigning_product": [],
+    "permission_required": {},
+    "cost_resource": true
+  }
+}
