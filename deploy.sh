@@ -493,7 +493,8 @@ r53_domain_name="${rgurl//http[s]*:\/\//}"
 jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
 hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
 echo "Creating configs locally"
-./makeconfigs.sh "$userpoolclient_id" "$userpool_id" "$bucketname" "$appuser" "$appuserpassword" \
+export RG_ENV="$env"
+./makeconfigs.sh "$userpool_id" "$userpoolclient_id"  "$bucketname" "$appuser" "$appuserpassword" \
             "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone"
 echo "Uploading configs to $bucketname"
 aws s3 cp "$localhome"/config.tar.gz s3://"$bucketname"
