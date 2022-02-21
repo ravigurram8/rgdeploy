@@ -714,7 +714,7 @@
 }
 {
   "_id": {
-    "$oid": "611b96eb4548787205d67866"
+    "$oid": "62010969011b8d521ccce386"
   },
   "name": "Cromwell Advanced",
   "description": "Use the scalability of AWS Batch to run Cromwell workflows. This is ideal for large workloads and larger data-sets.",
