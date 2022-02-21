@@ -184,5 +184,13 @@
     "dbName": "cc",
     "host": "localhost",
     "port": "27017"
-  }
+  },
+  "isCachingEnable": true,
+  "sleepTime": 1000,
+  "enableWatchDog": true,
+  "defaultPage":1,
+  "defaultLimit":10,
+  "linksForRg": {
+        "termsAndConditions": "REPLACE_WITH_TERMS_CONDITIONS_DOC_URL"
+    }
 }
