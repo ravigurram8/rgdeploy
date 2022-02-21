@@ -82,6 +82,12 @@
     },
     {
       "type": "shell",
+      "inline": [
+         "sudo apt install zip -y"
+        ]
+    },
+    {
+      "type": "shell",
       "environment_vars": ["RG_HOME=/opt/deploy/sp2","RG_SRC=/home/ubuntu"],
       "script": "./provisioners/provision-rg.sh"
     },

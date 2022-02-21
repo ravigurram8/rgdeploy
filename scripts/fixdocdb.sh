@@ -70,7 +70,7 @@ echo "Downloading new dump file..."
 # fi
 aws s3 cp s3://${S3_SOURCE}/dump.zip "$RG_SRC"
 echo "Extracting seed data from dump file."
-unzip "$RG_SRC/dump.zip" -d "$RG_SRC"
+unzip "$RG_SRC/dump.zip" -o -d "$RG_SRC"
 if [ ! "$(ls -A $RG_SRC/dump)" ]; then
 	echo "Error: No files found in dump folder. Your database cannot be seeded."
 else
