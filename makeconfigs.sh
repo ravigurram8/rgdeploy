@@ -106,19 +106,7 @@ jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
 	jq -r ".db_auth_config.username=\"$myappuser\"" |
 	jq -r ".db_auth_config.password=\"$myapppwd\"" |
 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
-echo "Modifying global-config.json"
-if [ -z "$baseurl" ]; then
-	echo "WARNING: Base URL is not passed. global-config.json file may not be configured correctly"
-fi
-jq -r ".secureURL.PROD=\"$baseurl\"" "$mytemp/global-config.json" |
-	jq -r ".linksForRg.termsAndConditions=\"$baseurl\"" >"${RG_HOME}/config/global-config.json"
-echo "Modifying email-config.json"
-if [ -z "$baseurl" ]; then
-	echo "WARNING: Base URL is not passed. The following file may not be configured correctly"
-fi
-jq -r ".email.url=\"$baseurl:2687/bot/sns_notify_bot/exec\"" "$mytemp/email-config.json" |
-	jq -r '.email.options.body.data.from="rlc.support@relevancelab.com"' |
-	jq -r '.email.options.body.data.url="https://serviceone.rlcatalyst.com"' >"${RG_HOME}/config/email-config.json"
+
 echo "Modifying notification-config.json"
 jq -r ".tokenID=[\"$generated_token\"]" "$mytemp/notification-config.json" >"${RG_HOME}/config/notification-config.json"
 echo "Modifying trustPolicy.json"

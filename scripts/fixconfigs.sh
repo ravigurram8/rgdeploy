@@ -56,7 +56,8 @@ echo "Copying docker-compose.yml from $RG_SRC to $RG_HOME"
 # trunk-ignore(shellcheck/SC2016)
 repcmd='s#\${PWD}#'$RG_HOME'#'
 echo "Modifying docker-compose.yml"
-sed -e "$repcmd" "$RG_SRC/docker-compose.yml" -e "s#APP_ENV=.*#APP_ENV=$RG_ENV#" >"$RG_HOME/docker-compose.yml"
-echo "Modified docker-compose.yml with APP_ENV=$RG_ENV"
+sed -e "$repcmd" -e "s#APP_ENV=.*#APP_ENV=$RG_ENV#" "$RG_SRC/docker-compose.yml" >"$RG_HOME/docker-compose.yml"
+grep -i "APP_ENV" "$RG_HOME/docker-compose.yml"
+echo "Modified docker-compose.yml"
 
 echo 'Configuration changed successfully'
