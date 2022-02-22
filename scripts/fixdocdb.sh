@@ -69,17 +69,17 @@ else
 	mongoimport --host "$mydocdburl:27017" --ssl \
 		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
 		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=standardcatalogitems \
+		--db "${mydbname}" --collection=standardcatalogitems --jsonArray\
 		"$RG_SRC/dump/standardcatalogitems.json"
 	mongoimport --host "$mydocdburl:27017" --ssl \
 		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
 		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=configs \
+		--db "${mydbname}" --collection=configs --jsonArray\
 		"$RG_SRC/dump/configs.json"
 	mongoimport --host "$mydocdburl:27017" --ssl \
 		--sslCAFile "$RG_HOME/config/rds-combined-ca-bundle.pem" \
 		--username "$mydbuser" --password "$mydbuserpwd" \
-		--db "${mydbname}" --collection=studies \
+		--db "${mydbname}" --collection=studies --jsonArray\
 		"$RG_SRC/dump/studies.json"
 
 fi
