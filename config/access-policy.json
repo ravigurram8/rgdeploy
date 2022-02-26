@@ -27,6 +27,7 @@
         "sns:*",
         "iam:GetUser",
         "iam:GetRole",
+	"iam:GetPolicyVersion",
         "iam:DeleteRole",
         "iam:CreateRole",
         "iam:AttachRolePolicy",
