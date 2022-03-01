@@ -189,7 +189,7 @@ The runid will be the random 4-character string generated for your instance duri
       ./make-amilist.sh > new-ami-list.json
 - Next run the following command to update your DB.
 
-      curl -X POST -H "Content-Type: application/json" -d  new-ami-list.json http://<RG-URL>/notificationsink/updateScAmiId
+      curl -X POST -H "Content-Type: application/json" -d @new-ami-list.json http://<RG-URL>/notificationsink/updateScAmiId
 - Note that these AMI-Ids will be picked up by any projects created after this update. For projects already created prior to the update, you have to update the SSM Parameter Store paths (as mentioned in img-builder-config.json) for the project account with the ami-id of the corresponding region and product.
 
 - Store the AMI Ids in the AWS SSM Parameter store of the base account (where Research Gateway runs) by running the following commands.
