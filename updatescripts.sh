@@ -74,6 +74,10 @@ if [ ! -f /usr/local/sbin/connect-db.sh ] || [ $RG_SRC/scripts/connect-db.sh -nt
 	cp $RG_SRC/scripts/connect-db.sh /usr/local/sbin/
 fi
 
+if [ ! -f /usr/local/sbin/import_bulk_users.sh ] || [ $RG_SRC/scripts/import_bulk_users.sh -nt /usr/local/sbin/import_bulk_users.sh ]; then
+	echo "Found newer version of import_bulk_users.sh. Updating"
+	cp $RG_SRC/scripts/import_bulk_users.sh /usr/local/sbin/
+fi
 grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh /usr/local/sbin/import-seed-db.sh /usr/local/sbin/updatessmpaths.sh /usr/local/sbin/connect-db.sh
 rm -rf $RG_SRC/scripts
 echo "Done updating scripts"
