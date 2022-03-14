@@ -89,7 +89,7 @@ get_role() {
 ## Param 3: FirstName
 ## Param 4: LastName
 add_user() {
-	data="{\"username\":\"$1\",\"first_name\":\"$3\",\"last_name\":\"$4\",\"email\":\"$1\",\"password\":\"RgAdmin@$instanceid\",\"level\":\"$2\"}"
+	data="{\"username\":\"$1\",\"first_name\":\"$3\",\"last_name\":\"$4\",\"email\":\"$1\",\"password\":\"RgAdmin@$instanceid\",\"level\":\"$2\",\"org_id\":\"$5\"}"
 	if [ -z "$TEST" ]; then
 		message=$(curl --location --request POST "$baseurl/user/signup" --header "token: $token" --header "Content-Type: application/json" --data-raw "$data" | jq -r '.message')
 		if [ "$message" == "success" ]; then
