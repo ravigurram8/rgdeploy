@@ -23,12 +23,8 @@ Parameters:
     AllowedValues:
       - t2.medium
       - t2.large
-      - t2.xlarge
-      - m4.xlarge
-      - c4.xlarge
-      - r4.xlarge
-      - r4.xlarge
-      - p2.xlarge
+      - t3.medium
+      - t3.large
       
     ConstraintDescription: Valid instance type in the t2 families
     Default: t2.medium
