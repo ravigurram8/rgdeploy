@@ -82,14 +82,10 @@ Resources:
           ToPort: 22
           IpProtocol: tcp
         - CidrIp: "0.0.0.0/0"
-          FromPort: 80
-          ToPort: 80
+          FromPort: 443
+          ToPort: 443
           IpProtocol: tcp
-        - CidrIp: "0.0.0.0/0"
-          FromPort: 8787
-          ToPort: 8787
-          IpProtocol: tcp
-      GroupDescription: RStudio and Shiny Security Group
+      GroupDescription: RStudio Security Group
 
   RstudioEC2Instance:
     Type: AWS::EC2::Instance
@@ -136,4 +132,4 @@ Outputs:
   InstanceId:
     Value: !Ref 'RstudioEC2Instance'
   ApplicationPort:
-    Value: '8787'
+    Value: '443'
