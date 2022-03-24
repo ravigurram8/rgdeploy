@@ -27,24 +27,30 @@ sudo yum install -y "/tmp/rstudio/${rstudio_rpm}"
 sudo systemctl enable rstudio-server
 sudo systemctl start rstudio-server
 
+#Generate self signed certificate
+commonname=$(uname -n)
+password=dummypassword
+mkdir -p "/tmp/rstudio/ssl"
+chmod 700 /tmp/rstudio/ssl
+cd /tmp/rstudio/ssl
+openssl genrsa -des3 -passout pass:$password -out cert.key 2048
+#Remove passphrase from the key. Comment the line out to keep the passphrase
+openssl rsa -in cert.key -passin pass:$password -out cert.key
+openssl req -new -key cert.key -out cert.csr -passin pass:$password \
+    -subj "/C=NA/ST=NA/L=NA/O=NA/OU=RG/CN=$commonname/emailAddress=example.com"
+openssl x509 -req -days 365 -in cert.csr -signkey cert.key -out cert.pem
+cd "../../.."
+
 # Install and configure nginx
 sudo amazon-linux-extras install -y nginx1
+sudo openssl dhparam -out "/etc/nginx/dhparam.pem" 2048
+sudo mv "/tmp/rstudio/ssl/cert.pem" "/etc/nginx/"
+sudo mv "/tmp/rstudio/ssl/cert.key" "/etc/nginx/"
 sudo mv "/tmp/rstudio/nginx.conf" "/etc/nginx/"
 sudo chown -R nginx:nginx "/etc/nginx"
 sudo chmod -R 600 "/etc/nginx"
 sudo systemctl enable nginx
 sudo systemctl restart nginx
-
-# Setup nginx for rg deployment
-sudo mv "/tmp/rstudio/rg-nginx.service" "/etc/systemd/system/"
-sudo chown root: "/etc/systemd/system/rg-nginx.service"
-sudo systemctl daemon-reload
-sudo systemctl enable rg-nginx.service
-
-#To configure rg nginx
-sudo mv "/tmp/rstudio/rg-nginx" "/usr/local/bin/"
-sudo chown root: "/usr/local/bin/rg-nginx"
-sudo chmod 775 "/usr/local/bin/rg-nginx"
 
 # Install script that checks idle time and shuts down if max idle is reached
 sudo mv "/tmp/rstudio/check-idle" "/usr/local/bin/"
