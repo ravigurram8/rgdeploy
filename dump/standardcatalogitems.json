@@ -31,11 +31,11 @@
   },
   {
     "_id": {
-      "$oid": "60504955135663522b880cfc"
+      "$oid": "60504955135663522b880rts"
     },
-    "name": "Amazon DynamoDB",
-    "description": "Amazon DynamoDB is a fully managed proprietary NoSQL database of the Amazon Web Services",
-    "fileName": "dynamo-db-template.yml",
+    "name": "Docker on Amazon EC2 Linux",
+    "description": "Use Docker, a popular container orchestration software, on Amazon Elastic Compute Cloud (Amazon EC2).",
+    "fileName": "ec2-linux-docker.yml",
     "tags": [
       {
         "Key": "EstimatedTimeToProvision",
@@ -43,15 +43,15 @@
       },
       {
         "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/dynamodb/"
+        "Value": "https://researchgateway.readthedocs.io/en/latest/linux.html"
       },
       {
         "Key": "Service",
-        "Value": "DynamoDB"
+        "Value": "EC2"
       },
       {
         "Key": "TypeOfProduct",
-        "Value": "IT Applications"
+        "Value": "Research"
       }
     ],
     "owner": "RL",
@@ -59,13 +59,95 @@
     "availableRegions": [],
     "assignedOU": [],
     "metaData": {
-      "pre_provisioning": [],
+      "pre_provisioning": [
+        {
+          "code": "CFT_PARAMS",
+          "params": [
+            {
+              "name": "EnvironmentInstanceFiles",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "IamPolicyDocument",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "S3Mounts",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "Namespace",
+              "type": "RL::SC::PARAM::HD"
+            }
+          ]
+        }
+      ],
       "post_provisioning": [],
       "checks_before_assigning_product": [],
       "checks_after_assigning_product": [],
       "permission_required": {}
     }
   },
+  {
+    "_id": {
+      "$oid": "60504955135663522b880fet"
+    },
+    "name": "MySQL",
+    "description": "MySQL container on Docker EC2",
+    "fileName": "ec2-linux-docker-mysql.yml",
+    "tags": [
+      {
+        "Key": "EstimatedTimeToProvision",
+        "Value": "10 Minutes"
+      },
+      {
+        "Key": "DetailsLink",
+        "Value": "https://researchgateway.readthedocs.io/en/latest/linux.html"
+      },
+      {
+        "Key": "Service",
+        "Value": "EC2"
+      },
+      {
+        "Key": "TypeOfProduct",
+        "Value": "Research"
+      }
+    ],
+    "owner": "RL",
+    "portfolio": "RGPortfolio",
+    "availableRegions": [],
+    "assignedOU": [],
+    "metaData": {
+      "pre_provisioning": [
+        {
+          "code": "CFT_PARAMS",
+          "params": [
+            {
+              "name": "EnvironmentInstanceFiles",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "IamPolicyDocument",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "S3Mounts",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "Namespace",
+              "type": "RL::SC::PARAM::HD"
+            }
+          ]
+        }
+      ],
+      "post_provisioning": [],
+      "checks_before_assigning_product": [],
+      "checks_after_assigning_product": [],
+      "permission_required": {}
+    }
+  },
+
   {
     "_id": {
       "$oid": "60504955135663522b880cfd"
@@ -127,43 +209,6 @@
   },
   {
     "_id": {
-      "$oid": "60504955135663522b880cfe"
-    },
-    "name": "Amazon RDS",
-    "description": "Amazon Relational Database Service is a distributed relational database service by AWS",
-    "fileName": "RDS-template.yml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "10 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/rds/"
-      },
-      {
-        "Key": "Service",
-        "Value": "RDS"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
       "$oid": "60504955135663522b880cff"
     },
     "name": "Amazon Sagemaker",
@@ -185,191 +230,6 @@
       {
         "Key": "TypeOfProduct",
         "Value": "Research"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "60504955135663522b880d00"
-    },
-    "name": "Amazon EMR",
-    "description": "Amazon Elastic MapReduce (EMR) is an AWS tool for big data processing and analysis",
-    "fileName": "emr-template.json",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "10 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/emr/"
-      },
-      {
-        "Key": "Service",
-        "Value": "EMR"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b01075"
-    },
-    "name": "AppStream",
-    "description": "Amazon AppStream is a fully managed non-persistent application and desktop streaming service",
-    "fileName": "AppStream.yaml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "15 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/appstream2/"
-      },
-      {
-        "Key": "Service",
-        "Value": "EC2"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b01076"
-    },
-    "name": "Moodle",
-    "description": "Moodle is a Learning Platform or course management system (CMS) - a free Open Source software package designed to help educators",
-    "fileName": "Moodle.yaml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "15 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://moodle.org/"
-      },
-      {
-        "Key": "Service",
-        "Value": "Moodle"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b01077"
-    },
-    "name": "WordPress",
-    "description": "WordPress is a free and open-source content management system written in PHP and paired with a MySQL or MariaDB database.",
-    "fileName": "wordpress.yaml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "15 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://wordpress.com/"
-      },
-      {
-        "Key": "Service",
-        "Value": "WordPress"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b01078"
-    },
-    "name": "Amazon HPC",
-    "description": "AWS provides the most elastic and scalable cloud infrastructure to run your HPC applications",
-    "fileName": "hpc-template.json",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "15 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/hpc/"
-      },
-      {
-        "Key": "Service",
-        "Value": "EC2"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
       }
     ],
     "owner": "RL",
@@ -476,80 +336,6 @@
           "ami_path": "/RL/RG/StandardCatalog/RStudio"
         }
       ],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b0107a"
-    },
-    "name": "NextflowBasic",
-    "description": "Use an Amazon EC2 instance to run Nextflow workflows locally. This is ideal for small workloads like testing configurations or small amounts of data.",
-    "fileName": "nextflow-basic.yaml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "5 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/"
-      },
-      {
-        "Key": "Service",
-        "Value": "EC2"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
-      "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
-  },
-  {
-    "_id": {
-      "$oid": "605db54abd5cfd4d85b0107b"
-    },
-    "name": "GeosChem",
-    "description": "The GEOS–Chem model is a global 3-D model of atmospheric composition driven by assimilated meteorological observations.",
-    "fileName": "Geos-Chem.yaml",
-    "tags": [
-      {
-        "Key": "EstimatedTimeToProvision",
-        "Value": "10 Minutes"
-      },
-      {
-        "Key": "DetailsLink",
-        "Value": "http://acmg.seas.harvard.edu/geos/"
-      },
-      {
-        "Key": "Service",
-        "Value": "EC2"
-      },
-      {
-        "Key": "TypeOfProduct",
-        "Value": "IT Applications"
-      }
-    ],
-    "owner": "RL",
-    "portfolio": "RGPortfolio",
-    "availableRegions": [],
-    "assignedOU": [],
-    "metaData": {
-      "pre_provisioning": [],
-      "post_provisioning": [],
-      "checks_before_assigning_product": [],
       "checks_after_assigning_product": [],
       "permission_required": {}
     }
