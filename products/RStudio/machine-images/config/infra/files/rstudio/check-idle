@@ -9,7 +9,7 @@ LAST_ACTIVE_TIME_FILENAME = '/tmp/last-active-rsession-time'
 ACCESS_LOG_FILENAME = '/var/log/nginx/access.log'
 
 # To disable auto-stop for RStudio, enter 0 as the value below for MAX_IDLE_MINUTES
-MAX_IDLE_MINUTES = 60
+MAX_IDLE_MINUTES = 15
 
 if MAX_IDLE_MINUTES == 0:
     print('Auto-stop disabled. Exiting..')
