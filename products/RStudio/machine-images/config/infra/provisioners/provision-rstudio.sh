@@ -15,7 +15,7 @@ curl -s "https://cran.rstudio.com/src/base/R-3/R-${R_VERSION}.tar.gz" > "/tmp/R/
 cd "/tmp/R/"
 tar xvf "R-${R_VERSION}.tar.gz"
 cd "R-${R_VERSION}/"
-./configure --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack --with-pcre1
+./configure --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack
 sudo make
 sudo make install
 cd "../../.."
