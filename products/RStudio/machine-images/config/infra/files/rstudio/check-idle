@@ -26,7 +26,8 @@ def get_activity_count():
         for line in access_log:
             # nginx sometimes pings the RStudio instance
             # which does not indicate user activity
-            if "POST /events/get_events" not in line:
+            # Load balancer health check should also be not considered as an activity
+            if "POST /events/get_events" not in line and "ELB-HealthChecker/2.0" not in line:
                 non_ping_count += 1
     return (non_ping_count)
 
