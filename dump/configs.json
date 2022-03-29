@@ -297,11 +297,24 @@
         "link": "https://youtu.be/zDksIb1n9zI?t=100"
       },
       "assignProducts": {
-        "link": "https://youtu.be/zDksIb1n9zI?t=100"
+        "link": "https://youtu.be/zDksIb1n9zI?t=126"
       },
       "users": {
-        "link": "https://youtu.be/zDksIb1n9zI?t=100"
+        "link": "https://youtu.be/zDksIb1n9zI?t=121"
       }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6239b4f485c63a8c118d8e17"
+    },
+    "key": "projectCostControl",
+    "value": {
+      "isCostControlEnabled": true,
+      "defaultAllowProjectActionsOverride": true,
+      "projectPauseThresholdPercentage": 80,
+      "projectStopThresholdPercentage": 90,
+      "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/"
     }
   }
 ]
