@@ -96,6 +96,7 @@
   "accountCleanupEventTriggerURL": "http://sp2_cc-3102:3002/accountCleanupEvent",
   "paramChangeUpdateURL": "http://sp2_cc-3102:3002/researchProducts/productParams",
   "credentialManagementURL": "http://sp2_cc-3102:3002/authentication",
+  "projectSyncURL": "http://sp2_cc-3102:3002/sync-product",
   "researchGatewayAPIToken": "REPLACE_WITH_API_TOKEN",
   "nsUseSecretsManager": true,
   "thresholdPercentage": 80,
