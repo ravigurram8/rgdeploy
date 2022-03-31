@@ -133,6 +133,9 @@ Parameters:
     Description: >-
       An S3 URI (starting with "s3://") that specifies the location of files to be copied to
       the environment instance, including any bootstrap scripts
+  PipelineCommand:
+    Type: String
+    Description: The pipeline command is used to be executed in the ec2 instance head node
 
 Conditions:
   IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
@@ -545,6 +548,8 @@ Resources:
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           
           cd /usr/bin
+          sudo wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+          sudo rpm -ivh jdk-17_linux-x64_bin.rpm
           curl -s https://get.nextflow.io | bash
 
           sudo yum update -y --security
@@ -640,7 +645,7 @@ Resources:
           chmod 500 "/tmp/get_bootstrap.sh"
           /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
           /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
-          
+ 
       InstanceType: !Ref 'InstanceType'
       SecurityGroupIds:
         - { "Fn::GetAtt" : ["InstanceSecurityGroup", "GroupId"] }
