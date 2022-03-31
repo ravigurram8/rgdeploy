@@ -12,7 +12,7 @@
     {
       "type": "amazon-ebs",
       "profile": "{{user `awsProfile`}}",
-      "iam_instance_profile": "packer-role",
+      "iam_instance_profile": "packer-role-test",
       "region": "{{user `awsRegion`}}",
       "vpc_id": "{{user `vpcId`}}",
       "subnet_id": "{{user `subnetId`}}",
