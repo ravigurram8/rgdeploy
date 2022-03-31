@@ -133,9 +133,6 @@ Parameters:
     Description: >-
       An S3 URI (starting with "s3://") that specifies the location of files to be copied to
       the environment instance, including any bootstrap scripts
-  PipelineCommand:
-    Type: String
-    Description: The pipeline command is used to be executed in the ec2 instance head node
 
 Conditions:
   IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
