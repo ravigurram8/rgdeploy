@@ -25,11 +25,6 @@
     "pipeline_container": "nfcore/ampliseq"
   },
   {
-    "pipeline_name": "fetchngs",
-    "pipeline_git_url": "https://github.com/nf-core/fetchngs",
-    "pipeline_container": ""
-  },
-  {
     "pipeline_name": "mhcquant",
     "pipeline_git_url": "https://github.com/nf-core/mhcquant",
     "pipeline_container": "nfcore/mhcquant"

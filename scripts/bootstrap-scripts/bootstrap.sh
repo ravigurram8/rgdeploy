@@ -7,6 +7,7 @@
 # data since the associated resource policies aren't updated until after the
 # CFN stack has been completed created.
 S3_MOUNTS="$1"
+RSTUDIO_USER="$2"
 
 # Exit if no S3 mounts were specified
 [ -z "$S3_MOUNTS" -o "$S3_MOUNTS" = "[]" ] && exit 0
@@ -49,7 +50,7 @@ case "$(env_type)" in
         ;;
     "rstudio") # Add mount script to bash profile
         yum install -y fuse-2.9.2
-        printf "\n# Mount S3 study data\nmount_s3.sh\n\n" >> "/home/ec2-user/.bash_profile"
+        printf "\n# Mount S3 study data\nmount_s3.sh\n\n" >> "/home/${RSTUDIO_USER}/.bash_profile"
         ;;
     "nextflow") # Add mount script to bash profile
         yum install -y fuse-2.9.2

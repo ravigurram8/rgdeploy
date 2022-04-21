@@ -138,6 +138,11 @@
               "InstanceIPAddress",
               "InstanceId"
             ]
+          },
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png",
+            "outputsRequired": []
           }
         ],
         "action": [
@@ -224,6 +229,11 @@
               "InstanceDNSName",
               "ApplicationPort"
             ]
+          },
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png",
+            "outputsRequired": []
           }
         ],
         "action": [
@@ -305,7 +315,7 @@
           },
           {
             "menu": "Monitor Pipeline",
-            "imageUrl": "../../assets/images/link@2x.png",
+            "imageUrl": "../../assets/images/monitor_pipeline.png",
             "outputsRequired": [
               "InstanceIPAddress",
               "InstanceId"
@@ -313,11 +323,16 @@
           },
           {
             "menu": "View Outputs",
-            "imageUrl": "../../assets/images/link@2x.png",
+            "imageUrl": "../../assets/images/view_outputs.png",
             "outputsRequired": [
               "InstanceIPAddress",
               "InstanceId"
             ]
+          },
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png",
+            "outputsRequired": []
           }
         ],
         "action": [

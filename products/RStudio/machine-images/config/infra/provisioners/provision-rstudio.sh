@@ -9,13 +9,13 @@ sudo yum install -y libcurl-devel-7.79.* libpng-devel-1.5.* cairo-devel-1.15.* p
 sudo yum install -y xorg-x11-server-devel-1.20.* libX11-devel-1.6.* libXt-devel-1.1.*
 
 # Install R from source (https://docs.rstudio.com/resources/install-r-source/)
-R_VERSION="3.6.3"
+R_VERSION="4.1.3"
 mkdir -p "/tmp/R/"
-curl -s "https://cran.rstudio.com/src/base/R-3/R-${R_VERSION}.tar.gz" > "/tmp/R/R-${R_VERSION}.tar.gz"
+curl -s "https://cran.r-project.org/src/base/R-4/R-${R_VERSION}.tar.gz" > "/tmp/R/R-${R_VERSION}.tar.gz"
 cd "/tmp/R/"
 tar xvf "R-${R_VERSION}.tar.gz"
 cd "R-${R_VERSION}/"
-./configure --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack
+./configure --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack --with-pcre1
 sudo make
 sudo make install
 cd "../../.."
@@ -27,32 +27,30 @@ sudo yum install -y "/tmp/rstudio/${rstudio_rpm}"
 sudo systemctl enable rstudio-server
 sudo systemctl start rstudio-server
 
+#Generate self signed certificate
+commonname=$(uname -n)
+password=dummypassword
+mkdir -p "/tmp/rstudio/ssl"
+chmod 700 /tmp/rstudio/ssl
+cd /tmp/rstudio/ssl
+openssl genrsa -des3 -passout pass:$password -out cert.key 2048
+#Remove passphrase from the key. Comment the line out to keep the passphrase
+openssl rsa -in cert.key -passin pass:$password -out cert.key
+openssl req -new -key cert.key -out cert.csr -passin pass:$password \
+    -subj "/C=NA/ST=NA/L=NA/O=NA/OU=RG/CN=$commonname/emailAddress=example.com"
+openssl x509 -req -days 365 -in cert.csr -signkey cert.key -out cert.pem
+cd "../../.."
+
 # Install and configure nginx
 sudo amazon-linux-extras install -y nginx1
+sudo openssl dhparam -out "/etc/nginx/dhparam.pem" 2048
+sudo mv "/tmp/rstudio/ssl/cert.pem" "/etc/nginx/"
+sudo mv "/tmp/rstudio/ssl/cert.key" "/etc/nginx/"
 sudo mv "/tmp/rstudio/nginx.conf" "/etc/nginx/"
 sudo chown -R nginx:nginx "/etc/nginx"
 sudo chmod -R 600 "/etc/nginx"
 sudo systemctl enable nginx
 sudo systemctl restart nginx
-
-# Setup nginx for rg deployment
-sudo mv "/tmp/rstudio/rg-nginx.service" "/etc/systemd/system/"
-sudo chown root: "/etc/systemd/system/rg-nginx.service"
-sudo systemctl daemon-reload
-sudo systemctl enable rg-nginx.service
-
-#To configure rg nginx
-sudo mv "/tmp/rstudio/rg-nginx" "/usr/local/bin/"
-sudo chown root: "/usr/local/bin/rg-nginx"
-sudo chmod 775 "/usr/local/bin/rg-nginx"
-
-# Install script that checks idle time and shuts down if max idle is reached
-sudo mv "/tmp/rstudio/check-idle" "/usr/local/bin/"
-sudo chown root: "/usr/local/bin/check-idle"
-sudo chmod 775 "/usr/local/bin/check-idle"
-sudo crontab -l 2>/dev/null > "/tmp/crontab"
-echo '*/2 * * * * /usr/local/bin/check-idle 2>&1 >> /var/log/check-idle.log' >> "/tmp/crontab"
-sudo crontab "/tmp/crontab"
 
 
 # Install system packages necessary for installing R packages through RStudio CRAN [devtools, tidyverse]
@@ -89,6 +87,13 @@ sudo su - -c "R -e \"install.packages('MASS', version='7.3.53.1', repos='http://
 sudo su - -c "R -e \"install.packages('quantreg', version='5.85', repos='http://cran.rstudio.com/')\""
 sudo su - -c "R -e \"install.packages('DescTools', version='0.99.41', repos='http://cran.rstudio.com/')\""
 
+# Install script that checks idle time and shuts down if max idle is reached
+sudo mv "/tmp/rstudio/check-idle" "/usr/local/bin/"
+sudo chown root: "/usr/local/bin/check-idle"
+sudo chmod 775 "/usr/local/bin/check-idle"
+sudo crontab -l 2>/dev/null > "/tmp/crontab"
+echo '*/2 * * * * /usr/local/bin/check-idle 2>&1 >> /var/log/check-idle.log' >> "/tmp/crontab"
+sudo crontab "/tmp/crontab"
 
 # Wipe out all traces of provisioning files
 sudo rm -rf "/tmp/rstudio"
