@@ -522,11 +522,8 @@ Resources:
     Type: AWS::Batch::JobQueue
     Properties:
       Tags: 
-        Name: !Sub worker-node-queue-${AWS::StackName}  
-      JobQueueName: 
-        !Sub
-            - 'job-queue-${RandomGUID}'
-            - { RandomGUID: !Select [0, !Split ["-", !Select [2, !Split ["/", !Ref AWS::StackId ]]]] }
+        Name: !Sub worker-node-queue-${Namespace}
+      JobQueueName: !Sub worker-node-queue-${Namespace}
       Priority: 1
       State: ENABLED
       ComputeEnvironmentOrder:
@@ -545,7 +542,9 @@ Resources:
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           
           cd /usr/bin
-          curl -s https://get.nextflow.io | bash
+          sudo wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+          sudo rpm -ivh jdk-17_linux-x64_bin.rpm
+          sudo wget -qO- https://github.com/nextflow-io/nextflow/releases/download/v21.11.0-edge/nextflow-21.11.0-edge-all | sudo bash
 
           sudo yum update -y --security
           cd /root/ 
@@ -583,7 +582,10 @@ Resources:
               echo $InputDataLocation 
           fi
 
-          cd .nextflow/ 
+          sudo chown -R ec2-user:ec2-user /usr/bin/nextflow
+          sudo cp -prf /root/.nextflow/ /home/ec2-user/ 
+          cd /home/ec2-user/.nextflow/
+          
           PROJECT_NF_CONFIG=config 
 
           cat << EOF >> $PROJECT_NF_CONFIG
@@ -640,7 +642,7 @@ Resources:
           chmod 500 "/tmp/get_bootstrap.sh"
           /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
           /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
-          
+ 
       InstanceType: !Ref 'InstanceType'
       SecurityGroupIds:
         - { "Fn::GetAtt" : ["InstanceSecurityGroup", "GroupId"] }
@@ -711,3 +713,5 @@ Outputs:
     Value: !Ref EC2LaunchTemplate
   WorkDataLocation:
     Value: !Sub ${S3Bucket}
+  BatchQueue:
+    Value: !Sub ${DefaultQueue}
