@@ -522,11 +522,8 @@ Resources:
     Type: AWS::Batch::JobQueue
     Properties:
       Tags: 
-        Name: !Sub worker-node-queue-${AWS::StackName}  
-      JobQueueName: 
-        !Sub
-            - 'job-queue-${RandomGUID}'
-            - { RandomGUID: !Select [0, !Split ["-", !Select [2, !Split ["/", !Ref AWS::StackId ]]]] }
+        Name: !Sub worker-node-queue-${Namespace}
+      JobQueueName: !Sub worker-node-queue-${Namespace}
       Priority: 1
       State: ENABLED
       ComputeEnvironmentOrder:
@@ -547,7 +544,7 @@ Resources:
           cd /usr/bin
           sudo wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
           sudo rpm -ivh jdk-17_linux-x64_bin.rpm
-          curl -s https://get.nextflow.io | bash
+          sudo wget -qO- https://github.com/nextflow-io/nextflow/releases/download/v21.11.0-edge/nextflow-21.11.0-edge-all | sudo bash
 
           sudo yum update -y --security
           cd /root/ 
@@ -585,7 +582,10 @@ Resources:
               echo $InputDataLocation 
           fi
 
-          cd .nextflow/ 
+          sudo chown -R ec2-user:ec2-user /usr/bin/nextflow
+          sudo cp -prf /root/.nextflow/ /home/ec2-user/ 
+          cd /home/ec2-user/.nextflow/
+          
           PROJECT_NF_CONFIG=config 
 
           cat << EOF >> $PROJECT_NF_CONFIG
@@ -713,3 +713,5 @@ Outputs:
     Value: !Ref EC2LaunchTemplate
   WorkDataLocation:
     Value: !Sub ${S3Bucket}
+  BatchQueue:
+    Value: !Sub ${DefaultQueue}
