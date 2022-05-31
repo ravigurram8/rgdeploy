@@ -104,7 +104,7 @@
   "BucketName": "REPLACE_WITH_S3_BUCKET_NAME_CONTAINING_CFT_TEMPLATES",
   "cftTemplateURL": "REPLACE_WITH_S3_BUCKET_URL_CONTAINING_CFT_TEMPLATES",
   "RGUser": "RG-PortalUser",
-  "DescribeStackRetry": 2,
+  "DescribeStackRetry": 20,
   "DefaultCatalogAssignedToOrg": "Research",
   "userSetting": {
     "userRoleMapping": {
@@ -193,5 +193,11 @@
   "defaultLimit":10,
   "linksForRg": {
         "termsAndConditions": "REPLACE_WITH_TERMS_CONDITIONS_DOC_URL"
-    }
+    },
+  "s3BucketLimit" : 100,
+  "eodReportTime":{
+    "startTime": "20:00:00",
+    "endTime": "21:10:00"
+  },
+  "cronJobForEodSync" : "*/60 * * * *"
 }
