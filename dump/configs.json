@@ -114,6 +114,11 @@
         "tags": ["project_desc"]
       },
       {
+        "key" : "How can I add more than 1 project at a time?",
+        "value" : "We have a Project Copies field using which we can create N number of projects at a time.",
+        "tags" : ["project_copies"]
+      },
+      {
         "key": "Budget Available : Budget should be greater then 0",
         "value": "Example : 1000",
         "tags": ["project_budget"]
@@ -137,6 +142,16 @@
         "key": "What products can I get from the Standard Catalog",
         "value": "The RLCatalyst Research Gateway standard catalog brings in many of the products commonly used in scientific research computing. The products span many different categories like compute, storage, databases etc. For a full list click https://researchgateway.readthedocs.io/en/latest/Appendices.html#appendix-b",
         "tags": ["add_products"]
+      },
+      {
+        "key" : "What products can I get from the Bring all catalog items?",
+        "value" : "This option will sync all the products which do not have a project tag that matches any of the projects in this account. For BYOC to work, the role assumed by the Portal in the project account must be added to the portfolio manually",
+        "tags" : ["ownCatalog"]
+      }, 
+      {
+        "key" : "What products can I get from the Bring specific catalog items?",
+        "value" : "This option will pull in any products that are tagged with the same tag which user provides in the UI. For BYOC to work, the role assumed by the Portal in the project account must be added to the portfolio manually",
+        "tags" : ["ownCatalogWithTag"]
       }
     ],
     "configType": "create_project_helpText"
@@ -315,6 +330,18 @@
       "projectPauseThresholdPercentage": 80,
       "projectStopThresholdPercentage": 90,
       "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/"
+    }
+  },
+  {
+    "_id" : { 
+      "$oid": "626fb82256aaa6ec4fe242e9"
+    },
+    "key" : "projectConfig",
+    "value" : {
+        "maxProjectCount" : "10",
+        "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
+        "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
+        "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/"
     }
   }
 ]
