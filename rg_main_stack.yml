@@ -25,16 +25,6 @@ Parameters:
     Description: URL at which this instance of Research Gateway can be reached. e.g. myrg.example.com
     Type: String
     ConstraintDescription: RG URL
-  UserPoolId:
-    Description: UserPoolId of the Cognito UserPool created for this instance of Research Gateway
-    Type: String
-    Default: ""
-    ConstraintDescription: User Pool Id
-  ClientId:
-    Description: ClientId of the Cognito UserPool created for this instance of Research Gateway
-    Type: String
-    Default: ""
-    ConstraintDescription: ClientId
   CFTBucketName:
     Description: Bucket that is created to hold CFT templates used by Research Gateway
     Type: String
@@ -75,11 +65,6 @@ Parameters:
   BaseAccountPolicyName:
     Description: Name for RG Portal Base Account Policy
     Type: String
-  StackRunId:
-    Description: Run Id to make the config unique
-    Type: String
-    Default: ""
-    ConstraintDescription: Run ID         
 Conditions:
   DocumentDBSelected:
     Fn::Equals:
@@ -96,7 +81,7 @@ Conditions:
       - Condition: DocumentDBURLProvided
   UseLocalMongoDB:
     Fn::Not:
-      - Condition: DocumentDBSelected
+      - Condition: UseDocumentDB
 Resources:
   RGPortalRole:
     Type: AWS::IAM::Role
@@ -152,7 +137,7 @@ Resources:
               - sns:*
               - sts:AssumeRole
               - cloudformation:*
-            Resource: '*'
+            Resource: "*"
   RGPortalSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -189,45 +174,47 @@ Resources:
         - DeviceName: /dev/xvda
           Ebs:
             VolumeType: gp2
-            VolumeSize: '30'
-            DeleteOnTermination: 'true'
-            Encrypted: 'true'        
+            VolumeSize: "100"
+            DeleteOnTermination: "true"
+            Encrypted: "true"
       SubnetId:
         Ref: Subnet1
       SecurityGroupIds:
         - Ref: RGPortalSG
       UserData:
-        Fn::Base64: 
+        Fn::Base64:
           Fn::If:
             - UseLocalMongoDB
             - !Sub |
-                #!/bin/bash
-                exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-                export RG_HOME=/opt/deploy/sp2
-                export RG_ENV=${Environment}
-                export RG_SRC=/home/ubuntu
-                export S3_SOURCE="${CFTBucketName}"
-                aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
-                chmod +x /home/ubuntu/updatescripts.sh
-                /home/ubuntu/updatescripts.sh
-                fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
-                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${StackRunId} ${RGUrl} 
-                start_server.sh ${RGUrl} ${TGARN}
-                /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
+              #!/bin/bash
+              exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+              export RG_HOME=/opt/deploy/sp2
+              export RG_ENV=${Environment}
+              export RG_SRC=/home/ubuntu
+              export S3_SOURCE="${CFTBucketName}"
+              aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
+              aws s3 cp s3://${CFTBucketName}/config.tar.gz /home/ubuntu               
+              chmod +x /home/ubuntu/updatescripts.sh
+              /home/ubuntu/updatescripts.sh
+              fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
+              fixconfigs.sh
+              start_server.sh ${RGUrl} ${TGARN}
+              /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
             - !Sub |
-                #!/bin/bash
-                exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-                export RG_HOME=/opt/deploy/sp2
-                export RG_ENV=${Environment}
-                export RG_SRC=/home/ubuntu
-                export S3_SOURCE="${CFTBucketName}"
-                aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
-                chmod +x /home/ubuntu/updatescripts.sh
-                /home/ubuntu/updatescripts.sh
-                fixconfigs.sh ${UserPoolId} ${ClientId} ${CFTBucketName} rguser ${UserPassword} ${StackRunId} ${RGUrl} 
-                fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}
-                start_server.sh ${RGUrl} ${TGARN}
-                /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}            
+              #!/bin/bash
+              exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+              export RG_HOME=/opt/deploy/sp2
+              export RG_ENV=${Environment}
+              export RG_SRC=/home/ubuntu
+              export S3_SOURCE="${CFTBucketName}"
+              aws s3 cp s3://${CFTBucketName}/updatescripts.sh /home/ubuntu
+              aws s3 cp s3://${CFTBucketName}/config.tar.gz /home/ubuntu               
+              chmod +x /home/ubuntu/updatescripts.sh
+              /home/ubuntu/updatescripts.sh
+              fixconfigs.sh
+              fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}
+              start_server.sh ${RGUrl} ${TGARN}
+              /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
     CreationPolicy:
       ResourceSignal:
         Timeout: PT9M

@@ -5,33 +5,33 @@
 ##
 ###########################################################################
 
-version: '3.1'
+version: "3.1"
 services:
   web:
     image: nginx:latest
     ports:
-     - '80:80'
+      - "80:80"
     volumes:
       - ${PWD}/nginx.conf:/etc/nginx/conf.d/default.conf
       - ${PWD}/integrations:/etc/nginx/myfiles
     networks:
       - sp2net
-  
+
   cc-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.0_b954
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.11.3_b1152
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
     depends_on:
-     - scheduler-3102
+      - scheduler-3102
     environment:
       - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
-      - REDIS_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
       - SCHEDULER_HOST=scheduler-3102
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM URL where it has been placed
       - CC_HOST=cc-3102:3002
+      - NS_HOST=notificationsink:3005
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/logs:/rlc/cc/server/app/logs
@@ -39,20 +39,20 @@ services:
       - ${PWD}/catalog:/rlc/cc/tools/deploy/catalog
     networks:
       - sp2net
-    command: /bin/bash start.sh 
+    command: /bin/bash start.sh
 
   scheduler-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.9.0_b954
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.11.3_b1152
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
     environment:
       - DB_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
-      - REDIS_HOST=REPLACE_WITH_PRIVATE_IP_OF_HOST
       - APP_ENV=PROD
       - APM_ENABLE=false
       - APM_URL=APM_URL
       - CC_HOST=cc-3102:3002
+      - NS_HOST=notificationsink:3005  
     volumes:
       - ${PWD}/config:/rlc/cc/server/app/config
       - ${PWD}/slogs:/rlc/cc/server/app/logs
@@ -60,9 +60,9 @@ services:
     networks:
       - sp2net
     command: node ./app/scheduler/app.js
-    
-  notificationsink:  
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.9.0_b2
+
+  notificationsink:
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.11.2_b2
     secrets:
       - source: sp2prod-config.json
         target: /opt/app/config/config.json
@@ -83,7 +83,6 @@ secrets:
     external: true
   sp2prod-alert-config.json:
     external: true
- 
 
 networks:
   sp2net:

@@ -13,7 +13,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/stop.png"
           }
         ]
       },
@@ -40,7 +40,7 @@
           },
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/stop.png"
           }
         ]
       }
@@ -148,7 +148,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "imageUrl": "../../assets/images/stop.png",
             "outputsRequired": [
               "InstanceId"
             ]
@@ -184,7 +184,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/stop.png"
           },
           {
             "action": "Reboot",
@@ -239,7 +239,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "imageUrl": "../../assets/images/stop.png",
             "outputsRequired": [
               "InstanceId"
             ]
@@ -275,7 +275,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/stop.png"
           },
           {
             "action": "Reboot",
@@ -338,7 +338,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png",
+            "imageUrl": "../../assets/images/stop.png",
             "outputsRequired": [
               "InstanceId"
             ]
@@ -374,7 +374,7 @@
         "action": [
           {
             "action": "Stop",
-            "imageUrl": "../../assets/images/no-stopping@2x.png"
+            "imageUrl": "../../assets/images/stop.png"
           },
           {
             "action": "Reboot",
@@ -603,7 +603,7 @@
             "imageUrl": "../../assets/images/direction@2x.png"
           },
           {
-            "menu": "Link",view_outputs
+            "menu": "Link",
             "imageUrl": "../../assets/images/link@2x.png"
           }
         ],

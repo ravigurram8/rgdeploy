@@ -1,6 +1,6 @@
 #!/bin/bash
 # Download the latest scripts
-version='0.1.3'
+version='0.1.5'
 echo "updatescripts.sh version: $version"
 [ -z "$RG_HOME" ] && RG_HOME='/opt/deploy/sp2'
 echo "RG_HOME=$RG_HOME"
@@ -64,6 +64,20 @@ if [ ! -f /usr/local/sbin/updatessmpaths.sh ] || [ $RG_SRC/scripts/updatessmpath
 	echo "Found newer version of updatessmpaths.sh. Updating"
 	cp $RG_SRC/scripts/updatessmpaths.sh /usr/local/sbin/
 fi
-grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh
+if [ ! -f /usr/local/sbin/import-seed-db.sh ] || [ $RG_SRC/scripts/import-seed-db.sh -nt /usr/local/sbin/import-seed-db.sh ]; then
+	echo "Found newer version of import-seed-db.sh. Updating"
+	cp $RG_SRC/scripts/import-seed-db.sh /usr/local/sbin/
+fi
+
+if [ ! -f /usr/local/sbin/connect-db.sh ] || [ $RG_SRC/scripts/connect-db.sh -nt /usr/local/sbin/connect-db.sh ]; then
+	echo "Found newer version of connect-db.sh. Updating"
+	cp $RG_SRC/scripts/connect-db.sh /usr/local/sbin/
+fi
+
+if [ ! -f /usr/local/sbin/import_bulk_users.sh ] || [ $RG_SRC/scripts/import_bulk_users.sh -nt /usr/local/sbin/import_bulk_users.sh ]; then
+	echo "Found newer version of import_bulk_users.sh. Updating"
+	cp $RG_SRC/scripts/import_bulk_users.sh /usr/local/sbin/
+fi
+grep -i 'version=' /usr/local/sbin/fix*.sh /usr/local/sbin/start_server.sh /usr/local/sbin/import-seed-db.sh /usr/local/sbin/updatessmpaths.sh /usr/local/sbin/connect-db.sh
 rm -rf $RG_SRC/scripts
 echo "Done updating scripts"

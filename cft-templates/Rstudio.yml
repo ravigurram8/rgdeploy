@@ -23,12 +23,8 @@ Parameters:
     AllowedValues:
       - t2.medium
       - t2.large
-      - t2.xlarge
-      - m4.xlarge
-      - c4.xlarge
-      - r4.xlarge
-      - r4.xlarge
-      - p2.xlarge
+      - t3.medium
+      - t3.large
       
     ConstraintDescription: Valid instance type in the t2 families
     Default: t2.medium
@@ -86,14 +82,10 @@ Resources:
           ToPort: 22
           IpProtocol: tcp
         - CidrIp: "0.0.0.0/0"
-          FromPort: 80
-          ToPort: 80
+          FromPort: 443
+          ToPort: 443
           IpProtocol: tcp
-        - CidrIp: "0.0.0.0/0"
-          FromPort: 8787
-          ToPort: 8787
-          IpProtocol: tcp
-      GroupDescription: RStudio and Shiny Security Group
+      GroupDescription: RStudio Security Group
 
   RstudioEC2Instance:
     Type: AWS::EC2::Instance
@@ -121,11 +113,13 @@ Resources:
           #add user(s)
           sudo useradd -m -s /bin/bash ${InitialUser}
           sudo echo ${InitialUser}:${InitialPassword} | chpasswd
+          #Add user to the sudo group
+          sudo usermod -a -G wheel ${InitialUser}
           
           #Download and execute bootstrap script
           aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
           chmod 500 "/tmp/get_bootstrap.sh"
-          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${InitialUser}"
           
           /opt/aws/bin/cfn-signal --exit-code 0 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
 
@@ -138,4 +132,4 @@ Outputs:
   InstanceId:
     Value: !Ref 'RstudioEC2Instance'
   ApplicationPort:
-    Value: '8787'
+    Value: '443'

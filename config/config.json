@@ -96,6 +96,7 @@
   "accountCleanupEventTriggerURL": "http://sp2_cc-3102:3002/accountCleanupEvent",
   "paramChangeUpdateURL": "http://sp2_cc-3102:3002/researchProducts/productParams",
   "credentialManagementURL": "http://sp2_cc-3102:3002/authentication",
+  "projectSyncURL": "http://sp2_cc-3102:3002/sync-product",
   "researchGatewayAPIToken": "REPLACE_WITH_API_TOKEN",
   "nsUseSecretsManager": true,
   "thresholdPercentage": 80,
@@ -103,7 +104,7 @@
   "BucketName": "REPLACE_WITH_S3_BUCKET_NAME_CONTAINING_CFT_TEMPLATES",
   "cftTemplateURL": "REPLACE_WITH_S3_BUCKET_URL_CONTAINING_CFT_TEMPLATES",
   "RGUser": "RG-PortalUser",
-  "DescribeStackRetry": 2,
+  "DescribeStackRetry": 20,
   "DefaultCatalogAssignedToOrg": "Research",
   "userSetting": {
     "userRoleMapping": {
@@ -184,5 +185,22 @@
     "dbName": "cc",
     "host": "localhost",
     "port": "27017"
-  }
+  },
+  "isCachingEnable": true,
+  "sleepTime": 1000,
+  "enableWatchDog": true,
+  "defaultPage":1,
+  "defaultLimit":10,
+  "linksForRg": {
+        "termsAndConditions": "REPLACE_WITH_TERMS_CONDITIONS_DOC_URL"
+    },
+  "s3BucketLimit" : 100,
+  "eodReportTime":{
+    "startTime": "20:00:00",
+    "endTime": "21:10:00"
+  },
+  "cronJobForEodSync" : "*/60 * * * *",
+  "sampleCSVForUser": "users.csv",
+  "sampleCSVBucketRegion": "us-west-2"
+  "sessionMaxAge" : 900000
 }

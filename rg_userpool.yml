@@ -37,6 +37,11 @@ Parameters:
     MaxLength: 64
     Default: UserManagement
     ConstraintDescription: A Name to identify LambdaFunction2
+  CFTBucketName:
+    Description: Bucket that is created to hold CFT templates used by Research Gateway
+    Type: String
+    Default: ""
+    ConstraintDescription: Bucket Name
 Resources:
   UserPoolCustomMessageLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -355,7 +360,7 @@ Resources:
       FunctionName: !Ref Function1Name
       Handler: "index.handler"
       Code:
-        S3Bucket: rg-deployment-docs
+        S3Bucket: !Ref CFTBucketName
         S3Key: post_verification_send_message.zip
       Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
@@ -374,7 +379,7 @@ Resources:
       FunctionName: !Ref Function2Name
       Handler: "index.handler"
       Code:
-        S3Bucket: rg-deployment-docs
+        S3Bucket: !Ref CFTBucketName
         S3Key: pre_verification_custom_message.zip
       Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
