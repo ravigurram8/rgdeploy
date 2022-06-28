@@ -329,7 +329,8 @@
       "defaultAllowProjectActionsOverride": true,
       "projectPauseThresholdPercentage": 80,
       "projectStopThresholdPercentage": 90,
-      "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/"
+      "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/",
+      "budgetMaxAllowedValue": 50000
     }
   },
   {
@@ -342,6 +343,22 @@
         "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/"
+    }
+  },
+  {
+    "_id" : { 
+      "$oid": "62b6c70a7dec087675b33797"
+    },
+    "key" : "usersConfig",
+    "value" : {
+        "maxBulkUserCount" : 20,
+        "csvHeaderValues" : [ 
+          "email", 
+          "first_name", 
+          "last_name", 
+          "role", 
+          "userTags"
+      ]
     }
   }
 ]
