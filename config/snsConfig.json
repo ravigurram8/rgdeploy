@@ -51,5 +51,6 @@
   "snsProtocol": "REPLACE_WITH_HTTP_HTTPS",
   "endpoint": "notificationsink/productProvisioningUpdates",
   "notificationSinkCleanUpRoute": "unlinkAccount",
-  "snsUrlKey": "snsUrl"
+  "snsUrlKey": "snsUrl",
+  "sendEmailRoute":"sendEmail"
 }
