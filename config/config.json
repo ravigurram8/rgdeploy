@@ -199,5 +199,6 @@
     "startTime": "20:00:00",
     "endTime": "21:10:00"
   },
-  "cronJobForEodSync" : "*/60 * * * *"
+  "cronJobForEodSync" : "*/60 * * * *",
+  "sessionMaxAge" : 900000
 }
