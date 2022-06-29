@@ -91,6 +91,7 @@ jq -r ".baseURL=\"$baseurl\"" "$mytemp/config.json" |
     jq -r ".route53.domainName=\"${r53_domain_name}\"" |
     jq -r ".route53.hostedZoneId=\"${r53_hosted_zone}\"" |
 	jq -r ".AWSCognito.region=\"$region\"" |
+	jq -r ".sampleCSVBucketRegion=\"$region\"" |
 	jq -r ".enableB2CMode=false" >"${RG_HOME}/config/config.json"
 echo "Modifying snsConfig.json"
 if [ -z "$snsprotocol" ]; then
