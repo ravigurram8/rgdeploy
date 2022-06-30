@@ -27,7 +27,20 @@
     "owner": "RL",
     "portfolio": "RGPortfolio",
     "availableRegions": [],
-    "assignedOU": []
+    "assignedOU": [],
+    "metaData" : {
+                "pre_provisioning" : [
+                        {
+                                "code" : "CFT_PARAMS",
+                                "params" : [
+                                        {
+                                                "name" : "Namespace",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        }
+                                ]
+                        }
+                ]
+        }
   },
   {
     "_id": {
@@ -274,7 +287,7 @@
       },
       {
         "Key": "ApplicationPort",
-        "Value": 8787
+        "Value": "443"
       }
     ],
     "owner": "RL",

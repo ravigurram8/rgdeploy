@@ -400,6 +400,79 @@
       "terminated"
     ]
   },
+  "cromwell": {
+    "actions": {
+        "running": {
+            "connect": [
+                {
+                    "menu": "SSH/RDP",
+                    "imageUrl": "../../assets/images/technology@2x.png"
+                },
+                {
+                    "menu": "View Outputs",
+                    "imageUrl": "../../assets/images/link@2x.png",
+                    "outputsRequired": [
+                        "InstanceIPAddress",
+                        "InstanceId"
+                    ]
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/stop.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        },
+        "stopped": {
+            "connect": [],
+            "action": [
+                {
+                    "action": "Start",
+                    "imageUrl": "../../assets/images/play@2x.png"
+                }
+            ]
+        },
+        "default": {
+            "connect": [
+                {
+                    "menu": "SSH/RDP",
+                    "imageUrl": "../../assets/images/technology@2x.png"
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/stop.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        }
+    },
+    "transient_states": [
+        "pending",
+        "shutting-down",
+        "stopping",
+        "deleting"
+    ],
+    "active_states": [
+        "running",
+        "active"
+    ],
+    "stopped_states": [
+        "stopped"
+    ],
+    "terminated_states": [
+        "terminated"
+    ]
+},
   "wordpress": {
     "actions": {
       "running": {
@@ -651,7 +724,8 @@
     "emr",
     "rds",
     "rstudio",
-    "nextflow"
+    "nextflow",
+    "cromwell"
   ],
   "cft_active_states": [
     "available",

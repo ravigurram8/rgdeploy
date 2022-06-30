@@ -114,6 +114,11 @@
         "tags": ["project_desc"]
       },
       {
+        "key" : "How can I add more than 1 project at a time?",
+        "value" : "We have a Project Copies field using which we can create N number of projects at a time.",
+        "tags" : ["project_copies"]
+      },
+      {
         "key": "Budget Available : Budget should be greater then 0",
         "value": "Example : 1000",
         "tags": ["project_budget"]
@@ -137,6 +142,16 @@
         "key": "What products can I get from the Standard Catalog",
         "value": "The RLCatalyst Research Gateway standard catalog brings in many of the products commonly used in scientific research computing. The products span many different categories like compute, storage, databases etc. For a full list click https://researchgateway.readthedocs.io/en/latest/Appendices.html#appendix-b",
         "tags": ["add_products"]
+      },
+      {
+        "key" : "What products can I get from the Bring all catalog items?",
+        "value" : "This option will sync all the products which do not have a project tag that matches any of the projects in this account. For BYOC to work, the role assumed by the Portal in the project account must be added to the portfolio manually",
+        "tags" : ["ownCatalog"]
+      }, 
+      {
+        "key" : "What products can I get from the Bring specific catalog items?",
+        "value" : "This option will pull in any products that are tagged with the same tag which user provides in the UI. For BYOC to work, the role assumed by the Portal in the project account must be added to the portfolio manually",
+        "tags" : ["ownCatalogWithTag"]
       }
     ],
     "configType": "create_project_helpText"
@@ -209,7 +224,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
@@ -314,7 +329,68 @@
       "defaultAllowProjectActionsOverride": true,
       "projectPauseThresholdPercentage": 80,
       "projectStopThresholdPercentage": 90,
-      "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/"
+      "costControlReadMoreLink": "https://researchgateway.readthedocs.io/en/latest/",
+      "budgetMaxAllowedValue": 50000
     }
+  },
+  {
+    "_id" : { 
+      "$oid": "626fb82256aaa6ec4fe242e9"
+    },
+    "key" : "projectConfig",
+    "value" : {
+        "maxProjectCount" : "10",
+        "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
+        "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
+        "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/"
+    }
+  },
+  {
+    "_id" : { 
+      "$oid": "62b6c70a7dec087675b33797"
+    },
+    "key" : "usersConfig",
+    "value" : {
+        "maxBulkUserCount" : 20,
+        "csvHeaderValues" : [ 
+          "email", 
+          "first_name", 
+          "last_name", 
+          "role", 
+          "userTags"
+      ]
+    }
+  },
+  {
+    "_id" : { 
+        "$oid": "628b094788660e80ceb36ba3"
+      },
+    "key": "cromwellPipeline",
+    "value": [
+      {
+        "pipeline_name": "seq-format-validation",
+        "pipeline_git_url": "https://github.com/gatk-workflows/seq-format-validation.git"
+      },
+      {
+        "pipeline_name": "seq-format-conversion",
+        "pipeline_git_url": "https://github.com/gatk-workflows/seq-format-conversion.git"
+      },
+      {
+        "pipeline_name": "gatk4-rnaseq-germline-snps-indels",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-rnaseq-germline-snps-indels.git"
+      },
+      {
+        "pipeline_name": "gatk4-germline-snps-indels",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-germline-snps-indels.git"
+      },
+      {
+        "pipeline_name": "gatk4-data-processing",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-data-processing.git"
+      },
+      {
+        "pipeline_name": "gatk4-basic-joint-genotyping",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-basic-joint-genotyping.git"
+      }
+    ]
   }
 ]

@@ -1,9 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: create a single S3 bucket
 
+Parameters:
+  Namespace:
+    Type: String
+    Description: An environment name that will be prefixed to resource names  
+
 Resources:
   SampleBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref Namespace
 
 Outputs:
   BucketArn:
