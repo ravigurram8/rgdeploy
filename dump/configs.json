@@ -224,7 +224,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
