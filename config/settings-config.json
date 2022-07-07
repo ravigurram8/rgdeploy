@@ -171,6 +171,11 @@
             "outputsRequired": [
               "InstanceId"
             ]
+          },
+          {
+            "action":"Instance Type",
+            "imageUrl": "../../assets/images/pencil.png",
+            "outputsRequired": ["InstanceId"]
           }
         ]
       },
@@ -262,6 +267,11 @@
             "outputsRequired": [
               "InstanceId"
             ]
+          },
+          {
+            "action":"Instance Type",
+            "imageUrl": "../../assets/images/pencil.png",
+            "outputsRequired": ["InstanceId"]
           }
         ]
       },
@@ -361,6 +371,11 @@
             "outputsRequired": [
               "InstanceId"
             ]
+          },
+          {
+            "action":"Instance Type",
+            "imageUrl": "../../assets/images/pencil.png",
+            "outputsRequired": ["InstanceId"]
           }
         ]
       },
@@ -434,6 +449,11 @@
                 {
                     "action": "Start",
                     "imageUrl": "../../assets/images/play@2x.png"
+                },
+                {
+                  "action":"Instance Type",
+                  "imageUrl": "../../assets/images/pencil.png",
+                  "outputsRequired": ["InstanceId"]
                 }
             ]
         },
