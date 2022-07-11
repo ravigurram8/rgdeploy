@@ -5,7 +5,7 @@
       "Sid": "Stmt1609262373000",
       "Effect": "Allow",
       "Action": [
-	      "acm:*",
+        "acm:*",
         "config:*",
         "ce:DescribeCostCategoryDefinition",
         "ce:GetRightsizingRecommendation",
@@ -27,7 +27,7 @@
         "sns:*",
         "iam:GetUser",
         "iam:GetRole",
-	      "iam:GetPolicyVersion",
+        "iam:GetPolicyVersion",
         "iam:DeleteRole",
         "iam:CreateRole",
         "iam:AttachRolePolicy",
