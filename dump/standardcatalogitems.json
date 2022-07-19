@@ -390,6 +390,67 @@
       "permission_required": {}
     }
   },
+  {  
+    "_id": {
+      "$oid": "610166d6bbe50a00122a5139"
+    },
+        "name" : "Ubuntu 20 04 on Amazon EC2",
+        "description" : "Use Ubuntu 20.04, on Amazon Elastic Compute Cloud (Amazon EC2).",
+        "fileName" : "ec2-ubuntu.yml",
+        "tags" : [
+                {
+                        "Key" : "EstimatedTimeToProvision",
+                        "Value" : "10 Minutes"
+                },
+                {
+                        "Key" : "DetailsLink",
+                        "Value" : "https://researchgateway.readthedocs.io/en/latest/linux.html"
+                },
+                {
+                        "Key" : "Service",
+                        "Value" : "EC2"
+                },
+                {
+                        "Key" : "TypeOfProduct",
+                        "Value" : "Research"
+                }
+        ],
+        "owner" : "RL",
+        "portfolio" : "RGPortfolio",
+        "availableRegions" : [ ],
+        "assignedOU" : [ ],
+        "metaData" : {
+                "pre_provisioning" : [
+                        {
+                                "code" : "CFT_PARAMS",
+                                "params" : [
+                                        {
+                                                "name" : "EnvironmentInstanceFiles",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "IamPolicyDocument",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "S3Mounts",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "Namespace",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        }
+                                ]
+                        }
+                ],
+                "post_provisioning" : [ ],
+                "checks_before_assigning_product" : [ ],
+                "checks_after_assigning_product" : [ ],
+                "permission_required" : {
+
+                }
+        }
+  }, 
   {
     "_id": {
       "$oid": "611b96eb4548787205d67866"
@@ -509,8 +570,11 @@
         }
       ],
       "checks_after_assigning_product": [],
-      "permission_required": {}
-    }
+      "permission_required": {
+    },
+    "cost_resource" : true,
+    "aws_batch" : true
+  }
   },
   {
     "_id": {
@@ -594,7 +658,8 @@
       ],
       "checks_after_assigning_product": [],
       "permission_required": {},
-      "cost_resource": true
+      "cost_resource": true,
+      "aws_batch" : true
     }
   }
 ]
