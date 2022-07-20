@@ -176,7 +176,7 @@
             "action":"Instance Type",
             "imageUrl": "../../assets/images/pencil.png",
             "outputsRequired": ["InstanceId"]
-         }
+          }
         ]
       },
       "default": {
@@ -272,7 +272,7 @@
             "action":"Instance Type",
             "imageUrl": "../../assets/images/pencil.png",
             "outputsRequired": ["InstanceId"]
-         }
+          }
         ]
       },
       "default": {
@@ -376,7 +376,7 @@
             "action":"Instance Type",
             "imageUrl": "../../assets/images/pencil.png",
             "outputsRequired": ["InstanceId"]
-         }
+          }
         ]
       },
       "default": {
@@ -454,7 +454,7 @@
                   "action":"Instance Type",
                   "imageUrl": "../../assets/images/pencil.png",
                   "outputsRequired": ["InstanceId"]
-               }
+                }
             ]
         },
         "default": {
