@@ -80,13 +80,13 @@ Fore more details on requesting a certificate, follow this [link](https://docs.a
 
 *Create a listener on port 443 * 
 
-    aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:region:aws_account_id:loadbalancer/app/research-gw-alb/e5ba62739c16e642 --protocol HTTPS --port 443 --certificates CertificateArn=arn:aws:acm:us-east-1:aws_account_id:certificate/480cdfa8-bac6-4b99-977f-5f18441de49e  --ssl-policy ELBSecurityPolicy-2016-08 --default-actions Type=forward, TargetGroupArn=arn:aws:elasticloadbalancing:region:aws_account_id:targetgroup/tg-research-gw/209a844cd01825a4 --region us-east-1
+    aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:region:aws_account_id:loadbalancer/app/research-gw-alb/e5ba62739c16e642 --protocol HTTPS --port 443 --certificates CertificateArn=arn:aws:acm:us-east-1:aws_account_id:certificate/480cdfa8-bac6-4b99-977f-5f18441de49e  --ssl-policy ELBSecurityPolicy-2016-08 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:region:aws_account_id:targetgroup/tg-research-gw/209a844cd01825a4 --region us-east-1
 
 *Create a listener on port 80 *
 
 Note: This is only recommended for test setups and some of the features like secure links for resources will not work.
 
-    aws elbv2 create-listener arn:aws:elasticloadbalancing:region:aws_account_id:loadbalancer/app/research-gw-alb/e5ba62739c16e642 --protocol HTTPS --port 80 --default-actions Type=forward, TargetGroupArn=arn:aws:elasticloadbalancing:region:aws_account_id:targetgroup/tg-research-gw/209a844cd01825a4 --region us-east-1
+    aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:region:aws_account_id:loadbalancer/app/research-gw-alb/e5ba62739c16e642 --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:region:aws_account_id:targetgroup/tg-research-gw/209a844cd01825a4 
 
 <!-- trunk-ignore(markdownlint/MD036) -->
 *Set up Route 53 for your domain/sub-domain*
