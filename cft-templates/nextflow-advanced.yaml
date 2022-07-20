@@ -88,7 +88,7 @@ Parameters:
     Description: Head Node EC2 instance type
     Type: String
     Default: t2.small
-    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium, t2.large, m5.8xlarge]
+    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium]
     ConstraintDescription: Must be a valid EC2 instance type.
   KeyPair:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the Head Node. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
@@ -110,7 +110,7 @@ Parameters:
     Description: Specify the instance types to be used to carry out the computation. You can specify one or more family or instance type. The option 'optimal' chooses the best fit of M4, C4, and R4 instance types available in the region.
     Type: String
     Default: optimal
-    AllowedValues: [optimal, c4.large, m4.large, r4.large, c4.4xlarge, m4.4xlarge, r4.4xlarge, r5.8xlarge, r5.12xlarge, r5.16xlarge, r5.24xlarge, c6i.32xlarge]
+    AllowedValues: [optimal, c4.large, m4.large, r4.large, c4.4xlarge, m4.4xlarge, r4.4xlarge]
   WorkerNodeEBSVolumeSize:
     Description: The initial size of the volume (in GBs) Worker Node EBS will use for storage.
     Type: Number
@@ -721,3 +721,5 @@ Outputs:
     Value: !Sub ${S3Bucket}
   BatchQueue:
     Value: !Sub ${DefaultQueue}
+  BatchComputeEnvironment:
+    Value: !Ref SpotComputeEnv

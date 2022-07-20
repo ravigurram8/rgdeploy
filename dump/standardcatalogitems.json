@@ -509,7 +509,9 @@
         }
       ],
       "checks_after_assigning_product": [],
-      "permission_required": {}
+      "permission_required": {},
+      "cost_resource": true,
+      "aws_batch": true
     }
   },
   {
@@ -594,7 +596,8 @@
       ],
       "checks_after_assigning_product": [],
       "permission_required": {},
-      "cost_resource": true
+      "cost_resource": true,
+      "aws_batch": true
     }
   }
 ]

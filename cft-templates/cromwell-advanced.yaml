@@ -933,3 +933,5 @@ Outputs:
     Value: !Ref EC2LaunchTemplate
   WorkDataLocation:
     Value: !Sub ${S3Bucket}
+  BatchComputeEnvironment:
+    Value: !Ref SpotComputeEnv
