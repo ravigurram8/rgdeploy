@@ -56,8 +56,8 @@ Deploying an Application Load Balancer as part of Research Gateway deployment he
 2. Helps to serve the application on a secure port using SSL certificates stored in AWS ACM.
 
 create an ALB security Group with the following inbound and outbound rules.
- Inbound Rules - HTTP 80 ,HTTPS 443,SSH 22 .
- outbound Rules - All Traffic.
+ - Inbound rules - HTTP 80 ,HTTPS 443,SSH 22 .
+ - outbound Rules - All Traffic.
 
 Use the AWS CLI to create an Application Load Balancer choosing all three public subnets created by the quickstart above.
 
@@ -161,12 +161,12 @@ You can create the AMI with pre-requisites yourself by following these steps:
 Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
 Run deploy.sh with the following parameters.
 
- *Note* Check aws configure before running script
+ *Note* : Check aws configure before running script
   - $aws configure
-      AWS Access Key ID:"your_Access_Key"
-      AWS Secret Access Key :"your_Secret_Key"
-      Default region name:"Your_Region"
-      Default output format : json
+      - AWS Access Key ID:"your_Access_Key"
+      - AWS Secret Access Key :"your_Secret_Key"
+      - Default region name:"Your_Region"
+      - Default output format : json
 
 
 | Parameter# | Purpose                                                                                    |
