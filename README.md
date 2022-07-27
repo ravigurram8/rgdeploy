@@ -35,7 +35,7 @@ It provides a pre-built catalog of products which are ready to use out of the bo
  3. 3 Private Subnets  
  4. IGW  
  5. NAT Instance / NAT Gateway  
- 6. Bastion Hosts  
+ 6. Bastion Hosts  (optional)
  7. Application Load Balancer  
  8. Listener  
  9. ACM or External Certificates for SSL  
@@ -54,6 +54,10 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 Deploying an Application Load Balancer as part of Research Gateway deployment helps in two ways:
 1. Isolates your portal from being directly exposed over the internet. The ALB allows only https(s) traffic through.
 2. Helps to serve the application on a secure port using SSL certificates stored in AWS ACM.
+
+create an ALB security Group with the following inbound and outbound rules.
+ - Inbound rules - HTTP 80 ,HTTPS 443,SSH 22 .
+ - outbound Rules - All Traffic.
 
 Use the AWS CLI to create an Application Load Balancer choosing all three public subnets created by the quickstart above.
 
@@ -115,6 +119,8 @@ As a part of this deployment, you will create an AMI for the portal EC2 instance
 - AWS ImageBuilder
 - AWS EC2
 - AWS IAM
+- AWS service catalog
+- Elastic container Registery
 
 ## Installing the required 3rd party software
 
@@ -142,6 +148,7 @@ You can create the AMI with pre-requisites yourself by following these steps:
       export AWS_DEFAULT_REGION="Your_Region"
 
 - Clone this repo on a machine.
+- Target Account number must be added in Admin Account-ECR and give permission to access image builds
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace the "iam-instance_profile" :"<your_rolename>" in builders section which is in the packer-rg.json.
 - Run packer build packer-rg.json
     
@@ -152,7 +159,15 @@ You can create the AMI with pre-requisites yourself by following these steps:
 ### Installing Research Gateway
 
 Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
-Run deploy.sh with the following parameters
+Run deploy.sh with the following parameters.
+
+ *Note* : Check aws configure before running script
+  - $aws configure
+      - AWS Access Key ID:"your_Access_Key"
+      - AWS Secret Access Key :"your_Secret_Key"
+      - Default region name:"Your_Region"
+      - Default output format : json
+
 
 | Parameter# | Purpose                                                                                    |
 | ---------- | ------------------------------------------------------------------------------------------ |
@@ -177,6 +192,8 @@ runid.json is created in the rgdeploy folder when you first run deploy.sh with p
 
 The deployment creates EC2 Image Builder pipelines for building the RStudio and Nextflow AMIs that are used within Research Gateway. By default, these pipelines are set up to be manually triggered. You can change that in the AWS console if you wish to  trigger them on a schedule.
 
+steps to run pipelines: AWS console - Ec2imagebuilder – select image pipelines (Rstudio, Nextflow)-click on Actions-Run pipeline
+
 Once a build is completed, the AMIs are automatically distributed to the regions supported by Research Gateway in your account. The AMI Ids need to be updated into your database before creating any projects. 
 
 - Note down the names of the two pipelines created for RStudio and Nextflow_Advanced. They will be of the format:
@@ -185,6 +202,8 @@ RG-PortalStack-ImageBuilder-$runid-Pipeline_Nextflow_Advanced.
 The runid will be the random 4-character string generated for your instance during deployment. All the stacks created in your deployment should have that as a suffix.
 - In the rgdeploy folder, cd to products folder. You will find an img-builder-config.json file there. Edit it and set the pipeline names according to the ones deployed in your account. Save the file.
 - Run the script make-amilist.sh. You may have to run chmod +x make-amilist.sh if execute permissions are not set on the file.
+
+- Note: we need to wait untill ec2image builder pipeline distribution complete,without builds complete by running below command shows Error
 
       ./make-amilist.sh > new-ami-list.json
 - Next run the following command to update your DB.

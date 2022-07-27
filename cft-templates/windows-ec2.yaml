@@ -10,10 +10,10 @@ Description: 'AWS CloudFormation Sample Template Sample template EIP_With_Associ
   You will be billed for the AWS resources used if you create a stack from this template.'
 Parameters:
   InstanceType:
-    Description: Choose the instance type for this instance. e.g. t2.small
+    Description: Choose the instance type for this instance. e.g. t3.small
     Type: String
-    Default: t2.small
-    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium]
+    Default: t3.small
+    AllowedValues: [t3.nano, t3.micro, t3.small, t3.medium]
     ConstraintDescription: must be a valid EC2 instance type.
   KeyPair:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.

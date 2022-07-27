@@ -40,7 +40,7 @@ Parameters:
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
   LatestAmiId:
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+    Default: '/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id'
 
 Conditions:
   IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
@@ -77,18 +77,29 @@ Resources:
 
   EC2Instance:
     Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT3M
     Properties:
       UserData:
         Fn::Base64: !Sub |
           #!/usr/bin/env bash
-          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-          # Download and execute bootstrap script
-          aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
-          chmod 500 "/tmp/get_bootstrap.sh"
-          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
-
+          sudo yum install zip -y
+          sudo yum install unzip -y
+          # Install AWS CLI version2
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          # Install Mysql Shell
+          sudo yum install mysql -y
+          # Install cfn
+          yum install -y aws-cfn-bootstrap
+          # Download and execute shell script
+          aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap_mysql.sh" "/tmp"
+          chmod 500 "/tmp/get_bootstrap_mysql.sh"
+          /tmp/get_bootstrap_mysql.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
           # Signal result to CloudFormation
-          /opt/aws/bin/cfn-signal -e $? --stack "${AWS::StackName}" --resource "EC2Instance" --region "${AWS::Region}"
+          /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
       InstanceType: !Ref 'InstanceType'
       SecurityGroups: [!Ref 'InstanceSecurityGroup']
       KeyName: !Ref 'KeyPair'

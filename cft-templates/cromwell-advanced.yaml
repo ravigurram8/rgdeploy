@@ -82,8 +82,8 @@ Parameters:
   InstanceType:
     Description: Head Node EC2 instance type
     Type: String
-    Default: t2.small
-    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium]
+    Default: t3.small
+    AllowedValues: [t3.nano, t3.micro, t3.small, t3.medium]
     ConstraintDescription: Must be a valid EC2 instance type.
   WorkerNodeInstanceType:
     Description: Specify the instance types to be used to carry out the computation. You can specify one or more family or instance type. The option 'optimal' chooses the best fit of M4, C4, and R4 instance types available in the region.
@@ -933,3 +933,5 @@ Outputs:
     Value: !Ref EC2LaunchTemplate
   WorkDataLocation:
     Value: !Sub ${S3Bucket}
+  BatchComputeEnvironment:
+    Value: !Ref SpotComputeEnv
