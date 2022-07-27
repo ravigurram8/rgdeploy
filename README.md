@@ -35,7 +35,7 @@ It provides a pre-built catalog of products which are ready to use out of the bo
  3. 3 Private Subnets  
  4. IGW  
  5. NAT Instance / NAT Gateway  
- 6. Bastion Hosts  
+ 6. Bastion Hosts  (optional)
  7. Application Load Balancer  
  8. Listener  
  9. ACM or External Certificates for SSL  
@@ -54,6 +54,10 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 Deploying an Application Load Balancer as part of Research Gateway deployment helps in two ways:
 1. Isolates your portal from being directly exposed over the internet. The ALB allows only https(s) traffic through.
 2. Helps to serve the application on a secure port using SSL certificates stored in AWS ACM.
+
+create an ALB security Group with the following inbound and outbound rules
+ Inbound Rules - HTTP 80 ,HTTPS-443,SSH-20 .
+ outbound Rules - All Traffic.
 
 Use the AWS CLI to create an Application Load Balancer choosing all three public subnets created by the quickstart above.
 
@@ -115,6 +119,8 @@ As a part of this deployment, you will create an AMI for the portal EC2 instance
 - AWS ImageBuilder
 - AWS EC2
 - AWS IAM
+- AWS service catalog
+- Elastic container Registery
 
 ## Installing the required 3rd party software
 
@@ -142,6 +148,7 @@ You can create the AMI with pre-requisites yourself by following these steps:
       export AWS_DEFAULT_REGION="Your_Region"
 
 - Clone this repo on a machine.
+- Target Account number must be added in Admin Account-ECR and give permission to access image builds
 - Create a Role and attach a policy which permits ECR and EC2 actions and Replace the "iam-instance_profile" :"<your_rolename>" in builders section which is in the packer-rg.json.
 - Run packer build packer-rg.json
     
@@ -152,7 +159,15 @@ You can create the AMI with pre-requisites yourself by following these steps:
 ### Installing Research Gateway
 
 Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
-Run deploy.sh with the following parameters
+Run deploy.sh with the following parameters.
+
+- Check aws configure before running script
+  aws configure
+  AWS Access Key ID: <access Key ID>
+  AWS Secret Access Key :<secret Key>
+  Default region name: <region-name>
+  Default output format : json
+
 
 | Parameter# | Purpose                                                                                    |
 | ---------- | ------------------------------------------------------------------------------------------ |
