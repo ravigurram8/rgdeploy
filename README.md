@@ -55,8 +55,8 @@ Deploying an Application Load Balancer as part of Research Gateway deployment he
 1. Isolates your portal from being directly exposed over the internet. The ALB allows only https(s) traffic through.
 2. Helps to serve the application on a secure port using SSL certificates stored in AWS ACM.
 
-create an ALB security Group with the following inbound and outbound rules
- Inbound Rules - HTTP 80 ,HTTPS-443,SSH-20 .
+create an ALB security Group with the following inbound and outbound rules.
+ Inbound Rules - HTTP 80 ,HTTPS 443,SSH 22 .
  outbound Rules - All Traffic.
 
 Use the AWS CLI to create an Application Load Balancer choosing all three public subnets created by the quickstart above.
@@ -161,12 +161,12 @@ You can create the AMI with pre-requisites yourself by following these steps:
 Clone this repo on a machine that has AWS CLI configured with Default output format as JSON.
 Run deploy.sh with the following parameters.
 
-- Check aws configure before running script
-  aws configure
-  AWS Access Key ID: <access Key ID>
-  AWS Secret Access Key :<secret Key>
-  Default region name: <region-name>
-  Default output format : json
+ *Note* Check aws configure before running script
+  - $aws configure
+      AWS Access Key ID:"your_Access_Key"
+      AWS Secret Access Key :"your_Secret_Key"
+      Default region name:"Your_Region"
+      Default output format : json
 
 
 | Parameter# | Purpose                                                                                    |
@@ -192,6 +192,8 @@ runid.json is created in the rgdeploy folder when you first run deploy.sh with p
 
 The deployment creates EC2 Image Builder pipelines for building the RStudio and Nextflow AMIs that are used within Research Gateway. By default, these pipelines are set up to be manually triggered. You can change that in the AWS console if you wish to  trigger them on a schedule.
 
+steps to run pipelines: AWS console - Ec2imagebuilder – select image pipelines (Rstudio, Nextflow)-click on Actions-Run pipeline
+
 Once a build is completed, the AMIs are automatically distributed to the regions supported by Research Gateway in your account. The AMI Ids need to be updated into your database before creating any projects. 
 
 - Note down the names of the two pipelines created for RStudio and Nextflow_Advanced. They will be of the format:
@@ -200,6 +202,8 @@ RG-PortalStack-ImageBuilder-$runid-Pipeline_Nextflow_Advanced.
 The runid will be the random 4-character string generated for your instance during deployment. All the stacks created in your deployment should have that as a suffix.
 - In the rgdeploy folder, cd to products folder. You will find an img-builder-config.json file there. Edit it and set the pipeline names according to the ones deployed in your account. Save the file.
 - Run the script make-amilist.sh. You may have to run chmod +x make-amilist.sh if execute permissions are not set on the file.
+
+- Note: we need to wait untill ec2image builder pipeline distribution complete,without builds complete by running below command shows Error
 
       ./make-amilist.sh > new-ami-list.json
 - Next run the following command to update your DB.
