@@ -615,6 +615,8 @@ Resources:
               }                                                                       
               process.maxRetries = 5
               aws.batch.cliPath = '/home/ec2-user/miniconda/bin/aws'
+              aws.batch.maxParallelTransfers = 5
+              aws.batch.maxTransferAttempts = 5
             }
           }
 
