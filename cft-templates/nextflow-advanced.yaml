@@ -505,8 +505,7 @@ Resources:
           LaunchTemplateId: !Ref EC2LaunchTemplate
           Version: $Latest
         InstanceRole: !GetAtt BatchInstanceProfile.Arn
-        InstanceTypes: 
-          - !Ref WorkerNodeInstanceType
+        InstanceTypes: [c5, c5a, c5ad, c5d, i3, m5, r5, c6i ]
         MinvCpus: !Ref ComputeEnvMinvCpus
         MaxvCpus: !Ref ComputeEnvMaxvCpus
         SecurityGroupIds:
@@ -609,7 +608,14 @@ Resources:
               process.executor = 'awsbatch'
               process.queue = '${DefaultQueue}'
               workDir = 's3://${S3Bucket}/${AWS::StackName}'
+              process.errorStrategy = {                                                       
+                sleep( Math.pow( 2, task.attempt ) * 150 as long )                    
+                return 'retry'                                                        
+              }                                                                       
+              process.maxRetries = 5
               aws.batch.cliPath = '/home/ec2-user/miniconda/bin/aws'
+              aws.batch.maxParallelTransfers = 5
+              aws.batch.maxTransferAttempts = 5
             }
           }
 
