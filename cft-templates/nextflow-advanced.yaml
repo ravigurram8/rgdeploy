@@ -87,8 +87,8 @@ Parameters:
   InstanceType:
     Description: Head Node EC2 instance type
     Type: String
-    Default: t2.small
-    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium]
+    Default: t3.small
+    AllowedValues: [t3.nano, t3.micro, t3.small, t3.medium]
     ConstraintDescription: Must be a valid EC2 instance type.
   KeyPair:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the Head Node. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
@@ -505,7 +505,8 @@ Resources:
           LaunchTemplateId: !Ref EC2LaunchTemplate
           Version: $Latest
         InstanceRole: !GetAtt BatchInstanceProfile.Arn
-        InstanceTypes: [c5, c5a, c5ad, c5d, i3, m5, r5, c6i ]
+        InstanceTypes: 
+          - !Ref WorkerNodeInstanceType
         MinvCpus: !Ref ComputeEnvMinvCpus
         MaxvCpus: !Ref ComputeEnvMaxvCpus
         SecurityGroupIds:
@@ -607,15 +608,8 @@ Resources:
               process.container = '${PipelineContainer}'
               process.executor = 'awsbatch'
               process.queue = '${DefaultQueue}'
-              workDir = 's3://${S3Bucket}/${AWS::StackName}' 
-              process.errorStrategy = {                                                       
-                sleep( Math.pow( 2, task.attempt ) * 150 as long )                    
-                return 'retry'                                                        
-              }                                                                       
-              process.maxRetries = 5
+              workDir = 's3://${S3Bucket}/${AWS::StackName}'
               aws.batch.cliPath = '/home/ec2-user/miniconda/bin/aws'
-              aws.batch.maxParallelTransfers = 5
-              aws.batch.maxTransferAttempts = 5
             }
           }
 
@@ -655,6 +649,7 @@ Resources:
       KeyName: !Ref 'KeyPair'
       ImageId: '{{resolve:ssm:/RL/RG/StandardCatalog/nextflow-latest}}'
       IamInstanceProfile: !Ref IamInstanceProfile
+      PropagateTagsToVolumeOnCreation: true
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
