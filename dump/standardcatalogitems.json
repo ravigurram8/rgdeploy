@@ -744,7 +744,7 @@
                                             "ap-southeast-2" : "ami-049b783c5aa1ed5f5"
                                     }
                             ],
-                            "ami_path" : "/RL/RG/StandardCatalog/ParallelCluster"
+                            "ami_path" : "/RL/RG/StandardCatalog/ParallelCluster-linux-ami"
                     }
             ],
             "checks_after_assigning_product" : [ ],
