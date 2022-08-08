@@ -867,6 +867,7 @@ Resources:
       ImageId: !Ref 'LatestAmiId'
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref EC2InstanceProfile
+      PropagateTagsToVolumeOnCreation: true
       SecurityGroupIds:
         - { "Fn::GetAtt" : ["EC2SecurityGroup", "GroupId"] }
       KeyName: !Ref 'KeyPair'
