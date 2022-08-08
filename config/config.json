@@ -201,6 +201,6 @@
   },
   "cronJobForEodSync" : "*/60 * * * *",
   "sampleCSVForUser": "users.csv",
-  "sampleCSVBucketRegion": "us-west-2"
+  "sampleCSVBucketRegion": "REPLACE_WITH_REGION",
   "sessionMaxAge" : 900000
 }

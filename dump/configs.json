@@ -224,7 +224,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
@@ -360,5 +360,37 @@
           "userTags"
       ]
     }
+  },
+  {
+    "_id" : { 
+        "$oid": "628b094788660e80ceb36ba3"
+      },
+    "key": "cromwellPipeline",
+    "value": [
+      {
+        "pipeline_name": "seq-format-validation",
+        "pipeline_git_url": "https://github.com/gatk-workflows/seq-format-validation.git"
+      },
+      {
+        "pipeline_name": "seq-format-conversion",
+        "pipeline_git_url": "https://github.com/gatk-workflows/seq-format-conversion.git"
+      },
+      {
+        "pipeline_name": "gatk4-rnaseq-germline-snps-indels",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-rnaseq-germline-snps-indels.git"
+      },
+      {
+        "pipeline_name": "gatk4-germline-snps-indels",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-germline-snps-indels.git"
+      },
+      {
+        "pipeline_name": "gatk4-data-processing",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-data-processing.git"
+      },
+      {
+        "pipeline_name": "gatk4-basic-joint-genotyping",
+        "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-basic-joint-genotyping.git"
+      }
+    ]
   }
 ]

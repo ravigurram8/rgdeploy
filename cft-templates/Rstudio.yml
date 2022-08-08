@@ -19,15 +19,15 @@ Parameters:
       the environment instance, including any bootstrap scripts
   InstanceType:
     Type: String
-    Description: Instance type for RStudio. Default is t2.medium.
+    Description: Instance type for RStudio. Default is t3.medium.
     AllowedValues:
       - t2.medium
       - t2.large
       - t3.medium
       - t3.large
       
-    ConstraintDescription: Valid instance type in the t2 families
-    Default: t2.medium
+    ConstraintDescription: Valid instance type in the t3 families
+    Default: t3.medium
   InitialUser:
     Type: String
     Description: User Name for RStudio. Do not use 'root' and 'ec2-user'
