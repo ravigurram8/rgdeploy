@@ -215,6 +215,78 @@
       "terminated"
     ]
   },
+  "pcluster": {
+    "actions": {
+        "running": {
+            "connect": [
+                {
+                    "menu": "SSH to Pcluster HeadNode",
+                    "imageUrl": "../../assets/images/technology@2x.png",
+                    "outputsRequired": []
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png",
+                    "outputsRequired": []
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png",
+                    "outputsRequired": []
+                }
+            ]
+        },
+        "stopped": {
+            "connect": [],
+            "action": [
+                {
+                    "action": "Start",
+                    "imageUrl": "../../assets/images/play@2x.png",
+                    "outputsRequired": []
+                }
+            ]
+        },
+        "default": {
+            "connect": [
+                {
+                    "menu": "SSH to Pcluster HeadNode",
+                    "imageUrl": "../../assets/images/technology@2x.png",
+                    "outputsRequired": []
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png",
+                    "outputsRequired": []
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png",
+                    "outputsRequired": []
+                }
+            ]
+        }
+    },
+    "transient_states": [
+        "pending",
+        "shutting-down",
+        "stopping",
+        "deleting"
+    ],
+    "active_states": [
+        "running",
+        "active"
+    ],
+    "stopped_states": [
+        "stopped"
+    ],
+    "terminated_states": [
+        "terminated"
+    ]
+},
   "rstudio": {
     "actions": {
       "running": {
@@ -745,7 +817,8 @@
     "rds",
     "rstudio",
     "nextflow",
-    "cromwell"
+    "cromwell",
+    "pcluster"
   ],
   "cft_active_states": [
     "available",
