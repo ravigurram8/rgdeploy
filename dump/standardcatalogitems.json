@@ -661,5 +661,96 @@
       "cost_resource": true,
       "aws_batch": true
     }
+  },
+  {
+    "_id" : {
+      "$oid":"62839f80e82248514eba03b8"
+    },
+    "name" : "PCluster",
+    "description" : "Easy to deploy High Performance Computing based on AWS ParallelCluster 3.0 which supports AWS Batch and Slurm schedulers",
+    "fileName" : "pcluster.yaml",
+    "tags" : [
+            {
+                    "Key" : "EstimatedTimeToProvision",
+                    "Value" : "40 Minutes"
+            },
+            {
+                    "Key" : "DetailsLink",
+                    "Value" : "https://docs.aws.amazon.com/parallelcluster/latest/ug/install-v3-virtual-environment.html"
+            },
+            {
+                    "Key" : "TypeOfProduct",
+                    "Value" : "Research"
+            },
+            {
+                    "Key" : "ALB",
+                    "Value" : "false"
+            },
+            {
+                    "Key" : "ApplicationPort",
+                    "Value" : "443"
+            },
+            {
+                    "Key" : "Service",
+                    "Value" : "Pcluster"
+            }
+    ],
+    "owner" : "RL",
+    "portfolio" : "RGPortfolio",
+    "availableRegions" : [ ],
+    "assignedOU" : [],
+    "metaData" : {
+            "cost_resource" : true,
+            "pre_provisioning" : [
+                    {
+                            "code" : "CFT_PARAMS",
+                            "params" : [
+                                    {
+                                            "name" : "ResearcherName",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                            "name" : "ProjectId",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    }
+                            ]
+                    }
+            ],
+            "post_provisioning" : [ ],
+            "checks_before_assigning_product" : [
+                    {
+                            "code" : "AMI_ID_REQUIRED",
+                            "is_ami_required" : true,
+                            "ami_id_list" : [
+                                    {
+                                            "us-east-1" : "ami-008c509fcf5487b2f"
+                                    },
+                                    {
+                                            "us-east-2" : "ami-0c38985078358f3aa"
+                                    },
+                                    {
+                                            "us-west-1" : "ami-04f1e56b19a2adbf3"
+                                    },
+                                    {
+                                            "us-west-2" : "ami-0af5038b962a46099"
+                                    },
+                                    {
+                                            "ap-south-1" : "ami-0487808e91e9cb859"
+                                    },
+                                    {
+                                            "ap-southeast-1" : "ami-0387151f1797dfbc9"
+                                    },
+                                    {
+                                            "ap-southeast-2" : "ami-049b783c5aa1ed5f5"
+                                    }
+                            ],
+                            "ami_path" : "/RL/RG/StandardCatalog/ParallelCluster-linux-ami"
+                    }
+            ],
+            "checks_after_assigning_product" : [ ],
+            "permission_required" : {
+
+            }
+    }
   }
 ]

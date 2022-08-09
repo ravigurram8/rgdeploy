@@ -106,7 +106,9 @@
         "imagebuilder:GetInfrastructureConfiguration",
         "imagebuilder:TagResource",
         "imagebuilder:UntagResource",
-        "cognito-idp:DeleteUserPool"
+        "cognito-idp:DeleteUserPool",
+        "codebuild:DeleteProject",
+        "route53:*"
       ],
       "Resource": [
         "*"
