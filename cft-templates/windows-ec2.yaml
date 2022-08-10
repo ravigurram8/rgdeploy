@@ -42,7 +42,7 @@ Resources:
       ImageId: !Ref 'LatestAmiId'
       Tags:
         - Key: Name
-          Value: !Join ['-', [Ref: Namespace, 'windows-server']]
+          Value: !Join ['-', [Ref: AWS::StackName, 'windows-server']]
         - Key: Description
           Value: windows workspace instance
         - Key: cost_resource
