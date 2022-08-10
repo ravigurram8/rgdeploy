@@ -36,9 +36,17 @@ Resources:
     Properties:
       UserData: !Base64
       InstanceType: !Ref 'InstanceType'
+      PropagateTagsToVolumeOnCreation: true
       SecurityGroups: [!Ref 'InstanceSecurityGroup']
       KeyName: !Ref 'KeyPair'
       ImageId: !Ref 'LatestAmiId'
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [Ref: Namespace, 'windows-server']]
+        - Key: Description
+          Value: windows workspace instance
+        - Key: cost_resource
+          Value: !Sub ${AWS::StackName}
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
