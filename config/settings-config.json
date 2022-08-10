@@ -78,10 +78,6 @@
         ],
         "action": [
           {
-            "action": "Share",
-            "imageUrl": "../../assets/images/share@2x.png"
-          },
-          {
             "action": "Unshare",
             "imageUrl": "../../assets/images/unshare@2x.png"
           },
@@ -107,10 +103,6 @@
           }
         ],
         "action": [
-          {
-            "action": "Share",
-            "imageUrl": "../../assets/images/share@2x.png"
-          },
           {
             "action": "Upload",
             "imageUrl": "../../assets/images/cloud-computing@2x.png"
