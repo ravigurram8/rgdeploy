@@ -39,7 +39,8 @@
                                         }
                                 ]
                         }
-                ]
+                ],
+                "cost_resource": true
         }
   },
   {
