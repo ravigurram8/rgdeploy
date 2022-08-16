@@ -11,6 +11,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref Namespace
+      Tags:
+        - Key: cost_resource
+          Value: !Sub ${AWS::StackName}
+        - Key: Name
+          Value: !Sub ${Namespace} 
 
 Outputs:
   BucketArn:
