@@ -98,11 +98,14 @@ Resources:
       SecurityGroups: [!Ref 'RstudioEC2SecurityGroup']
       KeyName: !Ref 'KeyPair'
       IamInstanceProfile: !Ref InstanceProfile
+      PropagateTagsToVolumeOnCreation: true
       Tags:
         - Key: Name
           Value: !Join ['-', [Ref: Namespace, 'rstudio-server']]
         - Key: Description
           Value: EC2 linux based Rstudio server
+        - Key: cost_resource
+          Value: !Sub ${AWS::StackName}
       UserData: 
         Fn::Base64: !Sub |
           #!/bin/bash 

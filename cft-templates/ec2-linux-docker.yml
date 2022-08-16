@@ -104,12 +104,15 @@ Resources:
       SecurityGroups: [!Ref 'InstanceSecurityGroup']
       KeyName: !Ref 'KeyPair'
       ImageId: !Ref 'LatestAmiId'
+      PropagateTagsToVolumeOnCreation: true
       IamInstanceProfile: !Ref InstanceProfile
       Tags:
         - Key: Name
           Value: !Join ['-', [Ref: Namespace, 'ec2-linux']]
         - Key: Description
           Value: EC2 workspace instance
+        - Key: cost_resource
+          Value: !Sub ${AWS::StackName}
   
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
