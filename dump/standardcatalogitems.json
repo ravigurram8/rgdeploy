@@ -258,7 +258,8 @@
       "post_provisioning": [],
       "checks_before_assigning_product": [],
       "checks_after_assigning_product": [],
-      "permission_required": {}
+      "permission_required": {},
+      "cost_resource": true
     }
   },
   {
