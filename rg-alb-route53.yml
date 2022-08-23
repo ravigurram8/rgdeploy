@@ -56,7 +56,7 @@ Resources:
   RGApplicationLoadBalancer:
         Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
         Properties:
-            Name: "test-Application-Load-Balancer"
+            Name: "RG-Application-Load-Balancer"
             Scheme: "internet-facing"
             Type: "application"
             Subnets: 
