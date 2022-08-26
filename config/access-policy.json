@@ -46,6 +46,7 @@
         "iam:GetRolePolicy",
         "iam:GetPolicy",
         "iam:ListPolicyVersions",
+        "iam:CreateServiceLinkedRole",
         "batch:*",
         "sts:AssumeRole",
         "sts:GetFederationToken",
@@ -108,7 +109,8 @@
         "imagebuilder:UntagResource",
         "cognito-idp:DeleteUserPool",
         "codebuild:DeleteProject",
-        "route53:*"
+        "route53:*",
+        "fsx:*"
       ],
       "Resource": [
         "*"
