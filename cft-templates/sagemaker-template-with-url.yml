@@ -36,6 +36,11 @@ Resources:
       InstanceType: !Ref NotebookInstanceType 
       RoleArn: !GetAtt SageMakerRole.Arn
       LifecycleConfigName: 'Research-Portal-Setup'
+      Tags:
+        - Key: cost_resource
+          Value: !Sub ${AWS::StackName}
+        - Key: Name
+          Value: !Sub ${AWS::StackName}
 Outputs:
   SageMakerNotebookInstanceARN:
     Description: "ARN for the newly created SageMaker Notebook Instance"

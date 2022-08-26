@@ -194,6 +194,16 @@ Resources:
                 Value: !Ref ResearcherName
               - Key: project_name
                 Value: !Ref ProjectId
+          - ResourceType: volume
+            Tags:
+              - Key: cost_resource
+                Value: !Sub ${AWS::StackName}
+              - Key: Name
+                Value: !Sub worker-node-${AWS::StackName}
+              - Key: researcher_name
+                Value: !Ref ResearcherName
+              - Key: project_name
+                Value: !Ref ProjectId
         BlockDeviceMappings:
           - Ebs:
               DeleteOnTermination: True
@@ -608,8 +618,15 @@ Resources:
               process.container = '${PipelineContainer}'
               process.executor = 'awsbatch'
               process.queue = '${DefaultQueue}'
-              workDir = 's3://${S3Bucket}/${AWS::StackName}' 
+              workDir = 's3://${S3Bucket}/${AWS::StackName}'
+              process.errorStrategy = {                                                       
+                sleep( Math.pow( 2, task.attempt ) * 150 as long )                    
+                return 'retry'                                                        
+              }                                                                       
+              process.maxRetries = 5
               aws.batch.cliPath = '/home/ec2-user/miniconda/bin/aws'
+              aws.batch.maxParallelTransfers = 5
+              aws.batch.maxTransferAttempts = 5
             }
           }
 
@@ -649,6 +666,7 @@ Resources:
       KeyName: !Ref 'KeyPair'
       ImageId: '{{resolve:ssm:/RL/RG/StandardCatalog/nextflow-latest}}'
       IamInstanceProfile: !Ref IamInstanceProfile
+      PropagateTagsToVolumeOnCreation: true
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
