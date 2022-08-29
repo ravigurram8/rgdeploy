@@ -57,7 +57,7 @@
       },
       {
         "Key": "DetailsLink",
-        "Value": "https://researchgateway.readthedocs.io/en/latest/linux.html"
+        "Value": "https://researchgateway.readthedocs.io/en/latest/DockerEC2linux.html"
       },
       {
         "Key": "Service",
@@ -117,7 +117,7 @@
       },
       {
         "Key": "DetailsLink",
-        "Value": "https://researchgateway.readthedocs.io/en/latest/linux.html"
+        "Value": "https://researchgateway.readthedocs.io/en/latest/MySql.html"
       },
       {
         "Key": "Service",
@@ -411,7 +411,7 @@
                 },
                 {
                         "Key" : "DetailsLink",
-                        "Value" : "https://researchgateway.readthedocs.io/en/latest/linux.html"
+                        "Value" : "https://researchgateway.readthedocs.io/en/latest/ubuntu.html"
                 },
                 {
                         "Key" : "Service",
@@ -598,7 +598,7 @@
       },
       {
         "Key": "DetailsLink",
-        "Value": "https://gatk.broadinstitute.org/hc/en-us/categories/360002302312"
+        "Value": "https://researchgateway.readthedocs.io/en/latest/cromwell.html"
       },
       {
         "Key": "TypeOfProduct",
@@ -684,7 +684,7 @@
             },
             {
                     "Key" : "DetailsLink",
-                    "Value" : "https://docs.aws.amazon.com/parallelcluster/latest/ug/install-v3-virtual-environment.html"
+                    "Value" : "https://researchgateway.readthedocs.io/en/latest/PCluster.html"
             },
             {
                     "Key" : "TypeOfProduct",
@@ -759,6 +759,62 @@
             "permission_required" : {
 
             }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "60504955135663522b880cfe"
+    },
+    "name": "FSx For Lustre",
+    "description": "Sets up an FSX for Lustre filesystem with PERSISTENT_1 deployment type using SSD storage",
+    "fileName": "fsx-for-lustre.yaml",
+    "tags": [
+      {
+        "Key": "EstimatedTimeToProvision",
+        "Value": "20 Minutes"
+      },
+      {
+        "Key": "DetailsLink",
+        "Value": "https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html"
+      },
+      {
+        "Key": "Service",
+        "Value": "FSXForLustre"
+      },
+      {
+        "Key": "TypeOfProduct",
+        "Value": "Research"
+      }
+    ],
+    "owner": "RL",
+    "portfolio": "RGPortfolio",
+    "availableRegions": [],
+    "assignedOU": [],
+    "metaData": {
+      "pre_provisioning": [
+        {
+          "code": "CFT_PARAMS",
+          "params": [
+            {
+              "name": "ProjectId",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "ResearcherName",
+              "type": "RL::SC::PARAM::HD"
+            },
+            {
+              "name": "Namespace",
+              "type": "RL::SC::PARAM::HD"
+            }
+          ]
+        }
+      ],
+      "post_provisioning": [],
+      "checks_before_assigning_product": [],
+      "checks_after_assigning_product": [],
+      "permission_required": {},
+      "cost_resource": true
     }
   }
 ]
