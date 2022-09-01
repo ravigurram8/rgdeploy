@@ -258,7 +258,7 @@
       "Type": "AWS::EC2::Instance",
       "Properties": {
         "ImageId": "ami-0fb3fe843311c4412",
-        "InstanceType": "t2.large",
+        "InstanceType": "t3.large",
         "Monitoring": "true",
         "DisableApiTermination": "false",
         "IamInstanceProfile": {
