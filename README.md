@@ -74,7 +74,7 @@ Fore more details on requesting a certificate, follow this [link](https://docs.a
 
 <!-- trunk-ignore(markdownlint/MD036) -->
 
-*Note* - Create #7 - #9 above using AWS CLI commands also ( Create file reference :rg.alb-Tg with AWS CLI.md file from repo)
+*Note* - Create #7 - #9 above using AWS CLI commands also .For that you refer to the rg_alb-tg-creation.md file from repo
 
 *10.Set up Route 53 for your domain/sub-domain*
 
@@ -82,18 +82,18 @@ From the AWS Console, select Route 53 service. Create a hosted zone for your dom
 
 *Note* - It is possible to use Research Gateway without a domain-name but we do not recommend that for product workloads. To do so, use the public DNS name of the ALB as the URL of the Research Gateway in the setup scripts.
 
-#### 3. Software Requirements
+#### 4. Software Requirements
 
 | Virtual Machine Purpose     | Software pre-requisites |
 | --------------------------- | ----------------------- |
 | Role: Portal                | Python, Docker 20.04+   |
 | Role: DB (Option 1) MongoDB | MongoDB 3.6.23          |
-|                             |                         |
+                                                   
 
 The application software for Research Gateway will be made available to you as a docker image shared from Relevance Lab's Elastic Container Registry instance to your AWS account.
 As a part of this deployment, you will create an AMI for the portal EC2 instance which will have these softwares pre-deployed. Alternately, you can request the AMI to be shared with you by Relevance Lab and the software above will be available pre-deployed on the AMI shared with you.
 
-#### 4. AWS Services required
+#### 5. AWS Services required
 
 - AWS Cognito
 - Amazon S3
@@ -116,7 +116,8 @@ The following sofware needs to be installed on the Portal EC2 instance
 | jq        | latest  |
 | zip       | latest  |
 
-For your convenience we have created packer scripts which allow you to create the AMI in your account  ( Create file reference: rg-AMI creation.md file from repo ).
+For your convenience we have created packer scripts which allow you to create the AMI in your account For that you refer to the rg_AMI-creation.md file from repo
+
 If an AMI with the pre-requisites has been shared with you, you can skip this section
 
 ### Installing Research Gateway
