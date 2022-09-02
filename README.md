@@ -25,7 +25,7 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 
 | Virtual Machine Purpose            | Virtual Machine Spec                  |
 | ---------------------------------- | ------------------------------------- |
-| Role: Portal                       | t2.large 2CPU, 8GB RAM, 100GB Disk    |
+| Role: Portal                       | t3.large 2CPU, 8GB RAM, 100GB Disk    |
 | Role: DB AWS DocumentDB            | db.t3.large (dev) db.r5.large+ (prod) |
 
 #### 2. Network Requirements
@@ -49,6 +49,17 @@ It provides a pre-built catalog of products which are ready to use out of the bo
 
 
 <!-- trunk-ignore(markdownlint/MD036) -->
+
+<!-- trunk-ignore(markdownlint/MD036) -->
+*Create #7 - #10 above using the following quick-start*
+
+
+[![Launch Stack](https://cdn.rawgit.com/buildkite/cloudformation-launch-stack-button-svg/master/launch-stack.svg)](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://rglaunch-stack.s3.us-east-2.amazonaws.com/rg-alb-route53.yml)
+
+
+<!-- trunk-ignore(markdownlint/MD036) -->
+
+
 *Create an Application Load Balancer*
 
 Deploying an Application Load Balancer as part of Research Gateway deployment helps in two ways:
