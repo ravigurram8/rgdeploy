@@ -202,6 +202,11 @@ scripts/updatessmpaths.sh "$region" "$localhome"
 BUCKET_TEST=$(aws s3api head-bucket --bucket "$bucketname" 2>&1)
 if [ -z "$BUCKET_TEST" ]; then
 	echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
+	bucket_region=$(aws s3api get-bucket-location --bucket "$bucketname" | jq -r ".LocationConstraint")
+      if [[ "$bucket_region" != "$region" ]]; then
+          echo "The given bucket $bucketname is not in $region. Please provide a bucket in this region."
+          exit 1
+      fi
 	read -r a && echo "Copying files to bucket $bucketname"
 else
 	echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
