@@ -22,14 +22,18 @@ Metadata:
           default: Scheduler Configuration
         Parameters:
           - Scheduler
-          - WorkerNodeInstanceType
-          - WorkerNodeSubnetId
+          - ComputeNodeInstanceType
+          - QueueCapacityType
+          - ComputeNodeSubnetId
           - ComputeEnvMinvCpus
           - ComputeEnvMaxvCpus
           - ComputeEnvDesiredvCpus
           - SpotBidPercentage
           - ResearcherName
           - ProjectId
+          - DisableSimultaneousMultithreading
+          - EnableEFA
+          - PlacementGroup
     ProductName: Pcluster
 
 
@@ -64,7 +68,7 @@ Parameters:
   Scheduler:
     Description: Cluster scheduler
     Type: String
-    Default: awsbatch
+    Default: slurm
     ConstraintDescription: Must be a supported scheduler
     AllowedValues:
      - slurm
@@ -76,17 +80,17 @@ Parameters:
     Description: Head Node EC2 instance type
     Type: String
     Default: t3.micro
-    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge]
+    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge, c5n.large]
     ConstraintDescription: Must be a valid EC2 instance type.
-  WorkerNodeInstanceType:
+  ComputeNodeInstanceType:
     Description: Specify the instance types to be used to carry out the computation.
     Type: String
     Default: c4.large
-    AllowedValues: [c4.large, m4.large, r4.large, c4.4xlarge, m4.4xlarge, r4.4xlarge]
+    AllowedValues: [c4.large, m4.large, r4.large, c4.4xlarge, m4.4xlarge, r4.4xlarge, c5n.18xlarge, c6i.32xlarge, g4dn.12xlarge]
   HeadNodeSubnetId:
     Type: AWS::EC2::Subnet::Id
     Description: 'Subnet you want your Head Node to launch in. You must select a public subnet.'
-  WorkerNodeSubnetId:
+  ComputeNodeSubnetId:
     Type: AWS::EC2::Subnet::Id
     Description: 'Subnet you want your Batch or slurm Worker Node to launch in. We recommend public subnets.'
   ComputeEnvDesiredvCpus:
@@ -112,7 +116,28 @@ Parameters:
   FileSystemId:
     Type: String
     Description: Enter the File System Id of the FSx for Lustre file system which you want to use. e.g. fs-12345678. Leave this field to default if you do not want to use FSx for Lustre
-    Default: default  
+    Default: default
+  QueueCapacityType:
+    Description: The type of the compute resources used in the queue. Supported values are ONDEMAND or SPOT
+    Type: String
+    Default: SPOT
+    AllowedValues: [SPOT, ONDEMAND]
+  DisableSimultaneousMultithreading:
+    Description: Disables hyperthreading on the compute nodes.Works with slurm Scheduler  
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+  EnableEFA:
+    Description: Enables better network performances. Only available for certain instance types, If user select unsupported instance, EFA assigned to false.Works with slurm Scheduler
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+  PlacementGroup:
+    Description: Enables a PlacementGroup. Use with EnableEFA.Works with slurm Scheduler
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]  
+
   
 
 Resources :
@@ -222,14 +247,21 @@ Resources :
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
         UserData:
-          Fn::Base64:
-            !Sub |
+          Fn::Base64: !Sub |   
               #!/bin/bash 
-              set -e          
+              efaEnabled=${EnableEFA}
+              case "${ComputeNodeInstanceType}" in
+                c5n.18xlarge|c6i.32xlarge|g4dn.12xlarge) true
+                ;;
+              *)
+                efaEnabled=false
+                ;;
+              esac
+              set -e 
               trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR    
-              sudo yum update -y --security        
+              sudo yum update -y --security
               cd /home/ec2-user/parallel-update             
-              sudo -u ec2-user ./Provision-pcluster.sh ${Scheduler} ${AWS::Region} ${HeadNodeInstanceType} ${HeadNodeSubnetId} ${KeyPair} ${WorkerNodeInstanceType} ${ComputeEnvMinvCpus} ${ComputeEnvMaxvCpus} ${WorkerNodeSubnetId} ${ComputeEnvDesiredvCpus} ${SpotBidPercentage} ${AWS::StackName} ${CustomAMI} ${FileSystemId}
+              sudo -u ec2-user ./Provision-pcluster.sh ${Scheduler} ${AWS::Region} ${HeadNodeInstanceType} ${HeadNodeSubnetId} ${KeyPair} ${ComputeNodeInstanceType} ${ComputeEnvMinvCpus} ${ComputeEnvMaxvCpus} ${ComputeNodeSubnetId} ${ComputeEnvDesiredvCpus} ${SpotBidPercentage} ${AWS::StackName} ${CustomAMI} ${FileSystemId} ${QueueCapacityType} ${DisableSimultaneousMultithreading} $efaEnabled ${PlacementGroup}
               /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
               sleep 10
               aws ec2 stop-instances --instance-ids `wget -qO- http://instance-data/latest/meta-data/instance-id`
