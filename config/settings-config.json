@@ -219,11 +219,16 @@
     "actions": {
         "running": {
             "connect": [
-                {
-                    "menu": "SSH to Pcluster HeadNode",
-                    "imageUrl": "../../assets/images/technology@2x.png",
-                    "outputsRequired": []
-                }
+              {
+                "menu": "Remote Desktop",
+                "imageUrl": "../../assets/images/Screen-icon.png",
+                "outputsRequired": []
+              },
+              {
+                "menu": "SSH Terminal",
+                "imageUrl": "../../assets/images/technology@2x.png",
+                "outputsRequired": []
+              }
             ],
             "action": [
                 {
@@ -250,11 +255,16 @@
         },
         "default": {
             "connect": [
-                {
-                    "menu": "SSH to Pcluster HeadNode",
-                    "imageUrl": "../../assets/images/technology@2x.png",
-                    "outputsRequired": []
-                }
+              {
+                "menu": "Remote Desktop",
+                "imageUrl": "../../assets/images/Screen-icon.png",
+                "outputsRequired": []
+              },
+              {
+                "menu": "SSH Terminal",
+                "imageUrl": "../../assets/images/technology@2x.png",
+                "outputsRequired": []
+              }
             ],
             "action": [
                 {

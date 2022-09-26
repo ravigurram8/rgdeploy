@@ -692,15 +692,19 @@
             },
             {
                     "Key" : "ALB",
-                    "Value" : "false"
+                    "Value" : "true"
             },
             {
                     "Key" : "ApplicationPort",
-                    "Value" : "443"
+                    "Value" : "8443"
             },
             {
                     "Key" : "Service",
                     "Value" : "Pcluster"
+            },
+            {
+                    "Key" : "ApplicationProtocol",
+                    "Value" : "HTTPS"
             }
     ],
     "owner" : "RL",
