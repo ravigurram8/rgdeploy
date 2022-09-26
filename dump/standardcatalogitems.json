@@ -692,15 +692,19 @@
             },
             {
                     "Key" : "ALB",
-                    "Value" : "false"
+                    "Value" : "true"
             },
             {
                     "Key" : "ApplicationPort",
-                    "Value" : "443"
+                    "Value" : "8443"
             },
             {
                     "Key" : "Service",
                     "Value" : "Pcluster"
+            },
+            {
+                    "Key" : "ApplicationProtocol",
+                    "Value" : "HTTPS"
             }
     ],
     "owner" : "RL",
@@ -731,25 +735,25 @@
                             "is_ami_required" : true,
                             "ami_id_list" : [
                                     {
-                                            "us-east-1" : "ami-008c509fcf5487b2f"
+                                            "us-east-1" : "ami-0c118ae8fa3db70b0"
                                     },
                                     {
-                                            "us-east-2" : "ami-0c38985078358f3aa"
+                                            "us-east-2" : "ami-011e5bed8ea1b616c"
                                     },
                                     {
-                                            "us-west-1" : "ami-04f1e56b19a2adbf3"
+                                            "us-west-1" : "ami-0d10e7a4a2017963d"
                                     },
                                     {
-                                            "us-west-2" : "ami-0af5038b962a46099"
+                                            "us-west-2" : "ami-02872787f6c9fc51d"
                                     },
                                     {
-                                            "ap-south-1" : "ami-0487808e91e9cb859"
+                                            "ap-south-1" : "ami-0345b99c54d574522"
                                     },
                                     {
-                                            "ap-southeast-1" : "ami-0387151f1797dfbc9"
+                                            "ap-southeast-1" : "ami-08113a8abda2dbd3c"
                                     },
                                     {
-                                            "ap-southeast-2" : "ami-049b783c5aa1ed5f5"
+                                            "ap-southeast-2" : "ami-03f4743208c938213"
                                     }
                             ],
                             "ami_path" : "/RL/RG/StandardCatalog/ParallelCluster-linux-ami"
@@ -816,5 +820,79 @@
       "permission_required": {},
       "cost_resource": true
     }
-  }
+  },
+  {
+    "_id": {
+        "$oid": "60504955135663522b880adx"
+      },
+        "name" : "NICE DCV on Amazon EC2 Linux",
+        "description" : "NICE DCV is a high-performance remote display protocol using which the customers can run graphics-intensive applications remotely on EC2 instances, and stream their user interface to simpler client machines, eliminating the need for expensive dedicated workstations. The user can connect to the DCV server by using the RG Connect URL button. The user name is ec2-user and password is the Instance ID.",
+        "fileName" : "ec2-dcv.yml",
+        "tags" : [
+                {
+                        "Key" : "EstimatedTimeToProvision",
+                        "Value" : "15 Minutes"
+                },
+                {
+                        "Key" : "DetailsLink",
+                        "Value" : "https://aws.amazon.com/hpc/dcv/"
+                },
+                {
+                        "Key" : "Service",
+                        "Value" : "EC2-DCV"
+                },
+                {
+                        "Key" : "TypeOfProduct",
+                        "Value" : "Research"
+                },
+                {
+                        "Key" : "ALB",
+                        "Value" : "true"
+                },
+                {
+                        "Key" : "ApplicationPort",
+                        "Value" : "8443"
+                },
+                {
+                        "Key" : "ApplicationProtocol",
+                        "Value" : "HTTPS"
+                }
+        ],
+        "owner" : "RL",
+        "portfolio" : "RGPortfolio",
+        "availableRegions" : [ ],
+        "assignedOU" : [ ],
+        "metaData" : {
+                "pre_provisioning" : [
+                        {
+                                "code" : "CFT_PARAMS",
+                                "params" : [
+                                        {
+                                                "name" : "EnvironmentInstanceFiles",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "IamPolicyDocument",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "S3Mounts",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "Namespace",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        }
+                                ]
+                        }
+                ],
+                "post_provisioning" : [ ],
+                "checks_before_assigning_product" : [ ],
+                "checks_after_assigning_product" : [ ],
+                "permission_required" : {
+
+                },
+                "cost_resource" : true
+        }
+}
 ]

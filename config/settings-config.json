@@ -220,9 +220,14 @@
         "running": {
             "connect": [
                 {
-                    "menu": "SSH to Pcluster HeadNode",
-                    "imageUrl": "../../assets/images/technology@2x.png",
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png",
                     "outputsRequired": []
+                  },
+                  {
+                    "menu": "SSH Terminal",
+                "imageUrl": "../../assets/images/technology@2x.png",
+                "outputsRequired": []
                 }
             ],
             "action": [
@@ -251,12 +256,22 @@
         "default": {
             "connect": [
                 {
-                    "menu": "SSH to Pcluster HeadNode",
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png",
+                    "outputsRequired": []
+                  },
+                  {
+                    "menu": "SSH Terminal",
                     "imageUrl": "../../assets/images/technology@2x.png",
                     "outputsRequired": []
                 }
             ],
             "action": [
+                {
+                    "action":"Start",
+                    "imageUrl": "../../assets/images/play@2x.png",
+                    "outputsRequired": []
+                },
                 {
                     "action": "Stop",
                     "imageUrl": "../../assets/images/no-stopping@2x.png",
@@ -287,8 +302,8 @@
         "terminated"
     ]
 },
-  "rstudio": {
-    "actions": {
+"rstudio": {
+  "actions": {
       "running": {
         "connect": [
           {
@@ -778,6 +793,19 @@
         ],
         "action": []
       },
+      "external": {
+        "connect":[
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action":[]
+      },
       "Personal": {
         "connect": [
           {
@@ -849,6 +877,10 @@
       {
         "key": "studyType",
         "value": "Public"
+      },
+      {
+        "key": "studyType",
+        "value": "external"
       },
       {
         "key": "studyType",
