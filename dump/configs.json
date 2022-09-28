@@ -224,7 +224,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow", "cromwell"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell", "ec2-dcv"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
@@ -342,7 +342,8 @@
         "maxProjectCount" : "10",
         "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
-        "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/"
+        "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/",
+        "isProductDailyCostMigration_v1_13_0_Required" : true
     }
   },
   {
