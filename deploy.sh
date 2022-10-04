@@ -273,10 +273,12 @@ aws s3 cp ./rstudio.tar.gz s3://"$bucketname/"
 rm -f rstudio.tar.gz
 cp ./PCluster/machine-images/config/infra/files/pcluster/slurm-main.yaml  ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
 cp ./PCluster/machine-images/config/infra/files/pcluster/batch-main.yaml  ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml
-sed -i 's/tempbucket/$bucketname/g' ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
-sed -i 's/tempbucket/$bucketname/g' ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml
+sed -i "s/tempbucket/$bucketname/g" ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
+sed -i "s/tempbucket/$bucketname/g" ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml
 tar -czf PCluster.tar.gz PCluster/*
 aws s3 cp ./PCluster.tar.gz s3://"$bucketname/"
+rm -f ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
+rm -f ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml 
 rm -f PCluster.tar.gz
 
 echo "Copying Database seed-data files to new bucket"
