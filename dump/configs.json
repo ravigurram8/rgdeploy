@@ -343,7 +343,8 @@
         "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/",
-        "isProductDailyCostMigration_v1_13_0_Required" : true
+        "isProductDailyCostMigration_v1_13_0_Required" : true,
+        "projectStorage" : "https://researchgateway.readthedocs.io/en/latest/GettingStarted.html#project-storage"
     }
   },
   {

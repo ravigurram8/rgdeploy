@@ -110,7 +110,25 @@
         "cognito-idp:DeleteUserPool",
         "codebuild:DeleteProject",
         "route53:*",
-        "fsx:*"
+        "fsx:*",
+        "elasticfilesystem:Backup",
+        "elasticfilesystem:CreateFileSystem",
+        "elasticfilesystem:CreateMountTarget",
+        "elasticfilesystem:CreateTags",
+        "elasticfilesystem:CreateAccessPoint",
+        "elasticfilesystem:CreateReplicationConfiguration",
+        "elasticfilesystem:DeleteFileSystem",
+        "elasticfilesystem:DeleteMountTarget",
+        "elasticfilesystem:DeleteTags",
+        "elasticfilesystem:DeleteAccessPoint",
+        "elasticfilesystem:DeleteFileSystemPolicy",
+        "elasticfilesystem:DeleteReplicationConfiguration",
+        "elasticfilesystem:DescribeBackupPolicy",
+        "elasticfilesystem:DescribeMountTargets",
+        "elasticfilesystem:DescribeFileSystems",
+        "elasticfilesystem:PutFileSystemPolicy",
+        "elasticfilesystem:PutLifecycleConfiguration",
+        "elasticfilesystem:PutBackupPolicy"
       ],
       "Resource": [
         "*"
