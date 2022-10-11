@@ -1,1 +1,14 @@
-{}
+{
+    "enableProvisionAlert": ["COMPLETED", "FAILED"],
+    "alertType": "email",
+    "emailConfig": {
+        "credentials":{
+            "accessKey": "",
+            "secretKey": ""
+        },
+        "region": "us-east-1",
+        "fromAddress": "rlc.support@relevancelab.com",
+        "toAddress": ["rlc.support@relevancelab.com"],
+        "ccAddress": []
+    }
+}
