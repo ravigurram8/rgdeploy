@@ -338,7 +338,7 @@ function create_doc_db() {
 	echo "Creating new stack $1"
 	aws cloudformation deploy --template-file "$localhome"/rg_document_db.yml --stack-name "$1" \
         --parameter-overrides DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" \       
-		 DBInstanceClass="db.t3.medium "Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" \
+		 DBInstanceClass="db.t3.medium" "Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" \
      VPC="$vpcid" SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid" DocDBSecretName="app/config/RG-$runid"
 	echo "Waiting for stack $1 to finish deploying..."
 	aws cloudformation wait stack-create-complete --stack-name "$1"
