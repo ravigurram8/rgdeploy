@@ -6,13 +6,13 @@
     "awsRegion": "",
     "RG_HOME": "/opt/deploy/sp2",
     "RG_SRC": "/home/ubuntu",
-    "amiName": "Ubuntu20.04_MongoDB3.6_Docker-ce20.10"
+    "amiName": "Ubuntu20.04_MongoDB4.0_Docker-ce20.10.1.13.3"
   },
   "builders": [
     {
       "type": "amazon-ebs",
       "profile": "{{user `awsProfile`}}",
-      "iam_instance_profile": "packer-role-test",
+      "iam_instance_profile": "packer-role1",
       "region": "{{user `awsRegion`}}",
       "vpc_id": "{{user `vpcId`}}",
       "subnet_id": "{{user `subnetId`}}",
@@ -93,7 +93,7 @@
     },
     {
       "type": "shell",
-      "environment_vars": ["MONGO_VERSION=3.6","MONGO_Full_VERSION=23"],
+      "environment_vars": ["MONGO_VERSION=4.0","MONGO_Full_VERSION=28"],
       "script": "./provisioners/provision-mongo.sh",
       "pause_before": "10s"
     },
