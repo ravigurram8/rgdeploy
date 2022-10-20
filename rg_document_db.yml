@@ -96,7 +96,7 @@ Resources:
       Name: !Ref DocDBSecretName 
       Description: secrets for Documentdb
       GenerateSecretString:
-        SecretStringTemplate: '{"username": "rgadmin"}'
+        SecretStringTemplate: '{"username": "rguser"}'
         GenerateStringKey: "password"
         PasswordLength: 16
         ExcludeCharacters: '"@/\'
