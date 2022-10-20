@@ -340,7 +340,7 @@ function create_doc_db() {
 		--parameter-overrides DocDBSecretName="app/config/RG-$runid" \
 		DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
 		Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
-		SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid" --capabilities CAPABILITY_NAMED_IAM
+		SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid" --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
 	echo "Waiting for stack $1 to finish deploying..."
 	aws cloudformation wait stack-create-complete --stack-name "$1"
 }
