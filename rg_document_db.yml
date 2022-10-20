@@ -120,8 +120,9 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       DBClusterIdentifier: !Ref DBClusterName
-      MasterUsername: rgadmin   
-      MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref DocDBClusterRotationSecret, ':SecretString:password}}' ]] 
+      MasterUsername: rguser   
+      MasterUserPassword: 
+        Fn::Sub: "{{resolve:secretsmanager:${MyDocDBClusterRotationSecret}::password}}"
       EngineVersion: 3.6.0
       DBSubnetGroupName : !Ref DocumentDBSubnetGroup
       VpcSecurityGroupIds: 
