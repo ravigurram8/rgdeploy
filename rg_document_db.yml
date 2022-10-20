@@ -122,7 +122,7 @@ Resources:
       DBClusterIdentifier: !Ref DBClusterName
       MasterUsername: rguser   
       MasterUserPassword: 
-        Fn::Sub: "{{resolve:secretsmanager:${MyDocDBClusterRotationSecret}::password}}"
+        Fn::Sub: "{{resolve:secretsmanager:${DocDBClusterRotationSecret}::password}}"
       EngineVersion: 3.6.0
       DBSubnetGroupName : !Ref DocumentDBSubnetGroup
       VpcSecurityGroupIds: 
