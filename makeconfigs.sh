@@ -31,6 +31,7 @@ myrunid=$6
 myurl=$7
 region=$8
 role_name=$9
+docdb_pwd=${12}
 RG_HOME=$(mktemp -d -t "config.$myrunid.XXX")
 echo "RG_HOME=$RG_HOME"
 RG_SRC=$(pwd)
@@ -105,7 +106,7 @@ jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
 	jq -r ".db_auth_enable=true" |
 	jq -r ".db_documentdb_enable=true" |
 	jq -r ".db_auth_config.username=\"$myappuser\"" |
-	jq -r ".db_auth_config.password=\"$myapppwd\"" |
+	jq -r ".db_auth_config.password=\"$docdb_pwd\"" |
 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 
 echo "Modifying notification-config.json"
@@ -121,7 +122,7 @@ jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
 	jq -r '.db_ssl_config.CAFile="rds-combined-ca-bundle.pem"' |
 	jq -r '.db_ssl_config.PEMFile="mongodb.pem"' |
 	jq -r ".db_auth_config.username=\"$myappuser\"" |
-	jq -r ".db_auth_config.password=\"$myapppwd\"" |
+	jq -r ".db_auth_config.password=\"$docdb_pwd\"" |
 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 tar -C "$RG_HOME" -czf config.tar.gz "config"/*
 tar -tf config.tar.gz
