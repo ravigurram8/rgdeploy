@@ -102,6 +102,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess
         - arn:aws:iam::aws:policy/IAMReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonRoute53FullAccess
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite
         - Ref: ResearchGatewayRolePolicy
       Path: /
   ResearchGatewayInstanceProfile:
@@ -124,6 +125,7 @@ Resources:
               - ec2:CopyImage
               - ec2:ModifyImageAttribute
               - ec2:ModifyInstanceMetadataOptions
+              - ec2:CreateNetworkInterface
               - iam:attachRolePolicy
               - iam:createPolicy
               - iam:createPolicyVersion

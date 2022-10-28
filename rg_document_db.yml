@@ -1,5 +1,5 @@
 Description:  "AWS CloudFormation Sample Template DocumentDB_Quick_Create: Sample template showing how to create a DocumentDB DB cluster and DB instance. **WARNING** This template creates an Amazon DocumentDB resources and you will be billed for the AWS resources used if you create a stack from this template."
-
+Transform: AWS::SecretsManager-2020-07-23
 Parameters: 
   DBClusterName: 
     Default: "MyCluster1"
@@ -18,24 +18,7 @@ Parameters:
     MaxLength: "64"
     AllowedPattern : "[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*"
     ConstraintDescription : "Must begin with a letter and contain only alphanumeric characters."
-
-  MasterUser:
-    NoEcho: "true"
-    Description : "The database admin account username"
-    Type: "String"
-    MinLength: "1"
-    MaxLength: "16"
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription : "Must begin with a letter and contain only alphanumeric characters."
-
-  MasterPassword:
-    NoEcho: "true"
-    Description : "The database admin account password"
-    Type: "String"
-    MinLength: "8"
-    MaxLength: "100"
-    AllowedPattern : "[a-zA-Z0-9]{8,100}"
-    ConstraintDescription : "must contain only alphanumeric characters."
+  
   AccessFromCidr:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
     Type: String
@@ -55,13 +38,16 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   Subnet3:
     Description: The VPC subnet in which the EC2 instance
-    Type: AWS::EC2::Subnet::Id
+    Type: AWS::EC2::Subnet::Id  
   SecurityGroupName:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
     Type: String
   DocDBSubnetGroupName:
     Description: Subnet Group Name
     Type: String
+  DocDBSecretName:
+    Description: Secret Name
+    Type: String  
   DBInstanceClass:
     Description : "Instance class. Please refer to: https://docs.aws.amazon.com/documentdb/latest/developerguide/db-instance-classes.html#db-instance-classes-by-region"
     Type: "String"
@@ -81,7 +67,7 @@ Resources:
     Properties: 
       GroupDescription: Amazon DocumentDB Security Group
       GroupName: !Ref SecurityGroupName 
-      VpcId: !Ref VPC
+      VpcId: !Ref VPC 
       SecurityGroupIngress:
          - IpProtocol: tcp
            CidrIp: !Ref AccessFromCidr
@@ -90,6 +76,33 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref SecurityGroupName
+  SecretsManagerVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties: 
+      SubnetIds:
+      - Ref: Subnet1
+      - Ref: Subnet2
+      SecurityGroupIds:
+        - !GetAtt DocumentDBSecurityGroup.GroupId
+      VpcEndpointType: Interface
+      ServiceName:
+        Fn::Sub: com.amazonaws.${AWS::Region}.secretsmanager
+      PrivateDnsEnabled: true
+      VpcId:
+        Ref: VPC
+  DocDBClusterRotationSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Ref DocDBSecretName 
+      Description: secrets for Documentdb
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "rguser"}'
+        GenerateStringKey: "password"
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+      Tags:
+        - Key: Name
+          Value: /rl/cc/app/server/config/test    
   DocumentDBSubnetGroup:
     Type: AWS::DocDB::DBSubnetGroup
     Properties: 
@@ -107,8 +120,9 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       DBClusterIdentifier: !Ref DBClusterName
-      MasterUsername: !Ref MasterUser
-      MasterUserPassword: !Ref MasterPassword
+      MasterUsername: rguser   
+      MasterUserPassword: 
+        Fn::Sub: "{{resolve:secretsmanager:${DocDBClusterRotationSecret}::password}}"
       EngineVersion: 3.6.0
       DBSubnetGroupName : !Ref DocumentDBSubnetGroup
       VpcSecurityGroupIds: 
@@ -120,6 +134,33 @@ Resources:
       DBInstanceIdentifier: !Ref DBInstanceName
       DBInstanceClass: !Ref DBInstanceClass
     DependsOn: DBCluster
+  SecretDocDBClusterAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId:
+        Ref: DocDBClusterRotationSecret
+      TargetId:
+        Ref: DBCluster
+      TargetType: AWS::DocDB::DBCluster
+  SecretRotationSchedule:
+    Type: AWS::SecretsManager::RotationSchedule
+    DependsOn: SecretDocDBClusterAttachment
+    Properties:
+      SecretId:
+        Ref: DocDBClusterRotationSecret
+      HostedRotationLambda:
+        RotationType: MongoDBSingleUser
+        RotationLambdaName: MongoDBSingleUser
+        VpcSecurityGroupIds:
+          Ref: DocumentDBSecurityGroup 
+        VpcSubnetIds:
+          Fn::Join:
+          - ","
+          - - Ref: Subnet1
+            - Ref: Subnet2 
+      RotationRules:
+        Duration: 6h
+        ScheduleExpression: 'rate(10 days)'     
 
 Outputs:
   ClusterId:

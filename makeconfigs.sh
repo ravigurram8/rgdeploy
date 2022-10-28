@@ -2,7 +2,7 @@
 version="0.1.0"
 echo "Making configs locally...(makeconfigs.sh v$version)"
 # Ensure right number of params
-if [ $# -lt 11 ]; then
+if [ $# -lt 12 ]; then
 	echo 'At least 11 parameters are required!'
 	echo '  Param 1: AWS Cognito User Pool id'
 	echo '  Param 2: AWS Cognito client id'
@@ -19,6 +19,7 @@ if [ $# -lt 11 ]; then
 	echo '            same account to which Research Gateway is to be deployed'
 	echo '  Param 11: Hosted Zone Id in Route53 to be used for enabling SSL'
     echo '            in projects'
+	echo '  Param 12: AWS secret ARN'
 	exit 1
 fi
 
@@ -31,6 +32,7 @@ myrunid=$6
 myurl=$7
 region=$8
 role_name=$9
+secret_arn=${12}
 RG_HOME=$(mktemp -d -t "config.$myrunid.XXX")
 echo "RG_HOME=$RG_HOME"
 RG_SRC=$(pwd)
@@ -106,6 +108,7 @@ jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
 	jq -r ".db_documentdb_enable=true" |
 	jq -r ".db_auth_config.username=\"$myappuser\"" |
 	jq -r ".db_auth_config.password=\"$myapppwd\"" |
+	jq -r ".db_auth_config.secretName=\"$secret_arn\"" |
 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 
 echo "Modifying notification-config.json"
@@ -122,6 +125,7 @@ jq -r ".db_ssl_enable=true" "$mytemp/mongo-config.json" |
 	jq -r '.db_ssl_config.PEMFile="mongodb.pem"' |
 	jq -r ".db_auth_config.username=\"$myappuser\"" |
 	jq -r ".db_auth_config.password=\"$myapppwd\"" |
+	jq -r ".db_auth_config.secretName=\"$secret_arn\"" |
 	jq -r '.db_auth_config.authenticateDb="admin"' >"${RG_HOME}/config/mongo-config.json"
 tar -C "$RG_HOME" -czf config.tar.gz "config"/*
 tar -tf config.tar.gz

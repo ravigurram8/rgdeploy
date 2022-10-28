@@ -337,10 +337,10 @@ function create_cognito_pool() {
 function create_doc_db() {
 	echo "Creating new stack $1"
 	aws cloudformation deploy --template-file "$localhome"/rg_document_db.yml --stack-name "$1" \
-		--parameter-overrides MasterUser="$appuser" MasterPassword="$appuserpassword" \
+		--parameter-overrides DocDBSecretName="RL/RG/$runid/$env" \
 		DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
 		Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
-		SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid"
+		SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid" --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
 	echo "Waiting for stack $1 to finish deploying..."
 	aws cloudformation wait stack-create-complete --stack-name "$1"
 }
@@ -506,10 +506,11 @@ ac_name=$(aws sts get-caller-identity --query "Account" --output text)
 r53_domain_name="${rgurl//http[s]*:\/\//}"
 jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
 hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
+secretdb_arn=$(aws secretsmanager get-secret-value --secret-id RL/RG/$runid/$env | jq --raw-output .ARN) 
 echo "Creating configs locally"
 export RG_ENV="$env"
 ./makeconfigs.sh "$userpool_id" "$userpoolclient_id"  "$bucketname" "$appuser" "$appuserpassword" \
-            "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone"
+            "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone" "$secretdb_arn"
 echo "Uploading configs to $bucketname"
 aws s3 cp "$localhome"/config.tar.gz s3://"$bucketname"
 #===============================================================================================================
