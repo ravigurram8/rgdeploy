@@ -42,6 +42,9 @@ Parameters:
   SecurityGroupName:
     Description: Lockdown SSH and HTTPS access (default can be accessed from anywhere)
     Type: String
+  VpceSecurityGroupName:
+    Description: Lockdown SSH and HTTPS access 
+    Type: String  
   DocDBSubnetGroupName:
     Description: Subnet Group Name
     Type: String
@@ -76,6 +79,20 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref SecurityGroupName
+  VpcendpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: vpc endpoint Security Group
+      GroupName: !Ref VpceSecurityGroupName
+      VpcId: !Ref VPC 
+      SecurityGroupIngress:
+         - IpProtocol: tcp
+           FromPort: "0"
+           ToPort: "65535"
+           CidrIp : "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Ref VpceSecurityGroupName        
   SecretsManagerVPCEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties: 
@@ -83,7 +100,7 @@ Resources:
       - Ref: Subnet1
       - Ref: Subnet2
       SecurityGroupIds:
-        - !GetAtt DocumentDBSecurityGroup.GroupId
+        - !GetAtt VpcendpointSecurityGroup.GroupId
       VpcEndpointType: Interface
       ServiceName:
         Fn::Sub: com.amazonaws.${AWS::Region}.secretsmanager
@@ -160,7 +177,7 @@ Resources:
             - Ref: Subnet2 
       RotationRules:
         Duration: 6h
-        ScheduleExpression: 'rate(10 days)'     
+        ScheduleExpression: 'rate(30 days)'     
 
 Outputs:
   ClusterId:

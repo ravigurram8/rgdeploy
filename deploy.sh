@@ -337,7 +337,7 @@ function create_cognito_pool() {
 function create_doc_db() {
 	echo "Creating new stack $1"
 	aws cloudformation deploy --template-file "$localhome"/rg_document_db.yml --stack-name "$1" \
-		--parameter-overrides DocDBSecretName="RL/RG/$runid/$env" \
+		--parameter-overrides DocDBSecretName="RL/RG/$runid/$env" VpceSecurityGroupName="RGVE-SG-$runid" \
 		DBClusterName="RGCluster-$runid" DBInstanceName="RGInstance-$runid" DBInstanceClass="db.t3.medium" \
 		Subnet1="$subnet1id" Subnet2="$subnet2id" Subnet3="$subnet3id" VPC="$vpcid" \
 		SecurityGroupName="RGDB-SG-$runid" DocDBSubnetGroupName="RGDBSubnet-$runid" --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
