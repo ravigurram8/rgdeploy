@@ -507,7 +507,7 @@ ac_name=$(aws sts get-caller-identity --query "Account" --output text)
 r53_domain_name="${rgurl//http[s]*:\/\//}"
 jqcmd='.HostedZones[] | select(.Name=='"\"${r53_domain_name}.\""')|.Id'
 hosted_zone=$(aws route53 list-hosted-zones-by-name --dns-name "$r53_domain_name" | jq -r "$jqcmd" | sed -e 's#\/hostedzone\/##')
-secretdb_arn=$(aws secretsmanager get-secret-value --secret-id RL/RG/$runid/$env | jq --raw-output .ARN) 
+secretdb_arn=$(aws secretsmanager get-secret-value --secret-id RL-RG-$runid-$env | jq --raw-output .ARN) 
 echo "Creating configs locally"
 export RG_ENV="$env"
 ./makeconfigs.sh "$userpool_id" "$userpoolclient_id"  "$bucketname" "$appuser" "$appuserpassword" \
