@@ -15,8 +15,8 @@ if [ -z "$myinput" ]; then
 	exit 1
 fi
 
-mydbuser=$(aws secretsmanager get-secret-value --secret-id RL/RG/$runid/$env   --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."username")
-mydbuserpwd=$(aws secretsmanager get-secret-value --secret-id RL/RG/$runid/$env   --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
+mydbuser=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."username")
+mydbuserpwd=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
 
 if [ -z "$mydbuser" ] || [ -z "$mydbuserpwd" ]; then
 	echo "Could not find DB details. Exiting"
