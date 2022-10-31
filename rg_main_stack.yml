@@ -165,7 +165,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-0fb3fe843311c4412
-      InstanceType: t3.large
+      InstanceType: t3.medium
       Monitoring: "true"
       DisableApiTermination: "false"
       IamInstanceProfile:

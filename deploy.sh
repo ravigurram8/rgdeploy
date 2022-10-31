@@ -355,7 +355,7 @@ function create_image_builder() {
 	aws cloudformation wait stack-create-complete --stack-name "$1"
 
 }
-secpassword=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
+
 
 function create_main_stack() {
 	echo "Creating new stack $1"
@@ -368,14 +368,14 @@ function create_main_stack() {
 	echo "UserPool ClientId: $userpoolclient_id"
 	echo "BucketName $bucketname"
 	echo "RG URL: $rgurl"
-	if [ -n "$appuserpassword" ]; then
+	if [ -n "$secpassword" ]; then
 		echo "UserPassword is not a blank string"
 	fi
 	if [ -n "$adminpassword" ]; then
 		echo "AdminPassword is not a blank string"
 	fi
 	echo "VPC Id: $vpcid"
-	echo "subnet1id: subnet1id"
+	echo "subnet1id: $subnet1id"
 	echo "Key Pair: $keypairname"
 	echo "TGARN: $tgarn"
 	echo "DocDBURL: $docdburl"
@@ -515,6 +515,7 @@ export RG_ENV="$env"
             "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone" "$secretdb_arn"
 echo "Uploading configs to $bucketname"
 aws s3 cp "$localhome"/config.tar.gz s3://"$bucketname"
+secpassword=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
 #===============================================================================================================
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"
