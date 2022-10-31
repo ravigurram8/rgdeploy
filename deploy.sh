@@ -355,6 +355,7 @@ function create_image_builder() {
 	aws cloudformation wait stack-create-complete --stack-name "$1"
 
 }
+secpassword=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
 
 function create_main_stack() {
 	echo "Creating new stack $1"
@@ -383,7 +384,7 @@ function create_main_stack() {
 	aws cloudformation deploy --template-file "$localhome"/rg_main_stack.yml \
 		--stack-name "$mainstackname" \
 		--parameter-overrides CFTBucketName="$bucketname" RGUrl="$rgurl"\
-		UserPassword="$appuserpassword" AdminPassword="$adminpassword" \
+		UserPassword="$secpassword" AdminPassword="$adminpassword" \
 		VPC="$vpcid" Subnet1="$subnet1id" KeyName1="$keypairname" TGARN="$tgarn" \
 		DocumentDBInstanceURL="$docdburl" Environment="$env" BaseAccountPolicyName="RG-Portal-Base-Account-Policy-$env-$runid" \
 		--capabilities CAPABILITY_NAMED_IAM
