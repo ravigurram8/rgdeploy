@@ -515,7 +515,7 @@ export RG_ENV="$env"
             "$runid" "$rgurl" "$region" "ROLE_NAME" "$ac_name" "$hosted_zone" "$secretdb_arn"
 echo "Uploading configs to $bucketname"
 aws s3 cp "$localhome"/config.tar.gz s3://"$bucketname"
-secpassword=$(aws secretsmanager get-secret-value --secret-id secret_name  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
+secpassword=$(aws secretsmanager get-secret-value --secret-id RL-RG-$runid-$env  --version-stage AWSCURRENT | jq --raw-output .SecretString| jq -r ."password")
 #===============================================================================================================
 #Creating Main stack
 echo "Deploying main stack (roles, ec2 instance etc.)"

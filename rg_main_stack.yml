@@ -198,7 +198,7 @@ Resources:
               aws s3 cp s3://${CFTBucketName}/config.tar.gz /home/ubuntu               
               chmod +x /home/ubuntu/updatescripts.sh
               /home/ubuntu/updatescripts.sh
-              fixmongo.sh ${Environment}-cc ${AdminPassword} rguser ${UserPassword} ${RGUrl}
+              fixmongo.sh ${Environment}-cc ${AdminPassword} rguser '${UserPassword}' ${RGUrl}
               fixconfigs.sh
               start_server.sh ${RGUrl} ${TGARN}
               /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
@@ -214,7 +214,7 @@ Resources:
               chmod +x /home/ubuntu/updatescripts.sh
               /home/ubuntu/updatescripts.sh
               fixconfigs.sh
-              fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser ${UserPassword} ${RGUrl}
+              fixdocdb.sh ${DocumentDBInstanceURL} ${Environment}-cc rguser '${UserPassword}' ${RGUrl}
               start_server.sh ${RGUrl} ${TGARN}
               /opt/aws/bin/cfn-signal -e 0 --stack ${AWS::StackName} --resource RGEC2Instance --region ${AWS::Region}
     CreationPolicy:
