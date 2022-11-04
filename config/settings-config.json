@@ -84,10 +84,6 @@
           {
             "action": "Unshare",
             "imageUrl": "../../assets/images/unshare@2x.png"
-          },
-          {
-            "action": "Upload",
-            "imageUrl": "../../assets/images/cloud-computing@2x.png"
           }
         ]
       },
