@@ -343,7 +343,8 @@
         "standardCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/"
-    }
+    },
+    "studySelectionCount" : 2
   },
   {
     "_id" : { 
