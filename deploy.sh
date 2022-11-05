@@ -202,6 +202,11 @@ scripts/updatessmpaths.sh "$region" "$localhome"
 BUCKET_TEST=$(aws s3api head-bucket --bucket "$bucketname" 2>&1)
 if [ -z "$BUCKET_TEST" ]; then
 	echo "Bucket $bucketname exists, Hit Enter to continue, Ctrl-C to exit"
+	bucket_region=$(aws s3api get-bucket-location --bucket "$bucketname" | jq -r ".LocationConstraint")
+      if [[ "$bucket_region" != "$region" ]]; then
+          echo "The given bucket $bucketname is not in $region. Please provide a bucket in this region."
+          exit 1
+      fi
 	read -r a && echo "Copying files to bucket $bucketname"
 else
 	echo "An S3 bucket with name $bucketname  doesn't exist in current AWS account. Creating..."
@@ -266,6 +271,15 @@ rm -f nextflow-advanced.tar.gz
 tar -czf rstudio.tar.gz RStudio/*
 aws s3 cp ./rstudio.tar.gz s3://"$bucketname/"
 rm -f rstudio.tar.gz
+cp ./PCluster/machine-images/config/infra/files/pcluster/slurm-main.yaml  ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
+cp ./PCluster/machine-images/config/infra/files/pcluster/batch-main.yaml  ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml
+sed -i "s/tempbucket/$bucketname/g" ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
+sed -i "s/tempbucket/$bucketname/g" ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml
+tar -czf PCluster.tar.gz PCluster/*
+aws s3 cp ./PCluster.tar.gz s3://"$bucketname/"
+rm -f ./PCluster/machine-images/config/infra/files/pcluster/slurm.yaml
+rm -f ./PCluster/machine-images/config/infra/files/pcluster/batch.yaml 
+rm -f PCluster.tar.gz
 
 echo "Copying Database seed-data files to new bucket"
 cd "$localhome" || exit

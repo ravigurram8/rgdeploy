@@ -216,9 +216,14 @@
         "running": {
             "connect": [
                 {
-                    "menu": "SSH to Pcluster HeadNode",
-                    "imageUrl": "../../assets/images/technology@2x.png",
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png",
                     "outputsRequired": []
+                  },
+                  {
+                    "menu": "SSH Terminal",
+                "imageUrl": "../../assets/images/technology@2x.png",
+                "outputsRequired": []
                 }
             ],
             "action": [
@@ -247,12 +252,22 @@
         "default": {
             "connect": [
                 {
-                    "menu": "SSH to Pcluster HeadNode",
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png",
+                    "outputsRequired": []
+                  },
+                  {
+                    "menu": "SSH Terminal",
                     "imageUrl": "../../assets/images/technology@2x.png",
                     "outputsRequired": []
                 }
             ],
             "action": [
+                {
+                    "action":"Start",
+                    "imageUrl": "../../assets/images/play@2x.png",
+                    "outputsRequired": []
+                },
                 {
                     "action": "Stop",
                     "imageUrl": "../../assets/images/no-stopping@2x.png",
@@ -283,8 +298,8 @@
         "terminated"
     ]
 },
-  "rstudio": {
-    "actions": {
+"rstudio": {
+  "actions": {
       "running": {
         "connect": [
           {
@@ -378,6 +393,63 @@
     "terminated_states": [
       "terminated"
     ]
+  },
+  "ec2-dcv":{
+    "actions": {
+      "running" : {
+        "connect":[
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          },
+          {
+            "menu": "Remote Desktop",
+            "imageUrl": "../../assets/images/Screen-icon.png"
+          }
+        ],
+         "action":[
+            {
+              "action":"Stop",
+              "imageUrl": "../../assets/images/no-stopping@2x.png"
+            },
+            {
+              "action":"Reboot",
+              "imageUrl": "../../assets/images/reset@2x.png"
+            }
+          ]
+      },
+      "stopped": {
+        "connect":[],
+        "action":[
+          {
+              "action":"Start",
+              "imageUrl": "../../assets/images/play@2x.png"
+          }
+        ]
+      },
+      "default" : {
+        "connect":[
+          {
+            "menu": "SSH/RDP",
+            "imageUrl": "../../assets/images/technology@2x.png"
+          }
+        ],
+        "action":[
+            {
+              "action":"Stop",
+              "imageUrl": "../../assets/images/no-stopping@2x.png"
+            },
+            {
+              "action":"Reboot",
+              "imageUrl": "../../assets/images/reset@2x.png"
+            }
+          ]
+      }
+    },
+    "transient_states": ["pending", "shutting-down", "stopping", "deleting"],
+    "active_states": ["running", "active"],
+    "stopped_states":["stopped"],
+    "terminated_states": ["terminated"]
   },
   "nextflow": {
     "actions": {
@@ -717,6 +789,19 @@
         ],
         "action": []
       },
+      "external": {
+        "connect":[
+          {
+            "menu": "Explore",
+            "imageUrl": "../../assets/images/direction@2x.png"
+          },
+          {
+            "menu": "Link",
+            "imageUrl": "../../assets/images/link@2x.png"
+          }
+        ],
+        "action":[]
+      },
       "Personal": {
         "connect": [
           {
@@ -791,6 +876,10 @@
       },
       {
         "key": "studyType",
+        "value": "external"
+      },
+      {
+        "key": "studyType",
         "value": "Personal"
       },
       {
@@ -814,7 +903,8 @@
     "rstudio",
     "nextflow",
     "cromwell",
-    "pcluster"
+    "pcluster",
+    "ec2-dcv"
   ],
   "cft_active_states": [
     "available",

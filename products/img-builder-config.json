@@ -8,5 +8,10 @@
     "product": "RStudio",
     "pipeline": "RL_RG_RStudio",
     "path": "/RL/RG/StandardCatalog/RStudio"
+  },
+  {
+    "product": "PCluster",
+    "pipeline": "RL_RG_PCluster",
+    "path": "/RL/RG/StandardCatalog/ParallelCluster-linux-ami"
   }
 ]
