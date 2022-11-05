@@ -392,5 +392,18 @@
         "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-basic-joint-genotyping.git"
       }
     ]
-  }
+  },
+  {
+        "key" : "study",
+        "message" : "This config help us to configure the external studies in the product launch form",
+        "value" : {
+                "productList" : [
+                        "ec2",
+                        "rstudio",
+                        "nextflow",
+                        "cromwell"
+                ]
+        },
+        "studySelectionCount" : 4
+}
 ]
