@@ -894,5 +894,63 @@
                 },
                 "cost_resource" : true
         }
+  },
+  {
+    "_id": {
+      "$oid": "60504955135663522b880abd"
+      },
+      "name" : "Amazon EFS",
+          "description" : "Amazon Elastic File System (Amazon EFS) provides a simple, serverless, set-and-forget elastic file system for use with AWS Cloud services and on-premises resources.",
+          "fileName" : "EFS.yaml",
+          "tags" : [
+                  {
+                          "Key" : "EstimatedTimeToProvision",
+                          "Value" : "10 Minutes"
+                  },
+                  {
+                          "Key" : "DetailsLink",
+                          "Value" : "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+                  },
+                  {
+                          "Key" : "Service",
+                          "Value" : "EFS"
+                  },
+                  {
+                          "Key" : "TypeOfProduct",
+                          "Value" : "Research"
+                  }
+          ],
+          "owner" : "RL",
+          "portfolio" : "RGPortfolio",
+          "availableRegions" : [ ],
+          "assignedOU" : [ ],
+          "metaData" : {
+                  "pre_provisioning" : [
+                          {
+                                  "code" : "CFT_PARAMS",
+                                  "params" : [
+                                          {
+                                                  "name" : "ProjectId",
+                                                  "type" : "RL::SC::PARAM::HD"
+                                          },
+                                          {
+                                                  "name" : "ResearcherName",
+                                                  "type" : "RL::SC::PARAM::HD"
+                                          },
+                                          {
+                                                  "name" : "Namespace",
+                                                  "type" : "RL::SC::PARAM::HD"
+                                          }
+                                  ]
+                          }
+                  ],
+                  "post_provisioning" : [ ],
+                  "checks_before_assigning_product" : [ ],
+                  "checks_after_assigning_product" : [ ],
+                  "permission_required" : {
+  
+                  },
+                  "cost_resource" : true
+          }
   }
 ]

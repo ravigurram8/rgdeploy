@@ -92,10 +92,40 @@ Resources:
                 action: ExecuteBash
                 inputs:
                   commands:
-                    - tar -xvf /tmp/rstudio.tar.gz
+                    - tar -xvf /tmp/rstudio.tar.gz 
                     - mkdir -p /tmp/rstudio
                     - cp /tmp/RStudio/machine-images/config/infra/files/rstudio/* /tmp/rstudio
                     - bash /tmp/RStudio/machine-images/config/infra/provisioners/provision-rstudio.sh
+  ComponentPCluster:
+    Type: "AWS::ImageBuilder::Component"
+    Properties:
+      Name: !Sub "${AWS::StackName}-ComponentPCluster"
+      Platform: "Linux"
+      Version: !Ref Ver
+      Description: "Configure PCluster Server"
+      Tags:
+        Name: !Join ["-", [!Ref AWS::StackName, "ConfigurePCluster"]]
+        ResourceType: "RLCatalyst-Research-Gateway"
+      Data: !Sub |
+        name: PCluster-Provisioner
+        description: This is the provisioner for PCluster for Research Gateway
+        schemaVersion: 1.0
+        phases:
+          - name: build
+            steps:
+              - name: AddFiles
+                action: S3Download
+                inputs:
+                - source: "s3://${SourceBucketName}/PCluster.tar.gz"
+                  destination: /tmp/PCluster.tar.gz
+              - name: ExtractFiles
+                action: ExecuteBash
+                inputs:
+                  commands:
+                    - tar -xvzf /tmp/PCluster.tar.gz -C /tmp
+                    - mkdir -p /tmp/cluster
+                    - cp /tmp/PCluster/machine-images/config/infra/files/pcluster/* /tmp/cluster
+                    - bash /tmp/PCluster/machine-images/config/infra/provisioners/provision-launch.sh
 
   #############
   # RECIPE
@@ -127,6 +157,20 @@ Resources:
       Tags:
         Name: !Join ["-", [!Ref AWS::StackName, "Nextflow_AdvancedImageRecipe"]]
         ResourceType: "RLCatalyst-Research-Gateway"
+
+  PClusterImageRecipe:
+    Type: "AWS::ImageBuilder::ImageRecipe"
+    Properties:
+      Name: !Sub "${AWS::StackName}-PClusterImageRecipe"
+      Version: !Ref Ver
+      ParentImage: !Ref MasterAMI
+      Description: !Sub "${AWS::StackName}-PClusterImageRecipe"
+      Components:
+        - ComponentArn: !GetAtt ComponentConfigureOS.Arn
+        - ComponentArn: !GetAtt ComponentPCluster.Arn
+      Tags:
+        Name: !Join ["-", [!Ref AWS::StackName, "PClusterImageRecipe"]]
+        ResourceType: "RLCatalyst-Research-Gateway"      
 
   ###############
   # INFRA CONFIG
@@ -169,6 +213,25 @@ Resources:
       Tags:
         Name: !Join ["-", [!Ref AWS::StackName, "RStudioInfraConfig"]]
         ResourceType: "RLCatalyst-Research-Gateway"
+
+  PClusterInfraConfig:
+    Type: "AWS::ImageBuilder::InfrastructureConfiguration"
+    Properties:
+      Name: !Sub "${AWS::StackName}-PCluster-InfraConfig"
+      InstanceProfileName: !Ref ResearchGatewayImgBldrInstancePfl
+      InstanceTypes:
+        - "m5.large"
+      TerminateInstanceOnFailure: True
+      SecurityGroupIds:
+        - !Ref ResearchGatewayImgBldrInstanceSG
+      SubnetId: !Ref PrivateSubnetId
+      Logging:
+        S3Logs:
+          S3BucketName: !Ref SourceBucketName
+          S3KeyPrefix: !Join ["/", ["Logs", "RL_RG_PCluster", !Ref Ver]]
+      Tags:
+        Name: !Join ["-", [!Ref AWS::StackName, "PClusterInfraConfig"]]
+        ResourceType: "RLCatalyst-Research-Gateway"      
 
   ResearchGatewayImgBldrInstanceSG:
     Type: AWS::EC2::SecurityGroup
@@ -309,6 +372,57 @@ Resources:
       Tags:
         Name: "RStudio"
         RLCatalystProduct: "RStudio"
+  PClusterDistributionConfiguration:
+    Type: "AWS::ImageBuilder::DistributionConfiguration"
+    Properties:
+      Name: !Sub "${AWS::StackName}-PClusterDistributionConfig"
+      Description: "PCluster for RLCatalyst Research Gateway"
+      Distributions:
+        - Region: "us-east-2"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "us-east-1"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "us-west-2"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "us-west-1"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "ap-south-1"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "ap-southeast-1"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+        - Region: "ap-southeast-2"
+          AmiDistributionConfiguration:
+            Name: "PCluster {{ imagebuilder:buildDate }}"
+            Description: "PCluster for RLCatalyst Research Gateway"
+            AmiTags:
+              RLCatalystProduct: "PCluster"
+      Tags:
+        Name: "PCluster"
+        RLCatalystProduct: "PCluster"      
 
   ##############
   # PIPELINE
@@ -344,6 +458,22 @@ Resources:
         Name: "RL_RG_RStudio"
         ResourceType: "RLCatalyst-Research-Gateway"
 
+  PClusterImagePipeline:
+    Type: "AWS::ImageBuilder::ImagePipeline"
+    Properties:
+      Name: !Sub "${AWS::StackName}-Pipeline_PCluster"
+      Description: "Pipeline to build PCluster AMI for RLCatalyst Research Gateway"
+      ImageRecipeArn: !Ref PClusterImageRecipe
+      InfrastructureConfigurationArn: !Ref PClusterInfraConfig
+      DistributionConfigurationArn: !Ref PClusterDistributionConfiguration
+      ImageTestsConfiguration:
+        ImageTestsEnabled: false
+        TimeoutMinutes: 90
+      Status: "ENABLED"
+      Tags:
+        Name: "RL_RG_PCluster"
+        ResourceType: "RLCatalyst-Research-Gateway"      
+
 Outputs:
   NextflowAdvancedImagePipeline:
     Description: Nextflow_Advanced Image Builder Pipeline
@@ -355,3 +485,8 @@ Outputs:
     Value: !Ref RStudioImagePipeline
     Export:
       Name: !Sub "${AWS::StackName}-RStudioPipelineName"
+  PClusterImagePipeline:
+    Description: PCluster Image Builder Pipeline
+    Value: !Ref PClusterImagePipeline
+    Export:
+      Name: !Sub "${AWS::StackName}-PClusterPipelineName"
