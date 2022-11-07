@@ -345,7 +345,8 @@
         "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "isProductDailyCostMigration_v1_13_0_Required" : true,
         "projectStorage" : "https://researchgateway.readthedocs.io/en/latest/GettingStarted.html#project-storage"
-    }
+    },
+    "studySelectionCount" : 2
   },
   {
     "_id" : { 
@@ -394,5 +395,18 @@
         "pipeline_git_url": "https://github.com/gatk-workflows/gatk4-basic-joint-genotyping.git"
       }
     ]
-  }
+  },
+  {
+        "key" : "study",
+        "message" : "This config help us to configure the external studies in the product launch form",
+        "value" : {
+                "productList" : [
+                        "ec2",
+                        "rstudio",
+                        "nextflow",
+                        "cromwell"
+                ]
+        },
+        "studySelectionCount" : 4
+}
 ]
