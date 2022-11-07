@@ -1,7 +1,7 @@
 {
         "db_ssl_enable": "REPLACE_WITH_TRUE_FALSE",
         "db_auth_enable": "REPLACE_WITH_TRUE_FALSE",
-	"db_documentdb_enable": "REPLACE_WITH_TRUE_FALSE",
+	    "db_documentdb_enable": "REPLACE_WITH_TRUE_FALSE",
         "db_ssl_config": {
             "CAFile": "rds-combined-ca-bundle.pem",
             "PEMFile": "REPLACE_WITH_PEM_FILE_NAME"
@@ -9,6 +9,7 @@
         "db_auth_config": {
             "username": "app",
             "password": "App123",
+            "secretName": "REPLACE_WITH_secretarn",
             "authenticateDb":"admin"
         }
     
