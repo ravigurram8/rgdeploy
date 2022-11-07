@@ -789,7 +789,7 @@
         ],
         "action": []
       },
-      "external": {
+      "internal": {
         "connect":[
           {
             "menu": "Explore",
@@ -800,7 +800,12 @@
             "imageUrl": "../../assets/images/link@2x.png"
           }
         ],
-        "action":[]
+        "action":[
+          {
+            "action": "Edit",
+            "imageUrl": "../../assets/images/editStudy.png"
+          }
+        ]
       },
       "Personal": {
         "connect": [
@@ -876,7 +881,7 @@
       },
       {
         "key": "studyType",
-        "value": "external"
+        "value": "internal"
       },
       {
         "key": "studyType",

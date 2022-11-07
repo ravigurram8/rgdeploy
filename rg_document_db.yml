@@ -140,7 +140,7 @@ Resources:
       MasterUsername: rguser   
       MasterUserPassword: 
         Fn::Sub: "{{resolve:secretsmanager:${DocDBClusterRotationSecret}::password}}"
-      EngineVersion: 3.6.0
+      EngineVersion: 4.0.0
       DBSubnetGroupName : !Ref DocumentDBSubnetGroup
       VpcSecurityGroupIds: 
         - !GetAtt DocumentDBSecurityGroup.GroupId
@@ -189,4 +189,4 @@ Outputs:
   ClusterPort:
     Value: !GetAtt DBCluster.Port
   EngineVersion:
-    Value: "3.6.0"
+    Value: "4.0.0"
