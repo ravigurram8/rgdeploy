@@ -18,7 +18,7 @@ services:
       - sp2net
 
   cc-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.14.1_b1449
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.14.2_b1452
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
@@ -42,7 +42,7 @@ services:
     command: /bin/bash start.sh
 
   scheduler-3102:
-    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.14.1_b1449
+    image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.14.2_b1452
     secrets:
       - source: sp2prod-config.json
         target: /rlc/cc/server/app/config/config.json
