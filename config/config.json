@@ -200,6 +200,8 @@
     "endTime": "21:10:00"
   },
   "cronJobForEodSync" : "*/60 * * * *",
+  "cronJobForSync" : "00 08 * * *",
+  "cronJobForEodPIReport": "00 10 * * *",
   "sampleCSVForUser": "users.csv",
   "sampleCSVBucketRegion": "REPLACE_WITH_REGION",
   "sessionMaxAge" : 900000

@@ -6,13 +6,13 @@
     "awsRegion": "",
     "RG_HOME": "/opt/deploy/sp2",
     "RG_SRC": "/home/ubuntu",
-    "amiName": "Ubuntu20.04_MongoDB3.6_Docker-ce20.10"
+    "amiName": "RG-AMI-1.15.0"
   },
   "builders": [
     {
       "type": "amazon-ebs",
       "profile": "{{user `awsProfile`}}",
-      "iam_instance_profile": "packer-role-test",
+      "iam_instance_profile": "packer-role1",
       "region": "{{user `awsRegion`}}",
       "vpc_id": "{{user `vpcId`}}",
       "subnet_id": "{{user `subnetId`}}",
