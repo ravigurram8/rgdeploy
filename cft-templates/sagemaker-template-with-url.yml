@@ -9,6 +9,14 @@ Parameters:
     AllowedValues:
       - ml.t2.medium
       - ml.t3.medium
+      - ml.m5.large
+      - ml.m5.xlarge
+      - ml.m5.2xlarge
+      - ml.m5.4xlarge
+      - ml.g4dn.large
+      - ml.g4dn.xlarge
+      - ml.g4dn.2xlarge
+      - ml.g4dn.4xlarge
     ConstraintDescription: Must select a valid notebook instance type.
     Default: ml.t3.medium
     Description: Select Instance type for the SageMaker Notebook. e.g.ml.t3.medium
@@ -35,12 +43,63 @@ Resources:
     Properties:
       InstanceType: !Ref NotebookInstanceType 
       RoleArn: !GetAtt SageMakerRole.Arn
-      LifecycleConfigName: 'Research-Portal-Setup'
+      PlatformIdentifier: notebook-al2-v2
+      LifecycleConfigName: !GetAtt NotebookLifeCycleConfig.NotebookInstanceLifecycleConfigName   
       Tags:
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
         - Key: Name
           Value: !Sub ${AWS::StackName}
+
+NotebookLifeCycleConfig:
+    Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
+    Properties: 
+      OnStart:
+        - Content:
+            Fn::Base64: !Sub |
+              #!/bin/bash
+
+              set -e
+
+              function get_tag()
+              {
+                  
+                  NOTEBOOK_ARN=$(jq '.ResourceArn' /opt/ml/metadata/resource-metadata.json --raw-output)
+                  TAG_NAME=$1
+                  local value=$(aws sagemaker list-tags --resource-arn $NOTEBOOK_ARN  | jq -r --arg TAG_NAME "$TAG_NAME" .'Tags[] | select(.Key == $TAG_NAME).Value' --raw-output)
+                  echo "$value"
+              }
+
+              # PARAMETERS
+              DATA_BUCKET=$(get_tag "DATA_BUCKET")
+
+              #Set Environment variables
+              if [[ $DATA_BUCKET  != '' ]]
+              then
+                  touch /etc/profile.d/jupyter-env.sh
+                  echo "export 'DATA_BUCKET'=$DATA_BUCKET" >> /etc/profile.d/jupyter-env.sh
+              fi
+
+
+              #Copy Sample notebook from S3
+
+              TEMPLATE_NOTEBOOK_BUCKET=$(get_tag "TEMPLATE_NOTEBOOK_BUCKET")
+              TEMPLATE_NOTEBOOK_DIRECTORY="/home/ec2-user/sample-notebooks/research_portal_templates/getting_started"
+
+              # Copy the files only when the bucket exists
+
+              if aws s3api head-bucket --bucket "$TEMPLATE_NOTEBOOK_BUCKET" 2>/dev/null; then
+                  mkdir -p $TEMPLATE_NOTEBOOK_DIRECTORY
+                  aws s3 cp s3://$TEMPLATE_NOTEBOOK_BUCKET/ $TEMPLATE_NOTEBOOK_DIRECTORY/ --recursive
+                  chown -R "ec2-user":"ec2-user" $TEMPLATE_NOTEBOOK_DIRECTORY
+              else
+                  echo "Template bucket not found. Skipping sample notebook creation"
+              fi
+
+              systemctl restart jupyter-server
+
+
+
 Outputs:
   SageMakerNotebookInstanceARN:
     Description: "ARN for the newly created SageMaker Notebook Instance"
