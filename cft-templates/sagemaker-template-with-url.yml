@@ -44,14 +44,14 @@ Resources:
       InstanceType: !Ref NotebookInstanceType 
       RoleArn: !GetAtt SageMakerRole.Arn
       PlatformIdentifier: notebook-al2-v2
-      LifecycleConfigName: !GetAtt NotebookLifeCycleConfig.NotebookInstanceLifecycleConfigName   
+      LifecycleConfigName: !GetAtt NotebookLifeCycleConfig.NotebookInstanceLifecycleConfigName
       Tags:
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
         - Key: Name
-          Value: !Sub ${AWS::StackName}
-
-NotebookLifeCycleConfig:
+          Value: !Sub ${AWS::StackName}      
+      
+  NotebookLifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
     Properties: 
       OnStart:
