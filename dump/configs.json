@@ -408,5 +408,20 @@
                 ]
         },
         "studySelectionCount" : 4
+},
+{
+  "_id" : { 
+    "$oid": "62b6c70a7dec087675b33788"
+  },
+  "key" : "ebsCompatibleProducts",
+  "value" : {
+          "productList" : [
+                  "ec2",
+                  "cromwell",
+                  "rstudio",
+                  "ec2-dcv",
+                  "nextflow"
+          ]
+  }
 }
 ]

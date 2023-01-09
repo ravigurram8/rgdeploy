@@ -134,3 +134,6 @@ Outputs:
   InstanceDNSName:
     Description: DNS name of the newly created EC2 instance
     Value: !GetAtt [EC2Instance, PublicDnsName]
+  AvailabilityZone: 
+    Description: AvailabilityZone of newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]  

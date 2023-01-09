@@ -117,8 +117,8 @@ Parameters:
   FileSystemType:
     Type: String
     Description: Choose the fileSystem type you want to mount on headnode leave it as NONE if don't want to mount any filesystem.
-    AllowedValues: [NONE,EFS, FSxForLustre]
-    Default: NONE  
+    AllowedValues: [NONE,EFS, FSxForLustre,EBS]
+    Default: NONE
   FileSystemId:
     Type: String
     Description: Enter the File System Id of the EFS/FSxForLustre file system which you want to use. e.g. fs-12345678. Leave this field to default if you do not want to use any file system

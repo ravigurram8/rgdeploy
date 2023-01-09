@@ -952,5 +952,65 @@
                   },
                   "cost_resource" : true
           }
+  },
+  {
+    "_id": {
+      "$oid": "60504955135663522b880cfa"
+    },
+    "name" : "Amazon EBS volume",
+    "description" : "Amazon EBS volume is a durable, block-level storage device that you can attach to your instances. After you attach a volume to an instance, you can use it as you would use a physical hard drive.",
+    "fileName" : "amazon-ebs.yml",
+    "tags" : [
+            {
+                    "Key" : "EstimatedTimeToProvision",
+                    "Value" : "10 Minutes"
+            },
+            {
+                    "Key" : "DetailsLink",
+                    "Value" : "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volumes.html"
+            },
+            {
+                    "Key" : "Service",
+                    "Value" : "AmazonEbsVolume"
+            },
+            {
+                    "Key" : "TypeOfProduct",
+                    "Value" : "Research"
+            }
+    ],
+    "owner" : "RL",
+    "portfolio" : "RGPortfolio",
+    "availableRegions" : [ ],
+    "assignedOU" : [
+            
+    ],
+    "metaData" : {
+            "pre_provisioning" : [
+                    {
+                            "code" : "CFT_PARAMS",
+                            "params" : [
+                                    {
+                                            "name" : "ProjectId",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                            "name" : "ResearcherName",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                            "name" : "Namespace",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    }
+                            ]
+                    }
+            ],
+            "post_provisioning" : [ ],
+            "checks_before_assigning_product" : [ ],
+            "checks_after_assigning_product" : [ ],
+            "permission_required" : {
+
+            },
+            "cost_resource" : true
+    }
   }
 ]

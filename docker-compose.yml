@@ -39,8 +39,8 @@ services:
       - ${PWD}/catalog:/rlc/cc/tools/deploy/catalog
     networks:
       - sp2net
-    command: /bin/bash start.sh
-
+    
+    
   scheduler-3102:
     image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/researchportal:_fd_1.15.0_b1480
     secrets:
@@ -59,7 +59,7 @@ services:
       - ${PWD}/topologies:/rlc/cc/server/dashboard/topologies
     networks:
       - sp2net
-    command: node ./app/scheduler/app.js
+    command: ["./app/scheduler/app.js"]
 
   notificationsink:
     image: 045938549113.dkr.ecr.us-east-2.amazonaws.com/notificationsink:1.15.0_b1
