@@ -63,6 +63,10 @@ if [ "$scheduler" == "slurm" ]; then
           echo "Mounting $FileSystemId EFS filesystem to headnode"
           yq -i '.SharedStorage=[{"MountDir": "/efs", "Name":"RG_Efs_Filesysytem", "StorageType": "Efs", "EfsSettings":{"FileSystemId":"'$FileSystemId'"}}]' slurm.yaml
        fi
+       if [ "$FileSystemType" == "EBS" ] && [ "$FileSystemId" != "default" ]; then
+          echo "Mounting $FileSystemId EBS Volume to headnode"
+          yq -i '.SharedStorage=[{"MountDir": "/ebs", "Name":"RG_EBS_Volume", "StorageType": "Ebs", "EbsSettings":{"VolumeId":"'$FileSystemId'"}}]' slurm.yaml
+       fi
        yq -i ".Region=\"$Region\"" slurm.yaml
        yq -i ".HeadNode.InstanceType=\"$headnodeinstancetype\"" slurm.yaml
        yq -i ".HeadNode.Networking.SubnetId=\"$headnodesubnetId\"" slurm.yaml
@@ -88,6 +92,10 @@ else
        if [ "$FileSystemType" == "EFS" ] && [ "$FileSystemId" != "default" ]; then
           echo "Mounting $FileSystemId EFS filesystem to headnode"
           yq -i '.SharedStorage=[{"MountDir": "/efs", "Name":"RG_Efs_Filesysytem", "StorageType": "Efs", "EfsSettings":{"FileSystemId":"'$FileSystemId'"}}]' batch.yaml
+       fi
+       if [ "$FileSystemType" == "EBS" ] && [ "$FileSystemId" != "default" ]; then
+          echo "Mounting $FileSystemId EBS Volume to headnode"
+          yq -i '.SharedStorage=[{"MountDir": "/ebs", "Name":"RG_EBS_Volume", "StorageType": "Ebs", "EbsSettings":{"VolumeId":"'$FileSystemId'"}}]' batch.yaml
        fi
        yq -i ".Region=\"$Region\"" batch.yaml
        yq -i ".HeadNode.InstanceType=\"$headnodeinstancetype\"" batch.yaml

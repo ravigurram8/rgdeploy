@@ -136,3 +136,6 @@ Outputs:
     Value: !Ref 'RstudioEC2Instance'
   ApplicationPort:
     Value: '443'
+  AvailabilityZone: 
+    Description: AvailabilityZone of newly created Rstudio EC2Instance
+    Value: !GetAtt [RstudioEC2Instance, AvailabilityZone]  
