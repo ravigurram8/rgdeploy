@@ -43,7 +43,10 @@ instanceid=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
 data="{\"username\":\"rgadmin\",\"first_name\":\"$firstname\",\"last_name\":\"$lastname\",\"email\":\"$emailid\",\"password\":\"RgAdmin@$instanceid\",\"level\":2}"
 #echo $data | jq -r
 
-message=`curl --location --request POST "$baseurl/user/signup" --header "token: $token" --header "Content-Type: application/json" --data-raw $data | jq -r '.message'`
+curl -c cookies.txt -X GET -H "Content-Type: application/json" -H "token:$token" $baseurl/user/signup
+ctoken=`cat cookies.txt | awk '{if(NR==5) print $7}'`
+
+message=`curl -b cookies.txt --location --request POST -H "X-CSRF-Token:$ctoken" --header "token:$token" --header "Content-Type: application/json" --data-raw $data $baseurl/user/signup | jq -r '.message'`
 if [ "$message" == "success" ]; then
     echo "Admin user created. You should receive an email to verify your email address. Please click on the link to change your password"
 else
