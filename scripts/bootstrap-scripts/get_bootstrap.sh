@@ -7,7 +7,7 @@ INSTALL_DIR="/usr/local/share/workspace-environment"
 
 # Download instance files and execute bootstrap script
 sudo mkdir "$INSTALL_DIR"
-sudo aws s3 sync "$bootstrap_s3_location" "$INSTALL_DIR" --region us-east-2
+sudo aws s3 sync "$bootstrap_s3_location" "$INSTALL_DIR"
 
 bootstrap_script="$INSTALL_DIR/bootstrap.sh"
 if [ -s "$bootstrap_script" ]
