@@ -6,7 +6,7 @@
     "awsRegion": "",
     "RG_HOME": "/opt/deploy/sp2",
     "RG_SRC": "/home/ubuntu",
-    "amiName": "RG-AMI-1.16.0"
+    "amiName": "RG-AMI-1.17.0"
   },
   "builders": [
     {
