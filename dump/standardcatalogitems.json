@@ -254,7 +254,29 @@
     "availableRegions": [],
     "assignedOU": [],
     "metaData": {
-      "pre_provisioning": [],
+      "pre_provisioning": [
+        {
+          "code" : "CFT_PARAMS",
+          "params" : [
+                  {
+                          "name" : "EnvironmentInstanceFiles",
+                          "type" : "RL::SC::PARAM::HD"
+                  },
+                  {
+                          "name" : "IamPolicyDocument",
+                          "type" : "RL::SC::PARAM::HD"
+                  },
+                  {
+                          "name" : "S3Mounts",
+                          "type" : "RL::SC::PARAM::HD"
+                  },
+                  {
+                          "name" : "Namespace",
+                          "type" : "RL::SC::PARAM::HD"
+                  }
+          ]
+       }   
+      ],
       "post_provisioning": [],
       "checks_before_assigning_product": [],
       "checks_after_assigning_product": [],

@@ -17,6 +17,14 @@ AWS_CONFIG_DIR="${HOME}/.aws"
 # Exit if CONFIG doesn't exist or is 0 bytes
 [ ! -s "$CONFIG" ] && exit 0
 
+# Define a function to determine what type of environment this is (EMR, SageMaker, RStudio, or EC2 Linux)
+env_type() {
+    if [ -d "/home/ec2-user/SageMaker" ]
+    then
+        printf "sagemaker"   
+    fi
+}      
+
 # Add roleArn for a study to credentials file if not present already
 append_role_to_credentials() {
     study_id=$1
@@ -32,6 +40,7 @@ append_role_to_credentials() {
     fi
 }
 
+export AWS_SDK_LOAD_CONFIG=1
 # Mount S3 buckets
 mounts="$(cat "$CONFIG")"
 num_mounts=$(printf "%s" "$mounts" | jq ". | length" -)
@@ -73,3 +82,21 @@ do
         fi
     fi
 done
+
+# Define where the Jupyter notebook (if any) should be running
+notebook_dir=""
+case "$(env_type)" in
+        "sagemaker")
+        notebook_dir="/home/ec2-user/SageMaker"
+        ;;
+esac
+
+# Add a link to the mount in the notebook directory.
+# (The user gets easy access, but it won't check the bucket into a git repo.)
+# Only create a link if Jupyter is running, there are studies mounted, and the link
+# doesn't already exist.
+if [ -n "$notebook_dir" -a $num_mounts -ne 0 ]
+then
+    symlink_name="$notebook_dir/studies"
+    [ ! -L "$symlink_name" ] && sudo ln -s "$MOUNT_DIR" "$symlink_name"
+fi

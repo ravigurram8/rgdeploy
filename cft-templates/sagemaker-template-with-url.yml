@@ -5,6 +5,20 @@ Description: 'AWS CloudFormation Sample Template SageMaker NotebookInstance: Thi
   the creation of a SageMaker NotebookInstance with encryption. You will be billed for the AWS resources used if you create a stack from
   this template. (fdp-1qj64b3fd)'
 Parameters:
+  Namespace:
+    Type: String
+    Description: An environment name that will be prefixed to resource names
+  S3Mounts:
+    Type: String
+    Description: A JSON array of objects with name, bucket and prefix properties used to mount data
+  IamPolicyDocument:
+    Type: String
+    Description: The IAM policy to be associated with the launched workstation
+  EnvironmentInstanceFiles:
+    Type: String
+    Description: >-
+      An S3 URI (starting with "s3://") that specifies the location of files to be copied to
+      the environment instance, including any bootstrap scripts
   NotebookInstanceType:
     AllowedValues:
       - ml.t2.medium
@@ -21,10 +35,15 @@ Parameters:
     Default: ml.t3.medium
     Description: Select Instance type for the SageMaker Notebook. e.g.ml.t3.medium
     Type: String
+Conditions:
+  IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
+     
 Resources:
-  SageMakerRole: 
+  IAMRole: 
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Join ['-', [Ref: Namespace, 'sagemaker-notebook-role']]
+      Path: '/'
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -34,6 +53,12 @@ Resources:
                 - "sagemaker.amazonaws.com"
             Action:
               - "sts:AssumeRole"
+      Policies:
+        - !If
+          - IamPolicyEmpty
+          - !Ref 'AWS::NoValue'
+          - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
+            PolicyDocument: !Ref IamPolicyDocument        
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess"
         - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
@@ -42,8 +67,8 @@ Resources:
     Type: "AWS::SageMaker::NotebookInstance"
     Properties:
       InstanceType: !Ref NotebookInstanceType 
-      RoleArn: !GetAtt SageMakerRole.Arn
-      PlatformIdentifier: notebook-al2-v2
+      RoleArn: !GetAtt IAMRole.Arn
+      PlatformIdentifier: notebook-al2-v1
       LifecycleConfigName: !GetAtt NotebookLifeCycleConfig.NotebookInstanceLifecycleConfigName
       Tags:
         - Key: cost_resource
@@ -57,10 +82,11 @@ Resources:
       OnStart:
         - Content:
             Fn::Base64: !Sub |
-              #!/bin/bash
-
-              set -e
-
+              #!/usr/bin/env bash
+              aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp" 
+              chmod 500 "/tmp/get_bootstrap.sh"
+              /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}'
+              
               function get_tag()
               {
                   
@@ -80,7 +106,6 @@ Resources:
                   echo "export 'DATA_BUCKET'=$DATA_BUCKET" >> /etc/profile.d/jupyter-env.sh
               fi
 
-
               #Copy Sample notebook from S3
 
               TEMPLATE_NOTEBOOK_BUCKET=$(get_tag "TEMPLATE_NOTEBOOK_BUCKET")
@@ -98,8 +123,6 @@ Resources:
 
               systemctl restart jupyter-server
 
-
-
 Outputs:
   SageMakerNotebookInstanceARN:
     Description: "ARN for the newly created SageMaker Notebook Instance"
@@ -107,3 +130,6 @@ Outputs:
   NotebookInstanceName:
     Description: "Name for the newly created SageMaker Notebook Instance"
     Value: !GetAtt [SageMakerNotebookInstance, NotebookInstanceName]
+  WorkspaceInstanceRoleArn:
+    Description: IAM role assumed by the SageMaker workspace instance
+    Value: !GetAtt IAMRole.Arn
