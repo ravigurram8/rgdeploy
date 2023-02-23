@@ -144,6 +144,7 @@ Resources:
       DBSubnetGroupName : !Ref DocumentDBSubnetGroup
       VpcSecurityGroupIds: 
         - !GetAtt DocumentDBSecurityGroup.GroupId
+      StorageEncrypted : true  
   DBInstance:
     Type: "AWS::DocDB::DBInstance"
     Properties:

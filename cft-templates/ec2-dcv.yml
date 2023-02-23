@@ -179,3 +179,6 @@ Outputs:
   ApplicationPort:
     Description: The Port in which the application is running
     Value: '8443'
+  AvailabilityZone: 
+    Description: AvailabilityZone of newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]  

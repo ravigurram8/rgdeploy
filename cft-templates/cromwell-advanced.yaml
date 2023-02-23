@@ -946,3 +946,6 @@ Outputs:
     Value: !Sub ${S3Bucket}
   BatchComputeEnvironment:
     Value: !Ref SpotComputeEnv
+  AvailabilityZone: 
+    Description: AvailabilityZone of newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]  
