@@ -287,7 +287,7 @@ Resources:
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
 
       InstanceType: !Ref "InstanceType"
-      SecurityGroups: [!Ref "InstanceSecurityGroup"]
+      
       ImageId: "{{resolve:ssm:/RL/RG/StandardCatalog/linux-nice-dcv-ami}}"
       IamInstanceProfile: !Ref InstanceProfile
       BlockDeviceMappings:
@@ -296,6 +296,12 @@ Resources:
             VolumeSize: !Ref EBSVolumeSize
             Encrypted: true
             KmsKeyId: !Ref enKey      
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: 'false'
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref InstanceSecurityGroup
+          SubnetId: !Ref Subnet            
       PropagateTagsToVolumeOnCreation: true
       Tags:
         - Key: Name
@@ -308,16 +314,13 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH access
+      GroupDescription: EC2 workspace security group          
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: "22"
-          ToPort: "22"
-          CidrIp: !Ref "AllowedIpAddress"
-        - IpProtocol: tcp
-          FromPort: "8443"
-          ToPort: "8443"
-          CidrIp: !Ref "AllowedIpAddress"
+          FromPort: 8443
+          ToPort: 8443      
+          SourceSecurityGroupId: !Ref ALBSecurityGroup          
+      VpcId: !Ref VPC
           
           
 Outputs:
