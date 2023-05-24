@@ -297,7 +297,7 @@ Resources:
             Encrypted: true
             KmsKeyId: !Ref enKey      
       NetworkInterfaces:
-        - AssociatePublicIpAddress: 'false'
+        - AssociatePublicIpAddress: 'true'
           DeviceIndex: '0'
           GroupSet:
             - !Ref InstanceSecurityGroup
@@ -336,3 +336,6 @@ Outputs:
   ApplicationPort:
     Description: The Port in which the application is running
     Value: "8443"
+  AvailabilityZone: 
+    Description: AvailabilityZone of newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]  
