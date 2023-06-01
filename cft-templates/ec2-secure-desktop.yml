@@ -22,6 +22,9 @@ Parameters:
   ALBSecurityGroup:
     Description: Security Group Id of the ALB to which the EC2 instance traffic will be allowed from
     Type: AWS::EC2::SecurityGroup::Id    
+  WorkSpaceSecurityGroup:  
+    Description: Security Group Id of the workspace to which the EC2 instance traffic will be allowed from
+    Type: AWS::EC2::SecurityGroup::Id 
   EnvironmentInstanceFiles:
     Type: String
     Description: >-
@@ -75,32 +78,62 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - ssm:PutParameter
-              - ssm:GetParameter
-              - ssm:DescribeParameters
+              - ssm:*
             Resource: "*"
-  IAMRole:
-    Type: "AWS::IAM::Role"
+  InstanceRolePermissionBoundary:
+    Type: AWS::IAM::ManagedPolicy
     Properties:
-      RoleName: !Join ["-", [Ref: Namespace, "ec2-role"]]
-      Path: "/"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+      Description: Permission boundary for EC2 instance role
+      ManagedPolicyName: !Join ['-', [Ref: Namespace, 'ec2-linux-permission-boundary']]
+      PolicyDocument:
+        Version: '2012-10-17'
         Statement:
-          - Effect: "Allow"
+          - Effect: Allow
+            Action:
+              - 's3:*'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 'kms:*'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 'ssm:*'
+            Resource: '*'
+          - Effect: Deny
+            Action: '*'
+            Resource: '*'
+            Condition:
+              StringNotEquals:
+                aws:Ec2InstanceSourceVPC: "${aws:SourceVpc}"
+                aws:ec2InstanceSourcePrivateIPv4: "${aws:VpcSourceIp}"
+              BoolIfExists:
+                aws:ViaAWSService: "false"
+              'Null':
+                aws:ec2InstanceSourceVPC: "false"
+  IAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Join ['-', [Ref: Namespace, 'ec2-role']]
+      Path: '/'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
             Principal:
               Service:
-                - "ec2.amazonaws.com"
+                - 'ec2.amazonaws.com'
             Action:
-              - "sts:AssumeRole"
+              - 'sts:AssumeRole'
       Policies:
         - !If
           - IamPolicyEmpty
-          - !Ref "AWS::NoValue"
-          - PolicyName: !Join ["-", [Ref: Namespace, "s3-studydata-policy"]]
+          - !Ref 'AWS::NoValue'
+          - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
             PolicyDocument: !Ref IamPolicyDocument
       ManagedPolicyArns:
-        - Ref: SSMPolicy
+        - Ref: SSMPolicy            
+      PermissionsBoundary: !Ref InstanceRolePermissionBoundary
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
@@ -108,7 +141,7 @@ Resources:
       Path: "/"
       Roles:
         - Ref: IAMRole
-  enKey:
+  EncryptionKey:
     Type: AWS::KMS::Key
     Properties:
       Description: "Encryption Key"
@@ -128,7 +161,7 @@ Resources:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT10M
+        Timeout: PT20M
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
@@ -223,6 +256,17 @@ Resources:
               mode: "000755"
               owner: "ec2-user"
               group: "ec2-user"
+            "/home/ec2-user/themes.sh":
+              mode: "000755"
+              owner: "ec2-user"
+              group: "ec2-user"
+              content: !Sub |
+                #!/bin/sh
+                set -x
+                sleep 120
+                export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep mate-session)/environ|cut -d= -f2- | tr -d '\0')
+                gsettings set org.mate.interface gtk-theme "Graphite-Light"
+                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"              
         config2:
           commands:
             01_start_ext_auth:
@@ -231,6 +275,7 @@ Resources:
             02_set_user_token:
               cwd: "/home/ec2-user"
               command: "/home/ec2-user/set_user_token.sh"
+               
     Properties:
       UserData:
         Fn::Base64: !Sub |
@@ -240,9 +285,11 @@ Resources:
           
           # Copy environment instance files needed for the workspace
           aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/secure_desktop/secure_desktop.perm" "/etc/dcv/"
-
-          # Install supervisor and start on boot
-          pip3 install supervisor crudini
+          
+          # Download and execute bootstrap script
+          aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
+          chmod 500 "/tmp/get_bootstrap.sh"
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${AWS::Region}"
 
           # Route auth request to external authenticator and restart dcv
           /usr/local/bin/crudini --set /etc/dcv/dcv.conf security auth-token-verifier \"http://127.0.0.1:8445\"
@@ -251,6 +298,7 @@ Resources:
 
           # Create dcv session start script
           cat << EOF > /usr/local/bin/start-dcv-session
+          sleep 15          
           dcv create-session rg-session --name rg-session --user ec2-user --owner ec2-user --permissions-file /etc/dcv/secure_desktop.perm
           EOF
 
@@ -258,8 +306,6 @@ Resources:
           chown root: "/usr/local/bin/start-dcv-session"
           chmod 775 "/usr/local/bin/start-dcv-session"
           sh "/usr/local/bin/start-dcv-session"
-
-          sleep 5
 
           # Run init script to create files
           /opt/aws/bin/cfn-init --verbose --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
@@ -271,6 +317,7 @@ Resources:
           echo '@reboot /usr/local/bin/start-dcv-session 2>&1 >> /var/log/start-dcv-session.log' >> "/tmp/crontab"
           echo '@reboot /home/ec2-user/set_user_token.sh 2>&1 >> /var/log/set_user_token.log' >> "/tmp/crontab"
           crontab "/tmp/crontab"
+
           # Restart DCV session to start dcv-session
           dcv close-session rg-session
           sh "/usr/local/bin/start-dcv-session"
@@ -279,10 +326,7 @@ Resources:
           passwd -l ec2-user
           dcv create-session lock-session --name lock-session --user ec2-user --owner ec2-user --init /home/ec2-user/disable_lock.sh
 
-          # Download and execute bootstrap script
-          aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
-          chmod 500 "/tmp/get_bootstrap.sh"
-          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${AWS::Region}"
+          sudo -u ec2-user /home/ec2-user/themes.sh
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
 
@@ -295,12 +339,13 @@ Resources:
           Ebs:
             VolumeSize: !Ref EBSVolumeSize
             Encrypted: true
-            KmsKeyId: !Ref enKey      
+            KmsKeyId: !Ref EncryptionKey      
       NetworkInterfaces:
-        - AssociatePublicIpAddress: 'true'
+        - AssociatePublicIpAddress: 'false'
           DeviceIndex: '0'
           GroupSet:
             - !Ref InstanceSecurityGroup
+            - !Ref WorkSpaceSecurityGroup
           SubnetId: !Ref Subnet            
       PropagateTagsToVolumeOnCreation: true
       Tags:
@@ -314,12 +359,18 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: EC2 workspace security group          
-      SecurityGroupIngress:
+      GroupDescription: EC2 workspace security group
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+          
+      SecurityGroupIngress:     
         - IpProtocol: tcp
           FromPort: 8443
           ToPort: 8443      
-          SourceSecurityGroupId: !Ref ALBSecurityGroup          
+          SourceSecurityGroupId: !Ref ALBSecurityGroup         
       VpcId: !Ref VPC
           
           
@@ -327,15 +378,9 @@ Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
     Value: !Ref "EC2Instance"
-  InstanceIPAddress:
-    Description: IP address of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicIp]
-  InstanceDNSName:
-    Description: DNS name of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicDnsName]
   ApplicationPort:
     Description: The Port in which the application is running
     Value: "8443"
   AvailabilityZone: 
     Description: AvailabilityZone of newly created EC2 instance
-    Value: !GetAtt [EC2Instance, AvailabilityZone]  
+    Value: !GetAtt [EC2Instance, AvailabilityZone]    
