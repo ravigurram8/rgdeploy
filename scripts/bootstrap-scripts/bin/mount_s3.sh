@@ -4,7 +4,7 @@
 #   goofys. It also attempts to create a sym link to the mounted data if the instance
 #   is an EMR or SageMaker instance so that it can be easily accessed by Jupyter notebooks.
 #
-# /usr/local/s3-mounts.json should contain S3 study data metadata of the form
+# /usr/local/etc/s3-mounts.json should contain S3 study data metadata of the form
 #  [{
 #   "id": "STUDY_ID",
 #   "bucket": "BUCKET_NAME",
@@ -19,11 +19,19 @@ AWS_CONFIG_DIR="${HOME}/.aws"
 
 # Define a function to determine what type of environment this is (EMR, SageMaker, RStudio, or EC2 Linux)
 env_type() {
-    if [ -d "/home/ec2-user/SageMaker" ]
+    if [ -d "/usr/share/aws/emr" ]
     then
-        printf "sagemaker"   
+        printf "emr"
+    elif [ -d "/home/ec2-user/SageMaker" ]
+    then
+        printf "sagemaker"
+    elif [ -d "/var/log/rstudio-server" ]
+    then
+        printf "rstudio"
+    else
+        printf "ec2-linux"
     fi
-}      
+}
 
 # Add roleArn for a study to credentials file if not present already
 append_role_to_credentials() {
@@ -40,7 +48,14 @@ append_role_to_credentials() {
     fi
 }
 
+# Use STS regional endpoint instead of global one. This allows external studies to connect with local interface endpoint
+# if it exists. Refer https://docs.aws.amazon.com/sdkref/latest/guide/setting-global-sts_regional_endpoints.html
+token=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+region=`curl http://169.254.169.254/latest/meta-data/placement/availability-zone/ -H "X-aws-ec2-metadata-token: $token" | sed 's/.$//'`
+export AWS_STS_REGIONAL_ENDPOINTS=regional
+export AWS_DEFAULT_REGION=$region
 export AWS_SDK_LOAD_CONFIG=1
+
 # Mount S3 buckets
 mounts="$(cat "$CONFIG")"
 num_mounts=$(printf "%s" "$mounts" | jq ". | length" -)
@@ -52,6 +67,7 @@ do
     s3_prefix="$(printf "%s" "$mounts" | jq -r ".[$study_idx].prefix" -)"
     s3_role_arn="$(printf "%s" "$mounts" | jq -r ".[$study_idx].roleArn" -)"
     kms_arn="$(printf "%s" "$mounts" | jq -r ".[$study_idx].kmsArn" -)"
+    bucket_region="$(printf "%s" "$mounts" | jq -r ".[$study_idx].region" -)"
 
     # Mount S3 location if not already mounted
     study_dir="${MOUNT_DIR}/${study_id}"
@@ -62,21 +78,28 @@ do
         if [ "$s3_role_arn" == "null" ]
         then
             printf 'Mounting internal study "%s" at "%s"\n' "$study_id" "$study_dir"
-            goofys --acl "bucket-owner-full-control" "${s3_bucket}:${s3_prefix}" "$study_dir"
+            goofys --region $bucket_region   --acl "bucket-owner-full-control" "${s3_bucket}:${s3_prefix}" "$study_dir"
         else
+            bucket_region="$(printf "%s" "$mounts" | jq -r ".[$study_idx].region" -)"
+            # BYOB studies have a region specified, but in case it isn't use the default region
+            if [[ $bucket_region == "null" ]]; then
+              printf 'Bucket region is not specified. Defaulting to "%s" for mounting \n' "$region"
+              bucket_region=$region
+            fi;
+
             # make .aws dir if it doesn't already exist and add credentials
             mkdir -p $AWS_CONFIG_DIR
             append_role_to_credentials $study_id $s3_role_arn
             if [ "$kms_arn" == "null" ]
             then
-                printf 'Mounting external study "%s" at "%s" using role "%s" \n' "$study_id" "$study_dir" \
-                "$s3_role_arn"
-                goofys --profile $study_id --acl "bucket-owner-full-control" \
+                printf 'Mounting external study "%s" at "%s" using role "%s" and region "%s" \n' "$study_id" "$study_dir" \
+                "$s3_role_arn" "$bucket_region"
+                goofys --region $bucket_region --profile $study_id --acl "bucket-owner-full-control" \
                 "${s3_bucket}:${s3_prefix}" "$study_dir"
             else
-                printf 'Mounting external study "%s" at "%s" using role "%s" and kms arn "%s" \n' "$study_id" "$study_dir" \
-                "$s3_role_arn" "$kms_arn"
-                goofys --profile $study_id --sse-kms $kms_arn --acl "bucket-owner-full-control" \
+                printf 'Mounting external study "%s" at "%s" using role "%s", kms arn "%s" and region "%s" \n' "$study_id" "$study_dir" \
+                "$s3_role_arn" "$kms_arn" "$bucket_region"
+                goofys --region $bucket_region --profile $study_id --sse-kms $kms_arn --acl "bucket-owner-full-control" \
                 "${s3_bucket}:${s3_prefix}" "$study_dir"
             fi
         fi
@@ -86,7 +109,10 @@ done
 # Define where the Jupyter notebook (if any) should be running
 notebook_dir=""
 case "$(env_type)" in
-        "sagemaker")
+    "emr")
+        notebook_dir="/opt/hail-on-AWS-spot-instances/notebook"
+        ;;
+    "sagemaker")
         notebook_dir="/home/ec2-user/SageMaker"
         ;;
 esac

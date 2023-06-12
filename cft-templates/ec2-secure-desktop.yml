@@ -1,8 +1,7 @@
-Metadata: 
+Metadata:
   License: Apache-2.0
-AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation Template to create an GPU based EC2 instance with NICE DCV pre installed.'
-
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CloudFormation Template to create an GPU based EC2 instance with NICE-DCV pre installed."
 
 Parameters:
   Namespace:
@@ -14,34 +13,54 @@ Parameters:
   IamPolicyDocument:
     Type: String
     Description: The IAM policy to be associated with the launched workstation
+  VPC:
+    Description: The VPC in which the EC2 instance will reside
+    Type: AWS::EC2::VPC::Id
+  Subnet:
+    Description: The VPC subnet in which the EC2 instance will reside
+    Type: AWS::EC2::Subnet::Id
+  ALBSecurityGroup:
+    Description: Security Group Id of the ALB to which the EC2 instance traffic will be allowed from
+    Type: AWS::EC2::SecurityGroup::Id    
+  WorkSpaceSecurityGroup:  
+    Description: Security Group Id of the workspace to which the EC2 instance traffic will be allowed from
+    Type: AWS::EC2::SecurityGroup::Id 
   EnvironmentInstanceFiles:
     Type: String
     Description: >-
       An S3 URI (starting with "s3://") that specifies the location of files to be copied to
       the environment instance, including any bootstrap scripts
   InstanceType:
-    Description: Choose the instance type for this instance. e.g. t3.large
+    Description: Choose the instance type for this instance. e.g. t3.medium
     Type: String
-    Default: t3.large
-    AllowedValues: [t3.large, t3.xlarge, t3.2xlarge,  g4dn.xlarge, g4dn.2xlarge, g4dn.4xlarge, g4dn.8xlarge, g4dn.12xlarge, g4dn.16xlarge, g4dn.metal, g3.4xlarge, g3.8xlarge, g3.16xlarge]
+    Default: t3.medium
+    AllowedValues:
+      [
+        t3.medium,
+        t3.xlarge,
+        t3.2xlarge,
+        g4dn.xlarge,
+        g4dn.2xlarge,
+        g4dn.4xlarge,
+        g4dn.8xlarge,
+        g4dn.12xlarge,
+        g4dn.16xlarge,
+        g4dn.metal,
+        g3.4xlarge,
+        g3.8xlarge,
+        g3.16xlarge,
+      ]
     ConstraintDescription: must be a valid EC2 instance type.
-  KeyPair:
-    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
-    Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: must be the name of an existing EC2 KeyPair.
-  AllowedIpAddress:
-    Description: The IP address range that can be used to SSH to instance and Connect to DCV
-    Type: String
-    MinLength: '9'
-    MaxLength: '18'
-    Default: 0.0.0.0/0
-    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
-    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+  EBSVolumeSize:
+    Description: The initial size of the volume (in GBs)  EBS will use for storage.
+    Type: Number
+    Default: 32  
+
 
 Conditions:
-  IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, '{}']
+  IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, "{}"]
 
-Resources:  
+Resources:
   SSMPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -51,10 +70,39 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - ssm:PutParameter
-              - ssm:GetParameter
-              - ssm:DescribeParameters
+              - ssm:*
             Resource: "*"
+  InstanceRolePermissionBoundary:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Permission boundary for EC2 instance role
+      ManagedPolicyName: !Join ['-', [Ref: Namespace, 'ec2-linux-permission-boundary']]
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:*'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 'kms:*'
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - 'ssm:*'
+            Resource: '*'
+          - Effect: Deny
+            Action: '*'
+            Resource: '*'
+            Condition:
+              StringNotEquals:
+                aws:Ec2InstanceSourceVPC: "${aws:SourceVpc}"
+                aws:ec2InstanceSourcePrivateIPv4: "${aws:VpcSourceIp}"
+              BoolIfExists:
+                aws:ViaAWSService: "false"
+              'Null':
+                aws:ec2InstanceSourceVPC: "false"
   IAMRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -76,21 +124,36 @@ Resources:
           - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
             PolicyDocument: !Ref IamPolicyDocument
       ManagedPolicyArns:
-        - Ref: SSMPolicy
-
+        - Ref: SSMPolicy            
+      PermissionsBoundary: !Ref InstanceRolePermissionBoundary
   InstanceProfile:
-    Type: 'AWS::IAM::InstanceProfile'
+    Type: "AWS::IAM::InstanceProfile"
     Properties:
-      InstanceProfileName: !Join ['-', [Ref: Namespace, 'ec2-profile']]
-      Path: '/'
+      InstanceProfileName: !Join ["-", [Ref: Namespace, "ec2-profile"]]
+      Path: "/"
       Roles:
         - Ref: IAMRole
+  EncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "Encryption Key"
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: enKeyPolicy
+        Statement:
+          - Sid: Allow all users to use this key
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - kms:*
+            Resource: "*"           
 
   EC2Instance:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT15M
+        Timeout: PT20M
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
@@ -134,7 +197,7 @@ Resources:
                 instance_id=$(curl -s "http://169.254.169.254/latest/meta-data/instance-id")
                 session_id="rg-session"
                 auth_token=`uuidgen`
-                parameter_name="/RL/RG/nice-dcv/auth-token/$instance_id"
+                parameter_name="/RL/RG/secure-desktop/auth-token/$instance_id"
                 aws ssm put-parameter --name "$parameter_name" --type "String" --value '{"auth_token":"'$auth_token'","session_id":"'$session_id'"}' --region $region --overwrite
                 echo "User token set successfully"
             "/home/ec2-user/supervisor/supervisord.conf":
@@ -162,7 +225,7 @@ Resources:
                 serverurl=unix:///home/ec2-user/supervisor/supervisor.sock ; use a unix:// URL  for a unix socket
 
                 [program:dcv-custom-auth]
-                command=docker run -p 8445:8445 -e PORT=8445 -e PARAMNAMEPREFIX=/RL/RG/nice-dcv/auth-token/ relevancelab/nice-dcv-auth-svc:1.0.0  ; the program (relative uses PATH, can take args)
+                command=docker run -p 8445:8445 -e PORT=8445 -e PARAMNAMEPREFIX=/RL/RG/secure-desktop/auth-token/ relevancelab/nice-dcv-auth-svc:1.0.0  ; the program (relative uses PATH, can take args)
                 directory=/home/ec2-user                                                                                                            ; directory to cwd to before exec (def no cwd)
                 user=ec2-user                                                                                                                       ; setuid to this UNIX account to run the program
                 redirect_stderr=true                                                                                                                ; redirect proc stderr to stdout (default false)
@@ -195,7 +258,7 @@ Resources:
                 sleep 120
                 export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep mate-session)/environ|cut -d= -f2- | tr -d '\0')
                 gsettings set org.mate.interface gtk-theme "Graphite-Light"
-                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"               
+                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"              
         config2:
           commands:
             01_start_ext_auth:
@@ -204,39 +267,37 @@ Resources:
             02_set_user_token:
               cwd: "/home/ec2-user"
               command: "/home/ec2-user/set_user_token.sh"
-                                       
+               
     Properties:
       UserData:
         Fn::Base64: !Sub |
           #!/usr/bin/env bash
           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
           # trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR
-
-          # Install supervisor and start on boot
-          pip3 install supervisor crudini
+          
+          # Copy environment instance files needed for the workspace
+          aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/secure_desktop/secure_desktop.perm" "/etc/dcv/"
+          
+          # Download and execute bootstrap script
+          aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
+          chmod 500 "/tmp/get_bootstrap.sh"
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${AWS::Region}"
 
           # Route auth request to external authenticator and restart dcv
           /usr/local/bin/crudini --set /etc/dcv/dcv.conf security auth-token-verifier \"http://127.0.0.1:8445\"
-          #/usr/local/bin/crudini --set /etc/dcv/dcv.conf clipboard primary-selection-copy false 
+          
           systemctl restart dcvserver
 
           # Create dcv session start script
           cat << EOF > /usr/local/bin/start-dcv-session
-          sleep 15
-          dcv create-session rg-session --name rg-session --user ec2-user --owner ec2-user
+          sleep 15          
+          dcv create-session rg-session --name rg-session --user ec2-user --owner ec2-user --permissions-file /etc/dcv/secure_desktop.perm
           EOF
 
           # Create dcv session on reboot
           chown root: "/usr/local/bin/start-dcv-session"
           chmod 775 "/usr/local/bin/start-dcv-session"
           sh "/usr/local/bin/start-dcv-session"
-
-          # Download and execute bootstrap script
-          aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
-          chmod 500 "/tmp/get_bootstrap.sh"
-          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${AWS::Region}"          
-
-          sleep 5
 
           # Run init script to create files
           /opt/aws/bin/cfn-init --verbose --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
@@ -248,7 +309,8 @@ Resources:
           echo '@reboot /usr/local/bin/start-dcv-session 2>&1 >> /var/log/start-dcv-session.log' >> "/tmp/crontab"
           echo '@reboot /home/ec2-user/set_user_token.sh 2>&1 >> /var/log/set_user_token.log' >> "/tmp/crontab"
           crontab "/tmp/crontab"
-          # Restart DCV session
+
+          # Restart DCV session to start dcv-session
           dcv close-session rg-session
           sh "/usr/local/bin/start-dcv-session"
 
@@ -259,47 +321,58 @@ Resources:
           sudo -u ec2-user /home/ec2-user/themes.sh
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
-      InstanceType: !Ref 'InstanceType'
-      SecurityGroups: [!Ref 'InstanceSecurityGroup']
-      KeyName: !Ref 'KeyPair'
+
+      InstanceType: !Ref "InstanceType"
+      
       ImageId: "{{resolve:ssm:/RL/RG/StandardCatalog/linux-nice-dcv-ami}}"
       IamInstanceProfile: !Ref InstanceProfile
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref EBSVolumeSize
+            Encrypted: true
+            KmsKeyId: !Ref EncryptionKey      
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: 'false'
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref InstanceSecurityGroup
+            - !Ref WorkSpaceSecurityGroup
+          SubnetId: !Ref Subnet            
       PropagateTagsToVolumeOnCreation: true
       Tags:
         - Key: Name
-          Value: !Join ['-', [Ref: Namespace, 'ec2-linux']]
+          Value: !Join ["-", [Ref: Namespace, "ec2-linux"]]
         - Key: Description
           Value: EC2 workspace instance
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
-    
+
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH access
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: '22'
-        ToPort: '22'
-        CidrIp: !Ref 'AllowedIpAddress'
-      - IpProtocol: tcp
-        FromPort: '8443'
-        ToPort: '8443'
-        CidrIp: !Ref 'AllowedIpAddress'
-
+      GroupDescription: EC2 workspace security group
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+          
+      SecurityGroupIngress:     
+        - IpProtocol: tcp
+          FromPort: 8443
+          ToPort: 8443      
+          SourceSecurityGroupId: !Ref ALBSecurityGroup         
+      VpcId: !Ref VPC
+          
+          
 Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
-    Value: !Ref 'EC2Instance'
-  InstanceIPAddress:
-    Description: IP address of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicIp]
-  InstanceDNSName:
-    Description: DNS name of the newly created EC2 instance
-    Value: !GetAtt [EC2Instance, PublicDnsName]
+    Value: !Ref "EC2Instance"
   ApplicationPort:
     Description: The Port in which the application is running
-    Value: '8443'
+    Value: "8443"
   AvailabilityZone: 
     Description: AvailabilityZone of newly created EC2 instance
-    Value: !GetAtt [EC2Instance, AvailabilityZone]  
+    Value: !GetAtt [EC2Instance, AvailabilityZone]    

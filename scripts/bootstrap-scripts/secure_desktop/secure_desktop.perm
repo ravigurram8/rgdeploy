@@ -1,0 +1,6 @@
+[permissions]
+ec2-user deny file-download clipboard-copy
+ec2-user allow display mouse pointer keyboard file-upload clipboard-paste
+
+group:ec2-user deny file-download clipboard-copy
+group:ec2-user allow display mouse pointer keyboard file-upload clipboard-paste
