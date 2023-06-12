@@ -17,7 +17,9 @@ HeadNode:
       - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore    
   CustomActions:
     OnNodeStart:
-      Script: s3://tempbucket/bootstrap-scripts/pcluster-on-node-start.sh           
+      Script: s3://tempbucket/bootstrap-scripts/pcluster-on-node-start.sh
+    OnNodeConfigured:
+      Script:            
   Imds:
     Secured: false
 Scheduling:

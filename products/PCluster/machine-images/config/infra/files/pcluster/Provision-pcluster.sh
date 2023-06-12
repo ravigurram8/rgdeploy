@@ -26,7 +26,7 @@ REGION=`wget -qO- http://instance-data/latest/meta-data/placement/availability-z
 aws ec2 describe-tags --region $REGION --filter "Name=resource-id,Values=$INSTANCE_ID" --query 'Tags[*].{Key:Key,Value:Value}' | jq -r '.[] | select( .Key as $a | ["cost_resource", "project_name","researcher_name"] | index($a) )' >> out.json
 jq -s '.' out.json >> valid.json
 echo "valid.json file is updated with Tags"
-yq eval -P valid.json > valid.yaml
+cat valid.json | yq -P > valid.yaml
 echo "Json file is converted to yaml"
 sed -i '1 i\Tags:' valid.yaml
 scheduler=$1
@@ -47,6 +47,7 @@ disableSimultaneousMultithreading=${16}
 efa=${17}
 placementGroup=${18}
 FileSystemType=${19}
+Nodeconfig=${20}
 
 IFS='-' read -ra TRIMMED <<< "$CustomAMI"
 CustomAMIStartsWith=${TRIMMED[0]}
@@ -71,6 +72,7 @@ if [ "$scheduler" == "slurm" ]; then
        yq -i ".HeadNode.InstanceType=\"$headnodeinstancetype\"" slurm.yaml
        yq -i ".HeadNode.Networking.SubnetId=\"$headnodesubnetId\"" slurm.yaml
        yq -i ".HeadNode.Ssh.KeyName=\"$keyname\"" slurm.yaml
+       yq -i ".HeadNode.CustomActions.OnNodeConfigured.Script=\"$Nodeconfig\"" slurm.yaml
        yq -i ".Scheduling.SlurmQueues[0].CapacityType=\"$QueueCapacityType\"" slurm.yaml
        yq -i ".Scheduling.SlurmQueues[0].ComputeResources[0].InstanceType=\"$computenodeinstancetype\"" slurm.yaml
        yq -i ".Scheduling.SlurmQueues[0].ComputeResources[0].MinCount=\"$minvpc\"" slurm.yaml
@@ -83,10 +85,10 @@ if [ "$scheduler" == "slurm" ]; then
        yq eval-all "select(fileIndex == 1) *+ select(fileIndex == 0)" valid.yaml slurm.yaml >> cluster-config-slurm.yaml
        echo "valid.yaml file and cluster-config.yaml file is merged into cluster-config-slurm.yaml"
        echo "Modified cluster-config-slurm.yaml with Tags"
-       pcluster create-cluster --cluster-name $CLUSTER_NAME --cluster-configuration cluster-config-slurm.yaml
+       pcluster create-cluster --cluster-name $CLUSTER_NAME --cluster-configuration cluster-config-slurm.yaml --region $Region
 else
        echo "batch.yaml exists"
-        if [ "$CustomAMIStartsWith" == "ami" ]; then
+       if [ "$CustomAMIStartsWith" == "ami" ]; then
             yq -i ".Image.CustomAmi=\"$CustomAMI\"" batch.yaml
        fi
        if [ "$FileSystemType" == "EFS" ] && [ "$FileSystemId" != "default" ]; then
@@ -101,6 +103,7 @@ else
        yq -i ".HeadNode.InstanceType=\"$headnodeinstancetype\"" batch.yaml
        yq -i ".HeadNode.Networking.SubnetId=\"$headnodesubnetId\"" batch.yaml
        yq -i ".HeadNode.Ssh.KeyName=\"$keyname\"" batch.yaml
+       yq -i ".HeadNode.CustomActions.OnNodeConfigured.Script=\"$Nodeconfig\"" batch.yaml
        yq -i ".Scheduling.AwsBatchQueues[0].CapacityType=\"$QueueCapacityType\"" batch.yaml
        yq -i ".Scheduling.AwsBatchQueues[0].ComputeResources[0].InstanceTypes[0]=\"$computenodeinstancetype\"" batch.yaml
        yq -i ".Scheduling.AwsBatchQueues[0].ComputeResources[0].MinvCpus=\"$minvpc\"" batch.yaml
@@ -112,7 +115,7 @@ else
        yq eval-all "select(fileIndex == 1) *+ select(fileIndex == 0)" valid.yaml batch.yaml >> cluster-config-batch.yaml
        echo "valid.yaml file and cluster-config.yaml file is merged into cluster-config-batch.yaml"
        echo "Modified cluster-config-batch.yaml with Tags"
-       pcluster create-cluster --cluster-name $CLUSTER_NAME --cluster-configuration cluster-config-batch.yaml
+       pcluster create-cluster --cluster-name $CLUSTER_NAME --cluster-configuration cluster-config-batch.yaml --region $Region
        
 fi
 
