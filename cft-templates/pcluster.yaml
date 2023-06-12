@@ -14,6 +14,7 @@ Metadata:
       - Label:
           default: Head Node Configuration
         Parameters:
+          - SpackSetup
           - HeadNodeInstanceType
           - VpcId
           - HeadNodeSubnetId
@@ -29,6 +30,8 @@ Metadata:
           - ComputeEnvMinvCpus
           - ComputeEnvMaxvCpus
           - ComputeEnvDesiredvCpus
+          - MinimumInstances
+          - MaximumInstances
           - SpotBidPercentage
           - ResearcherName
           - ProjectId
@@ -78,7 +81,7 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Description: 'The VPC to create security groups and deploy AWS Batch or slurm to.'
   HeadNodeInstanceType:
-    Description: Head Node EC2 instance type
+    Description: Head Node EC2 instance type.Spack support c, m, or r family instance types
     Type: String
     Default: t3.large
     AllowedValues: [t3.medium, t3.large, t3.xlarge, c5n.large]
@@ -88,6 +91,11 @@ Parameters:
     Type: String
     Default: c4.large
     AllowedValues: [c4.large, m4.large, r4.large, c4.4xlarge, m4.4xlarge, r4.4xlarge, c5n.18xlarge, c6i.32xlarge, g4dn.12xlarge]
+  SpackSetup:
+    Description: Spacksetup for PCluster helps to install optimized applications on HPC clusters.
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]  
   HeadNodeSubnetId:
     Type: AWS::EC2::Subnet::Id
     Description: 'Subnet you want your Head Node to launch in. You must select a public subnet.'
@@ -104,6 +112,14 @@ Parameters:
     Default: 0
   ComputeEnvMaxvCpus:
     Description: The maximum number of CPUs for the default Batch or slurm Compute Environment
+    Type: Number
+    Default: 10
+  MinimumInstances:
+    Description: The minimum number of CPUs or Instances to be kept in running state for the Batch/slurm Worker Nodes. If you give a non-zero value, some worker nodes may stay in running state always and you may incur higher cost.
+    Type: Number
+    Default: 0
+  MaximumInstances:
+    Description: The maximum number of CPUs or Instances for the default Batch or slurm Compute Environment (e.g., enter a number greater than zero).
     Type: Number
     Default: 10
   SpotBidPercentage:
@@ -142,7 +158,8 @@ Parameters:
     Description: Enables a PlacementGroup. Use with EnableEFA.Works with slurm Scheduler
     Type: String
     Default: "true"
-    AllowedValues: ["true", "false"]  
+    AllowedValues: ["true", "false"]
+      
 
   
 
@@ -272,24 +289,36 @@ Resources :
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
         UserData:
-          Fn::Base64: !Sub |   
-              #!/bin/bash 
-              efaEnabled=${EnableEFA}
-              case "${ComputeNodeInstanceType}" in
-                c5n.18xlarge|c6i.32xlarge|g4dn.12xlarge) true
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            if [[ ${Scheduler} == "slurm" ]]; then
+              Minimum=${MinimumInstances}
+              Maximum=${MaximumInstances}
+            else
+              Minimum=${ComputeEnvMinvCpus}
+              Maximum=${ComputeEnvMaxvCpus}
+            fi
+            efaEnabled=${EnableEFA}
+            case "${ComputeNodeInstanceType}" in
+              c5n.18xlarge|c6i.32xlarge|g4dn.12xlarge) true
                 ;;
               *)
                 efaEnabled=false
                 ;;
-              esac
-              set -e 
-              trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR    
-              sudo yum update -y --security
-              cd /home/ec2-user/parallel-update             
-              sudo -u ec2-user ./Provision-pcluster.sh ${Scheduler} ${AWS::Region} ${HeadNodeInstanceType} ${HeadNodeSubnetId} ${KeyPair} ${ComputeNodeInstanceType} ${ComputeEnvMinvCpus} ${ComputeEnvMaxvCpus} ${ComputeNodeSubnetId} ${ComputeEnvDesiredvCpus} ${SpotBidPercentage} ${AWS::StackName} ${CustomAMI} ${FileSystemId} ${QueueCapacityType} ${DisableSimultaneousMultithreading} $efaEnabled ${PlacementGroup} ${FileSystemType}
-              /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
-              sleep 10
-              aws ec2 stop-instances --instance-ids `wget -qO- http://instance-data/latest/meta-data/instance-id`
+            esac
+            if [ ${SpackSetup} = true ]; then
+                Nodeconfig="/home/ec2-user/parallel-update/postinstall.sh"
+            else
+                Nodeconfig="/home/ec2-user/parallel-update/sample.sh"
+            fi
+            set -e 
+            trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR    
+            sudo yum update -y --security
+            cd /home/ec2-user/parallel-update             
+            sudo -u ec2-user ./Provision-pcluster.sh ${Scheduler} ${AWS::Region} ${HeadNodeInstanceType} ${HeadNodeSubnetId} ${KeyPair} ${ComputeNodeInstanceType} ${ComputeEnvMinvCpus} ${ComputeEnvMaxvCpus} ${ComputeNodeSubnetId} ${ComputeEnvDesiredvCpus} ${SpotBidPercentage} ${AWS::StackName} ${CustomAMI} ${FileSystemId} ${QueueCapacityType} ${DisableSimultaneousMultithreading} $efaEnabled ${PlacementGroup} ${FileSystemType} $Nodeconfig
+            /opt/aws/bin/cfn-signal --exit-code 0 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
+            sleep 10
+            aws ec2 stop-instances --instance-ids `wget -qO- http://instance-data/latest/meta-data/instance-id`
 
 Outputs:
   InstanceId:

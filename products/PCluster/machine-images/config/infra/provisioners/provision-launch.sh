@@ -30,5 +30,7 @@ sudo chown -R ec2-user:ec2-user /home/ec2-user/*
 chmod 775  parallel-update/slurm.yaml
 chmod 775  parallel-update/batch.yaml
 chmod 775  parallel-update/Provision-pcluster.sh
+chmod 777  parallel-update/postinstall.sh
+chmod 777  parallel-update/sample.sh
 rm -rf /tmp/PCluster
 rm -rf /tmp/cluster
