@@ -224,7 +224,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow", "cromwell", "ec2-dcv", "sagemaker"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell", "ec2-dcv", "sagemaker", "ec2-igv", "ec2-secure-desktop"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
@@ -405,7 +405,9 @@
                         "rstudio",
                         "nextflow",
                         "cromwell",
-                        "sagemaker"
+                        "sagemaker",
+                        "ec2-igv",
+                        "ec2-secure-desktop"
                 ]
         },
         "studySelectionCount" : 5.0

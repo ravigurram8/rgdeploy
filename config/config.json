@@ -194,6 +194,10 @@
   "linksForRg": {
         "termsAndConditions": "REPLACE_WITH_TERMS_CONDITIONS_DOC_URL"
     },
+    "environmentInstanceFilesMap":{
+
+      "eu-west-2":"rg-entenvironment-instancefiles-london"
+    },  
   "s3BucketLimit" : 100,
   "eodReportTime":{
     "startTime": "20:00:00",
@@ -204,5 +208,6 @@
   "cronJobForEodPIReport": "00 10 * * *",
   "sampleCSVForUser": "users.csv",
   "sampleCSVBucketRegion": "REPLACE_WITH_REGION",
-  "sessionMaxAge" : 900000
+  "sessionMaxAge" : 900000,
+  "defaultSubscriptionPeriod" : 30
 }

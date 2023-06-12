@@ -746,6 +746,18 @@
                                     {
                                             "name" : "ProjectId",
                                             "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                            "name" : "ComputeEnvMinvCpus",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                            "name" : "ComputeEnvMaxvCpus",
+                                            "type" : "RL::SC::PARAM::HD"
+                                    },
+                                    {
+                                      "name" : "ComputeEnvDesiredvCpus",
+                                      "type" : "RL::SC::PARAM::HD"
                                     }
                             ]
                     }
@@ -885,6 +897,7 @@
         "availableRegions" : [ ],
         "assignedOU" : [ ],
         "metaData" : {
+                "cost_resource" : true,
                 "pre_provisioning" : [
                         {
                                 "code" : "CFT_PARAMS",
@@ -909,7 +922,42 @@
                         }
                 ],
                 "post_provisioning" : [ ],
-                "checks_before_assigning_product" : [ ],
+                "checks_before_assigning_product" : [ 
+                        {
+                                "code" : "AMI_ID_REQUIRED",
+                                "is_ami_required" : true,
+                                "ami_id_list" : [
+                                        {
+                                                "us-east-2" : "ami-0bcd819dd88585c32"
+                                        },
+                                        {
+                                                "us-east-1" : "ami-0b5fdc4291f61615f"
+                                        },
+                                        {
+                                                "us-west-2" : "ami-0ac56f9f8b19a73bf"
+                                        },
+                                        {
+                                                "us-west-1" : "ami-0e0231a98d0ca2679"
+                                        },
+                                        {
+                                                "ap-south-1" : "ami-0f81ea31ecefeba4f"
+                                        },
+                                        {
+                                                "ap-southeast-1" : "ami-069d31c5036ef2bef"
+                                        },
+                                        {
+                                                "ap-southeast-2" : "ami-03a848fa192a4342a"
+                                        },
+                                        {
+                                                "ap-east-1" : "ami-01819f556745b5d1d"
+                                        },
+                                        {
+                                                "eu-west-1" : "ami-03dab069555190662"
+                                        }
+                                ],
+                                "ami_path" : "/RL/RG/StandardCatalog/linux-nice-dcv-ami"
+                        }
+                ],
                 "checks_after_assigning_product" : [ ],
                 "permission_required" : {
 
@@ -917,6 +965,7 @@
                 "cost_resource" : true
         }
   },
+  
   {
     "_id": {
       "$oid": "60504955135663522b880abd"
@@ -1034,5 +1083,209 @@
             },
             "cost_resource" : true
     }
-  }
+  },
+  {
+    "_id": {
+      "$oid": "60504955135663522b880abm"
+      },
+        "name" : "Integrated Genomics Viewer",
+        "description" : "The Integrative Genomics Viewer (IGV) is a high-performance, easy-to-use, interactive tool for the visual exploration of genomic data.",
+        "fileName" : "igv.yml",
+        "tags" : [
+                {
+                        "Key" : "EstimatedTimeToProvision",
+                        "Value" : "10 Minutes"
+                },
+                {
+                        "Key" : "DetailsLink",
+                        "Value" : "https://software.broadinstitute.org/software/igv/home"
+                },
+                {
+                        "Key" : "Service",
+                        "Value" : "EC2-IGV"
+                },
+                {
+                        "Key" : "TypeOfProduct",
+                        "Value" : "Research"
+                },
+                {
+                        "Key" : "ALB",
+                        "Value" : "true"
+                },
+                {
+                        "Key" : "ApplicationPort",
+                        "Value" : "8443"
+                },
+                {
+                        "Key" : "ApplicationProtocol",
+                        "Value" : "HTTPS"
+                }
+        ],
+        "owner" : "RL",
+        "portfolio" : "RGPortfolio",
+        "availableRegions" : [ ],
+        "assignedOU" : [],
+        "metaData" : {
+                "pre_provisioning" : [
+                        {
+                                "code" : "CFT_PARAMS",
+                                "params" : [
+                                        {
+                                                "name" : "EnvironmentInstanceFiles",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "IamPolicyDocument",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "S3Mounts",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "Namespace",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        }
+                                ]
+                        }
+                ],
+                "post_provisioning" : [ ],
+                "checks_before_assigning_product" : [ ],
+                "checks_after_assigning_product" : [ ],
+                "permission_required" : {
+
+                },
+                "cost_resource" : true
+        }
+},
+{
+  "_id": {
+    "$oid": "60504955135663522b880cfm"
+  },
+  "name" : "Secure Research Linux Desktop",
+"description" : "A secure research environment intended to allow researchers to access sensitive data under a higher level of control and data protection.",
+"fileName" : "ec2-secure-desktop.yml",
+ "tags" : [
+                {
+                        "Key" : "EstimatedTimeToProvision",
+                        "Value" : "10 Minutes"
+                },
+                {
+                        "Key" : "DetailsLink",
+                        "Value" : "https://aws.amazon.com/hpc/dcv/"
+                },
+                {
+                        "Key" : "Service",
+                        "Value" : "EC2-SECURE-DESKTOP"
+                },
+                {
+                        "Key" : "TypeOfProduct",
+                        "Value" : "Research"
+                },
+                {
+                        "Key" : "ALB",
+                        "Value" : "true"
+                },
+                {
+                        "Key" : "ApplicationPort",
+                        "Value" : "8443"
+                },
+                {
+                        "Key" : "ApplicationProtocol",
+                        "Value" : "HTTPS"
+                }
+        ],
+        "owner" : "RL",
+        "portfolio" : "RGPortfolio",
+        "availableRegions" : [ ],
+        "assignedOU" : [ ],
+        "metaData" : {
+                "pre_provisioning" : [
+                        {
+                                "code" : "CFT_PARAMS",
+                                "params" : [
+                                        {
+                                                "name" : "EnvironmentInstanceFiles",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "IamPolicyDocument",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "ALBSecurityGroup",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "S3Mounts",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "WorkSpaceSecurityGroup",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "Subnet",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "VPC",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        },
+                                        {
+                                                "name" : "Namespace",
+                                                "type" : "RL::SC::PARAM::HD"
+                                        }
+                                ]
+                        }
+                ],
+                "post_provisioning" : [ ],
+                "checks_before_assigning_product" : [
+                        {
+                                "Key" : "Secure",
+                                "Value" : true
+                        },
+                        {
+                                "code" : "AMI_ID_REQUIRED",
+                                "is_ami_required" : true,
+                                "ami_id_list" : [
+                                        {
+                                                "us-east-2" : "ami-0dee29a828867a412"
+                                        },
+                                        {
+                                                "us-east-1" : "ami-0b5fdc4291f61615f"
+                                        },
+                                        {
+                                                "us-west-2" : "ami-0ac56f9f8b19a73bf"
+                                        },
+                                        {
+                                                "us-west-1" : "ami-0e0231a98d0ca2679"
+                                        },
+                                        {
+                                                "ap-south-1" : "ami-0f81ea31ecefeba4f"
+                                        },
+                                        {
+                                                "ap-southeast-1" : "ami-069d31c5036ef2bef"
+                                        },
+                                        {
+                                                "ap-southeast-2" : "ami-03a848fa192a4342a"
+                                        },
+                                        {
+                                                "ap-east-1" : "ami-01819f556745b5d1d"
+                                        },
+                                        {
+                                                "eu-west-1" : "ami-03dab069555190662"
+                                        }
+                                ],
+                                "ami_path" : "/RL/RG/StandardCatalog/linux-nice-dcv-ami"
+                        }
+                ],
+                "checks_after_assigning_product" : [ ],
+                "permission_required" : {
+
+                },
+                "cost_resource" : true
+        }
+}
+
 ]

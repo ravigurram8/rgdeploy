@@ -4,13 +4,38 @@ Description: create a single S3 bucket
 Parameters:
   Namespace:
     Type: String
-    Description: An environment name that will be prefixed to resource names  
+    Description: An environment name that will be prefixed to resource names 
+  KMSKeyArn:
+    Type: String
+    Description: "If having KMS Key ARN, Pass ARN"
+    Default: "Default"
+  SSEAlgorithm:
+    Type: String
+    Description: "If KMS key ARN passed,select aws:kms Encryption algorithm"
+    Default: "AES256"
+    AllowedValues:
+      - aws:kms
+      - AES256
+
+Conditions:
+  AES256: !Equals [!Ref SSEAlgorithm, "AES256"]   
 
 Resources:
   SampleBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref Namespace
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration: 
+        - !If
+          - AES256
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: !Ref SSEAlgorithm
+            BucketKeyEnabled: true
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: !Ref SSEAlgorithm
+              KMSMasterKeyID: !Ref KMSKeyArn
+            BucketKeyEnabled: true    
       Tags:
         - Key: cost_resource
           Value: !Sub ${AWS::StackName}
