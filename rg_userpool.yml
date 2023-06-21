@@ -364,7 +364,7 @@ Resources:
         S3Key: post_verification_send_message.zip
       Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
-      Runtime: "nodejs18.x"
+      Runtime: "nodejs14.x"
       Timeout: 3
       TracingConfig:
         Mode: "PassThrough"
@@ -383,7 +383,7 @@ Resources:
         S3Key: pre_verification_custom_message.zip
       Role: !GetAtt "LambdaExecutionRole.Arn"
       MemorySize: 128
-      Runtime: "nodejs18.x"
+      Runtime: "nodejs14.x"
       Timeout: 3
       TracingConfig:
         Mode: "PassThrough"
