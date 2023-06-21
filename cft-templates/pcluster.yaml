@@ -307,9 +307,9 @@ Resources :
                 ;;
             esac
             if [ ${SpackSetup} = true ]; then
-                Nodeconfig="/home/ec2-user/parallel-update/postinstall.sh"
+                Nodeconfig="https://raw.githubusercontent.com/spack/spack-configs/main/AWS/parallelcluster/postinstall.sh"
             else
-                Nodeconfig="/home/ec2-user/parallel-update/sample.sh"
+                Nodeconfig="https://raw.githubusercontent.com/geekdecoder/aws/master/update-centos.sh"
             fi
             set -e 
             trap '/opt/aws/bin/cfn-signal --exit-code 1 --resource EC2Instance --region ${AWS::Region} --stack ${AWS::StackName}' ERR    
