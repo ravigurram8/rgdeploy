@@ -56,6 +56,14 @@ Parameters:
     Type: Number
     Default: 32  
 
+  AllowedIpAddress:
+    Description: The IP address range that can be used to SSH to instance and Connect to DCV
+    Type: String
+    MinLength: "9"
+    MaxLength: "18"
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
 
 Conditions:
   IamPolicyEmpty: !Equals [!Ref IamPolicyDocument, "{}"]
@@ -126,6 +134,9 @@ Resources:
       ManagedPolicyArns:
         - Ref: SSMPolicy            
       PermissionsBoundary: !Ref InstanceRolePermissionBoundary
+
+
+
   InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
@@ -153,7 +164,7 @@ Resources:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT20M
+        Timeout: PT15M
     Metadata:
       AWS::CloudFormation::Init:
         configSets:
@@ -255,10 +266,10 @@ Resources:
               content: !Sub |
                 #!/bin/sh
                 set -x
-                sleep 120
+                sleep 25
                 export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep mate-session)/environ|cut -d= -f2- | tr -d '\0')
                 gsettings set org.mate.interface gtk-theme "Graphite-Light"
-                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"              
+                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"  
         config2:
           commands:
             01_start_ext_auth:
@@ -267,7 +278,6 @@ Resources:
             02_set_user_token:
               cwd: "/home/ec2-user"
               command: "/home/ec2-user/set_user_token.sh"
-               
     Properties:
       UserData:
         Fn::Base64: !Sub |
@@ -277,11 +287,12 @@ Resources:
           
           # Copy environment instance files needed for the workspace
           aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/secure_desktop/secure_desktop.perm" "/etc/dcv/"
-          
-          # Download and execute bootstrap script
           aws s3 cp --region "${AWS::Region}" "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
           chmod 500 "/tmp/get_bootstrap.sh"
-          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${AWS::Region}"
+          /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "" "${AWS::Region}"
+
+          # Install supervisor and start on boot
+          # pip3 install supervisor crudini
 
           # Route auth request to external authenticator and restart dcv
           /usr/local/bin/crudini --set /etc/dcv/dcv.conf security auth-token-verifier \"http://127.0.0.1:8445\"
@@ -290,7 +301,6 @@ Resources:
 
           # Create dcv session start script
           cat << EOF > /usr/local/bin/start-dcv-session
-          sleep 15          
           dcv create-session rg-session --name rg-session --user ec2-user --owner ec2-user --permissions-file /etc/dcv/secure_desktop.perm
           EOF
 
@@ -298,6 +308,8 @@ Resources:
           chown root: "/usr/local/bin/start-dcv-session"
           chmod 775 "/usr/local/bin/start-dcv-session"
           sh "/usr/local/bin/start-dcv-session"
+
+          sleep 5
 
           # Run init script to create files
           /opt/aws/bin/cfn-init --verbose --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
@@ -309,7 +321,6 @@ Resources:
           echo '@reboot /usr/local/bin/start-dcv-session 2>&1 >> /var/log/start-dcv-session.log' >> "/tmp/crontab"
           echo '@reboot /home/ec2-user/set_user_token.sh 2>&1 >> /var/log/set_user_token.log' >> "/tmp/crontab"
           crontab "/tmp/crontab"
-
           # Restart DCV session to start dcv-session
           dcv close-session rg-session
           sh "/usr/local/bin/start-dcv-session"
@@ -317,8 +328,9 @@ Resources:
           # Remove password and lock for ec2-user
           passwd -l ec2-user
           dcv create-session lock-session --name lock-session --user ec2-user --owner ec2-user --init /home/ec2-user/disable_lock.sh
-
           sudo -u ec2-user /home/ec2-user/themes.sh
+
+          
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
 
@@ -370,6 +382,7 @@ Outputs:
   InstanceId:
     Description: InstanceId of the newly created EC2 instance
     Value: !Ref "EC2Instance"
+
   ApplicationPort:
     Description: The Port in which the application is running
     Value: "8443"
