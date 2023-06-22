@@ -1086,7 +1086,7 @@
   },
   {
     "_id": {
-      "$oid": "60504955135663522b880abm"
+      "$oid": "60504955135663522b880abg"
       },
         "name" : "Integrated Genomics Viewer",
         "description" : "The Integrative Genomics Viewer (IGV) is a high-performance, easy-to-use, interactive tool for the visual exploration of genomic data.",
@@ -1160,7 +1160,7 @@
 },
 {
   "_id": {
-    "$oid": "60504955135663522b880cfm"
+    "$oid": "60504955135663522b880cde"
   },
   "name" : "Secure Research Linux Desktop",
 "description" : "A secure research environment intended to allow researchers to access sensitive data under a higher level of control and data protection.",
