@@ -249,11 +249,10 @@ Resources:
 
               # install AWS CLI with Miniconda:
               - sudo yum install -y bzip2 wget
-              - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-              - bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /home/ec2-user/miniconda
+              - wget https://repo.continuum.io/miniconda/Miniconda3-py39_22.11.1-1-Linux-x86_64.sh
+              - bash Miniconda3-py39_22.11.1-1-Linux-x86_64.sh -b -f -p /home/ec2-user/miniconda
               - /home/ec2-user/miniconda/bin/conda install -c conda-forge -y awscli
-              - rm Miniconda3-latest-Linux-x86_64.sh
-
+              - rm Miniconda3-py39_22.11.1-1-Linux-x86_64.sh
               --==BOUNDARY==--
   
   SecurityGroup:
@@ -608,6 +607,7 @@ Resources:
           params.outdir='$OutputDataLocation'
           params.reads='$InputDataLocation/$pattern'
           params.input='$InputDataLocation/$pattern'
+          params.test_data_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules'
           profiles {
             standard {
               process.container = '${PipelineContainer}'
@@ -639,6 +639,7 @@ Resources:
           echo ${PipelineName} > PipelineRepo.TXT 
 
           NEXTFLOW_CONFIG=nextflow.config
+          sed -i -e "/^[[:space:]]*params[[:space:]]\+{/a \ \ \ \ test_data_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules'" $NEXTFLOW_CONFIG
           
           cat << EOF >> $NEXTFLOW_CONFIG
 
