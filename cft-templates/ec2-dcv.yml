@@ -228,7 +228,7 @@ Resources:
           cat << 'EOF' > /usr/local/bin/start-dcv-session
            #!/bin/bash
             service_name="dcvserver"
-            timeout=60
+            timeout=20
             elapsed_time=0
 
             echo "Waiting for $service_name to become active..."
