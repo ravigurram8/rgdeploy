@@ -407,7 +407,9 @@
                         "cromwell",
                         "sagemaker",
                         "ec2-igv",
-                        "ec2-secure-desktop"
+                        "ec2-secure-desktop",
+                        "ec2-dcv"
+
                 ]
         },
         "studySelectionCount" : 5.0

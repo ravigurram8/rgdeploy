@@ -25,6 +25,10 @@ Parameters:
     Default: t3.large
     AllowedValues: [t3.large, t3.xlarge, t3.2xlarge,  g4dn.xlarge, g4dn.2xlarge, g4dn.4xlarge, g4dn.8xlarge, g4dn.12xlarge, g4dn.16xlarge, g4dn.metal, g3.4xlarge, g3.8xlarge, g3.16xlarge]
     ConstraintDescription: must be a valid EC2 instance type.
+  EBSVolumeSize:
+    Description: The initial size of the volume (in GBs)  EBS will use for storage.
+    Type: Number
+    Default: 32  
   KeyPair:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
     Type: AWS::EC2::KeyPair::KeyName
@@ -195,7 +199,7 @@ Resources:
                 sleep 120
                 export DBUS_SESSION_BUS_ADDRESS=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep mate-session)/environ|cut -d= -f2- | tr -d '\0')
                 gsettings set org.mate.interface gtk-theme "Graphite-Light"
-                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"               
+                gsettings set org.mate.background picture-filename "/home/ec2-user/Graphite-gtk-theme-main/wallpaper/Graphite/wave-color.png"
         config2:
           commands:
             01_start_ext_auth:
@@ -221,9 +225,32 @@ Resources:
           systemctl restart dcvserver
 
           # Create dcv session start script
-          cat << EOF > /usr/local/bin/start-dcv-session
-          sleep 15
+          cat << 'EOF' > /usr/local/bin/start-dcv-session
+           #!/bin/bash
+            service_name="dcvserver"
+            timeout=60
+            elapsed_time=0
+
+            echo "Waiting for $service_name to become active..."
+
+            while true; do
+            status=$(systemctl is-active $service_name)
+            if [[ $status == "active" ]]; then
+              echo "$service_name is now active."
+              break
+            fi
+
+            if [[ $elapsed_time -ge $timeout ]]; then
+              echo "Timeout: $service_name did not become active within $timeout seconds."
+              break
+            fi
+
+            sleep 1
+            elapsed_time=$((elapsed_time+1))
+            done
           dcv create-session rg-session --name rg-session --user ec2-user --owner ec2-user
+          dcv list-sessions
+          date
           EOF
 
           # Create dcv session on reboot
@@ -244,19 +271,23 @@ Resources:
           # Add command to start on reboot
           crontab -l 2>/dev/null > "/tmp/crontab"
           sh "/usr/local/bin/start-dcv-session"
+          echo '@reboot systemctl start dcvserver' >> "/tmp/crontab"
           echo '@reboot cd /home/ec2-user/supervisor && /usr/local/bin/supervisord 2>&1 >> /home/ec2-user/supervisor/cust_auth.log' >> "/tmp/crontab"
+          echo '@reboot sleep 5' >> "/tmp/crontab"
           echo '@reboot /usr/local/bin/start-dcv-session 2>&1 >> /var/log/start-dcv-session.log' >> "/tmp/crontab"
           echo '@reboot /home/ec2-user/set_user_token.sh 2>&1 >> /var/log/set_user_token.log' >> "/tmp/crontab"
           crontab "/tmp/crontab"
           # Restart DCV session
-          dcv close-session rg-session
-          sh "/usr/local/bin/start-dcv-session"
+          #dcv close-session rg-session
+          #sh "/usr/local/bin/start-dcv-session"
 
           # Remove password and lock for ec2-user
           passwd -l ec2-user
           dcv create-session lock-session --name lock-session --user ec2-user --owner ec2-user --init /home/ec2-user/disable_lock.sh
 
           sudo -u ec2-user /home/ec2-user/themes.sh
+          dcv list-sessions
+
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
       InstanceType: !Ref 'InstanceType'
@@ -264,6 +295,13 @@ Resources:
       KeyName: !Ref 'KeyPair'
       ImageId: "{{resolve:ssm:/RL/RG/StandardCatalog/linux-nice-dcv-ami}}"
       IamInstanceProfile: !Ref InstanceProfile
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref EBSVolumeSize
+            
+      
+
       PropagateTagsToVolumeOnCreation: true
       Tags:
         - Key: Name
