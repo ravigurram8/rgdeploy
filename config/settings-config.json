@@ -560,6 +560,129 @@
       "terminated"
     ]
   },
+  "ec2-secure-desktop": {
+    "actions": {
+        "running": {
+            "connect": [
+                {
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png"
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        },
+        "stopped": {
+            "connect": [],
+            "action": [
+                {
+                    "action": "Start",
+                    "imageUrl": "../../assets/images/play@2x.png"
+                }
+            ]
+        },
+        "default": {
+            "connect": [
+                {
+                    "menu": "Remote Desktop",
+                    "imageUrl": "../../assets/images/Screen-icon.png"
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        }
+    },
+    "transient_states": [
+        "pending",
+        "shutting-down",
+        "stopping",
+        "deleting"
+    ],
+    "active_states": ["running", "active"],
+    "stopped_states": ["stopped"],
+    "terminated_states": ["terminated"]
+},    
+"ec2-igv": {
+    "actions": {
+        "running": {
+            "connect": [
+                {
+                    "menu": "Remote Desktop",
+                    "imageUrl": "./../assets/images/Screen-icon.png"
+                }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        },
+        "stopped": {
+            "connect": [],
+            "action": [
+                {
+                    "action": "Start",
+                    "imageUrl": "../../assets/images/play@2x.png"
+                }
+            ]
+        },
+        "default": {
+            "connect": [
+                {
+            "menu": "Remote Desktop",
+            "imageUrl": "../../assets/images/Screen-icon.png"
+           }
+            ],
+            "action": [
+                {
+                    "action": "Stop",
+                    "imageUrl": "../../assets/images/no-stopping@2x.png"
+                },
+                {
+                    "action": "Reboot",
+                    "imageUrl": "../../assets/images/reset@2x.png"
+                }
+            ]
+        }
+    },
+    "transient_states": [
+        "pending",
+        "shutting-down",
+        "stopping",
+        "deleting"
+    ],
+    "active_states": [
+        "running",
+        "active"
+    ],
+    "stopped_states": [
+        "stopped"
+    ],
+    "terminated_states": [
+        "terminated"
+    ]
+},    
   "cromwell": {
     "actions": {
         "running": {
@@ -809,6 +932,10 @@
           {
             "action": "Edit",
             "imageUrl": "../../assets/images/editStudy.png"
+          },
+          {
+            "action": "Terminate",
+            "imageUrl": "../../assets/images/delete@2x.png"
           }
         ]
       },
@@ -914,7 +1041,9 @@
     "nextflow",
     "cromwell",
     "pcluster",
-    "ec2-dcv"
+    "ec2-dcv",
+    "ec2-igv", 
+    "ec2-secure-desktop"
   ],
   "cft_active_states": [
     "available",
