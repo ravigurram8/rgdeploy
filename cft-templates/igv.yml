@@ -6,19 +6,22 @@ Description: 'AWS CloudFormation Template to create an EC2 instance with NICE-DC
 Mappings: 
   RegionMap: 
     us-east-1: 
-      AmiID: "ami-0759d9ecf1fcb7be9"
+      AmiID: "ami-0d114a627f015307f"
     us-east-2: 
-      AmiID: "ami-018bd425554ab6cf4"
+      AmiID: "ami-0684a90a3dafafa2b"
     us-west-1: 
-      AmiID: "ami-02258ab533d22fa75"
+      AmiID: "ami-01219e6d4eeb84011"
     us-west-2: 
-      AmiID: "ami-02d3838a1d948d3ca"
+      AmiID: "ami-005d3bea287ac9e7a"
     ap-south-1: 
-      AmiID: "ami-0c33a5a105981b1fb"
+      AmiID: "ami-03b63611f215b913b"
     ap-southeast-1: 
-      AmiID: "ami-061f216d271a880ce"
+      AmiID: "ami-06802e4bc7a0376aa"
     ap-southeast-2: 
-      AmiID: "ami-0d1748650516fb8a3"
+      AmiID: "ami-0be5eaf9b870eb48a"
+    ap-east-1: 
+      AmiID: "ami-0483a4200dfccea47"
+
 
 Parameters:
   Namespace:
@@ -30,12 +33,6 @@ Parameters:
   IamPolicyDocument:
     Type: String
     Description: The IAM policy to be associated with the launched workstation
-  VPC:
-    Description: The VPC in which the EC2 instance will reside
-    Type: AWS::EC2::VPC::Id
-  Subnet:
-    Description: The VPC subnet in which the EC2 instance will reside
-    Type: AWS::EC2::Subnet::Id
   EnvironmentInstanceFiles:
     Type: String
     Description: >-
@@ -47,6 +44,10 @@ Parameters:
     Default: t3.medium
     AllowedValues: [t3.medium, t3.xlarge, t3.2xlarge,  g4dn.xlarge, g4dn.2xlarge, g4dn.4xlarge, g4dn.8xlarge, g4dn.12xlarge, g4dn.16xlarge, g4dn.metal, g3.4xlarge, g3.8xlarge, g3.16xlarge]
     ConstraintDescription: must be a valid EC2 instance type.
+  EBSVolumeSize:
+    Description: The initial size of the volume (in GBs)  EBS will use for storage.
+    Type: Number
+    Default: 32   
   KeyPair:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
     Type: AWS::EC2::KeyPair::KeyName
@@ -311,6 +312,10 @@ Resources:
         - !Ref 'AWS::Region'
         - AmiID
       IamInstanceProfile: !Ref InstanceProfile
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref EBSVolumeSize
       PropagateTagsToVolumeOnCreation: true
       Tags:
         - Key: Name
