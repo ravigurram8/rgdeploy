@@ -30,6 +30,7 @@ Parameters:
     Description: >-
       An S3 URI (starting with "s3://") that specifies the location of files to be copied to
       the environment instance, including any bootstrap scripts
+     
   InstanceType:
     Description: Choose the instance type for this instance. e.g. t3.medium
     Type: String
@@ -54,7 +55,11 @@ Parameters:
   EBSVolumeSize:
     Description: The initial size of the volume (in GBs)  EBS will use for storage.
     Type: Number
-    Default: 32  
+    Default: 32
+  KeyPair:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.  
 
   AllowedIpAddress:
     Description: The IP address range that can be used to SSH to instance and Connect to DCV
@@ -101,17 +106,14 @@ Resources:
               - 'ssm:*'
             Resource: '*'
           - Effect: Deny
-            Action: '*'
-            Resource: '*'
-            Condition:
-              StringNotEquals:
-                aws:Ec2InstanceSourceVPC: "${aws:SourceVpc}"
-                aws:ec2InstanceSourcePrivateIPv4: "${aws:VpcSourceIp}"
-              BoolIfExists:
-                aws:ViaAWSService: "false"
-              'Null':
-                aws:ec2InstanceSourceVPC: "false"
+            NotAction:
+              - 's3:*'
+              - 'ssm:*'
+              - 'kms:*'
+            NotResource: '*'   
+          
   IAMRole:
+  
     Type: 'AWS::IAM::Role'
     Properties:
       RoleName: !Join ['-', [Ref: Namespace, 'ec2-role']]
@@ -335,9 +337,11 @@ Resources:
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
 
       InstanceType: !Ref "InstanceType"
+      KeyName: !Ref 'KeyPair'
       
       ImageId: "{{resolve:ssm:/RL/RG/StandardCatalog/linux-nice-dcv-ami}}"
       IamInstanceProfile: !Ref InstanceProfile
+      
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
