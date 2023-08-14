@@ -32,10 +32,6 @@ Parameters:
     Type: String
     Description: User Name for RStudio. Do not use 'root' and 'ec2-user'
     Default: rstudio
-  InitialPassword:
-    Type: String
-    Description: Password for RStudio. Please keep in your records as this will not be echoed in the CloudFormation Console
-    NoEcho: True
   KeyPair:
     Type: "AWS::EC2::KeyPair::KeyName"
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance. If no key pairs exist, please create one from the button next to the dropdown. Please contact your Administrator if you are unable to create one.
@@ -64,6 +60,15 @@ Resources:
           - !Ref 'AWS::NoValue'
           - PolicyName: !Join ['-', [Ref: Namespace, 's3-studydata-policy']]
             PolicyDocument: !Ref IamPolicyDocument
+        - PolicyName: param-store-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - 'ssm:GetParameter'
+                  - 'ssm:PutParameter'
+                Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*'            
 
   InstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
@@ -92,6 +97,44 @@ Resources:
     CreationPolicy:
       ResourceSignal:
         Timeout: PT10M
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          default:
+            - config1
+            - config2
+        config1:
+          files:         
+            '/root/set_user_token.sh':
+              mode: '000755'
+              owner: 'ec2-user'
+              group: 'ec2-user'
+              content: !Sub |
+                #!/usr/bin/env bash
+                instance_id=$(curl -s "http://169.254.169.254/latest/meta-data/instance-id")
+                secret=`uuidgen`
+                echo "setting ${InitialUser} password and starting rstudio"
+                password=$(echo -n "$instance_id$secret" | sha256sum | awk '{print $1}')
+                echo "${InitialUser}:$password" | /usr/sbin/chpasswd
+                echo "Set rstudio-user password"
+                                             
+                sleep 10
+                public_key=$(curl http://localhost:8787/auth-public-key)
+                instance_region=$(curl -s "http://169.254.169.254/latest/meta-data/placement/region")
+                aws ssm put-parameter --name "/RL/RG/rstudio/public-key/$instance_id" --value '{"secret":"'$secret'","public_key":"'$public_key'"}' --region $instance_region --type SecureString --overwrite 
+                echo "Stored rstudio public key in SSM"
+            '/var/log/rstudio.log':
+              content: "\n"
+              mode: '000664'
+              owner: 'root'
+              group: 'root'
+
+        config2:
+          commands:
+            02_set_user_token:
+              cwd: '/root'
+              command: '/root/set_user_token.sh'
+
     Properties:
       ImageId : '{{resolve:ssm:/RL/RG/StandardCatalog/RStudio}}'
       InstanceType: !Ref 'InstanceType'
@@ -115,15 +158,22 @@ Resources:
           
           #add user(s)
           sudo useradd -m -s /bin/bash ${InitialUser}
-          sudo echo ${InitialUser}:${InitialPassword} | chpasswd
           #Add user to the sudo group
-          sudo usermod -a -G wheel ${InitialUser}
+          sudo usermod -a -G wheel ${InitialUser}             
           
           #Download and execute bootstrap script
           aws s3 cp "${EnvironmentInstanceFiles}/get_bootstrap.sh" "/tmp"
           chmod 500 "/tmp/get_bootstrap.sh"
           /tmp/get_bootstrap.sh "${EnvironmentInstanceFiles}" '${S3Mounts}' "${InitialUser}"
           
+          # Add command to start on reboot
+          crontab -l 2>/dev/null > "/tmp/crontab"
+          echo '@reboot /root/set_user_token.sh 2>&1 >> /var/log/set_user_token.log' >> "/tmp/crontab"
+          crontab "/tmp/crontab"
+
+          # Run init script to create files
+          /opt/aws/bin/cfn-init --verbose --stack ${AWS::StackName} --resource RstudioEC2Instance --region ${AWS::Region}
+
           /opt/aws/bin/cfn-signal --exit-code 0 --resource RstudioEC2Instance --region ${AWS::Region} --stack ${AWS::StackName}
 
 Outputs:
