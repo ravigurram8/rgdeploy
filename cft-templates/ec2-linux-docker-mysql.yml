@@ -108,7 +108,8 @@ Resources:
           # Install Mysql Shell
           sudo yum install mysql -y
           # Pull Mysql Image
-          docker pull mysql:8
+          #docker pull mysql:8
+          docker pull mariadb:latest
           mkdir docker
           mkdir docker/mysql
           mkdir docker/mysql/conf
@@ -118,7 +119,7 @@ Resources:
           -v /home/ec2-user/docker/mysql/data/:/var/lib/mysql \
           -e MYSQL_ROOT_PASSWORD=${MasterPassword} \
           --restart always \
-          --name docker_mysql mysql:8 \
+          --name docker_mysql mariadb:latest \
           # Download and execute shell script
           cd /home/ec2-user
           aws s3 cp "${EnvironmentInstanceFiles}/alter_rootpassword.sh" "alter_rootpassword.sh"
