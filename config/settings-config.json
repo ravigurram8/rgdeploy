@@ -617,7 +617,167 @@
     "active_states": ["running", "active"],
     "stopped_states": ["stopped"],
     "terminated_states": ["terminated"]
-},    
+}, 
+"ec2-jupyterlab": {
+  "actions": {
+      "running": {
+          "connect": [
+              {
+                  "menu": "SSH/RDP",
+                  "imageUrl": "../../assets/images/technology@2x.png",
+                  "outputsRequired": ["InstanceIPAddress", "InstanceId"]
+              },
+              {
+                  "menu": "Open Link",
+                  "imageUrl": "../../assets/images/link@2x.png",
+                  "outputsRequired": [
+                      "InstanceDNSName",
+                      "ApplicationPort"
+                  ]
+              },
+              {
+                  "menu": "Explore",
+                  "imageUrl": "../../assets/images/direction@2x.png",
+                  "outputsRequired": []
+              }
+          ],
+          "action": [
+              {
+                  "action": "Stop",
+                  "imageUrl": "../../assets/images/stop.png",
+                  "outputsRequired": ["InstanceId"]
+              },
+              {
+                  "action": "Reboot",
+                  "imageUrl": "../../assets/images/reset@2x.png",
+                  "outputsRequired": ["InstanceId"]
+              }
+          ]
+      },
+      "stopped": {
+          "connect": [],
+          "action": [
+              {
+                  "action": "Start",
+                  "imageUrl": "../../assets/images/play@2x.png",
+                  "outputsRequired": ["InstanceId"]
+              },
+              {
+                  "action": "Instance Type",
+                  "imageUrl": "../../assets/images/pencil.png",
+                  "outputsRequired": ["InstanceId"]
+              }
+          ]
+      },
+      "default": {
+          "connect": [
+              {
+                  "menu": "SSH/RDP",
+                  "imageUrl": "../../assets/images/technology@2x.png"
+              }
+          ],
+          "action": [
+              {
+                  "action": "Stop",
+                  "imageUrl": "../../assets/images/stop.png"
+              },
+              {
+                  "action": "Reboot",
+                  "imageUrl": "../../assets/images/reset@2x.png"
+              }
+          ]
+      }
+  },
+  "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+  ],
+  "active_states": ["running", "active"],
+  "stopped_states": ["stopped"],
+  "terminated_states": ["terminated"]
+},
+"ec2-vscode": {
+  "actions": {
+      "running": {
+          "connect": [
+              {
+                  "menu": "SSH/RDP",
+                  "imageUrl": "../../assets/images/technology@2x.png",
+                  "outputsRequired": ["InstanceIPAddress", "InstanceId"]
+              },
+              {
+                  "menu": "Open Link",
+                  "imageUrl": "../../assets/images/link@2x.png",
+                  "outputsRequired": [
+                      "InstanceDNSName",
+                      "ApplicationPort"
+                  ]
+              },
+              {
+                  "menu": "Explore",
+                  "imageUrl": "../../assets/images/direction@2x.png",
+                  "outputsRequired": []
+              }
+          ],
+          "action": [
+              {
+                  "action": "Stop",
+                  "imageUrl": "../../assets/images/stop.png",
+                  "outputsRequired": ["InstanceId"]
+              },
+              {
+                  "action": "Reboot",
+                  "imageUrl": "../../assets/images/reset@2x.png",
+                  "outputsRequired": ["InstanceId"]
+              }
+          ]
+      },
+      "stopped": {
+          "connect": [],
+          "action": [
+              {
+                  "action": "Start",
+                  "imageUrl": "../../assets/images/play@2x.png",
+                  "outputsRequired": ["InstanceId"]
+              },
+              {
+                  "action": "Instance Type",
+                  "imageUrl": "../../assets/images/pencil.png",
+                  "outputsRequired": ["InstanceId"]
+              }
+          ]
+      },
+      "default": {
+          "connect": [
+              {
+                  "menu": "SSH/RDP",
+                  "imageUrl": "../../assets/images/technology@2x.png"
+              }
+          ],
+          "action": [
+              {
+                  "action": "Stop",
+                  "imageUrl": "../../assets/images/stop.png"
+              },
+              {
+                  "action": "Reboot",
+                  "imageUrl": "../../assets/images/reset@2x.png"
+              }
+          ]
+      }
+  },
+  "transient_states": [
+      "pending",
+      "shutting-down",
+      "stopping",
+      "deleting"
+  ],
+  "active_states": ["running", "active"],
+  "stopped_states": ["stopped"],
+  "terminated_states": ["terminated"]
+},           
 "ec2-igv": {
     "actions": {
         "running": {
@@ -1043,7 +1203,10 @@
     "pcluster",
     "ec2-dcv",
     "ec2-igv", 
-    "ec2-secure-desktop"
+    "ec2-secure-desktop",
+    "ec2-vscode",
+    "ec2-jupyterlab"
+
   ],
   "cft_active_states": [
     "available",
