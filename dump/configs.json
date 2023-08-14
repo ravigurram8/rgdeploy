@@ -152,6 +152,16 @@
         "key" : "What products can I get from the Bring specific catalog items?",
         "value" : "This option will pull in any products that are tagged with the same tag which user provides in the UI. For BYOC to work, the role assumed by the Portal in the project account must be added to the portfolio manually",
         "tags" : ["ownCatalogWithTag"]
+      },
+      {
+        "key": "What is Secure Research?",
+        "value": "Secure Research is a configuration that allows you to conduct research on sensitive data by restricting access to the workspace so that it is only accessible via a controlled client. The data cannot be downloaded through the interface and the outputs can be extracted from the environment only via an approval process.",
+        "tags": ["add_accounts"]
+      },
+      {
+        "key": "How can I enable Secure Research?",
+        "value": "To enable Secure Research you need to first enable Secure Research at the account setting level. Secure Research projects can only be created using settings that have been enabled for Secure Research. On the create project page, select an account that mentions (Secure Research). Then choose Secure Research under the project type section.",
+        "tags": ["add_accounts"]
       }
     ],
     "configType": "create_project_helpText"
@@ -214,9 +224,37 @@
         "key": "Use default VPC",
         "value": "Research Gateway uses the default VPC for provisioning resources from the Standard Catalog. If you check this option, Research Gateway will check if a default VPC exists and will create one if it does not exist. If you do not check this option, provisioning resources from Standard Catalog may fail. You may still be able to provision resources which allow explicit selection of networking parameters like VPC, Subnets, Security Groups etc.",
         "tags": ["vpc"]
-      }
+      }, 
+      {
+        "key": "What is Secure Research?",
+        "value": "Secure Research is a configuration that allows you to conduct research on sensitive data by restricting access to the workspace so that it is only accessible via a controlled client. The data cannot be downloaded through the interface and the outputs can be extracted from the environment only via an approval process.To enable secure research you have to perform some manual steps with the help of the Research Gateway support team.",
+        "tags": ["add_accounts"]
+      } 
     ],
     "configType": "add_account_helpText"
+  },
+  {
+    "_id": {
+      "$oid": "611525242f8746728471ab5b"
+    },
+    "helpText": [
+      {
+        "key": "Secure Research",
+        "value": "Use a secure research project to enable research using datasets with sensitive data that need to be processed and analyzed in an environment from where the data cannot be extracted without approval. A secure research project has no access to the internet and users cannot download any data except via approved egress requests.",
+        "readMoreLink": "https://researchgateway.readthedocs.io/en/latest/Features.html#how-to-add-a-new-project"
+      },
+      {
+        "key": "Data Library",
+        "value": "Use a data library project to manage datasets, create internal studies, enable researchers to ingress data securely, and enable data administrators to review egress applications for approval.",
+        "readMoreLink": "https://researchgateway.readthedocs.io/en/latest/Features.html#how-to-add-a-new-project" 
+      },
+      {
+        "key": "Ingress Gateway",
+        "value": "A project of type ingress gateway allows users to upload files to a personalized storage area and submit an ingress request. After approval, these files are made available in the IngressStore folder that is mounted to their workspaces.",
+        "readMoreLink": "https://researchgateway.readthedocs.io/en/latest/Features.html#how-to-add-a-new-project"
+      }     
+    ],
+    "configType": "project_type"
   },
   {
     "_id": {
@@ -224,7 +262,7 @@
     },
     "key": "projectStorage",
     "value": {
-      "productList": ["ec2", "rstudio", "nextflow", "cromwell", "ec2-dcv", "sagemaker", "ec2-igv", "ec2-secure-desktop"],
+      "productList": ["ec2", "rstudio", "nextflow", "cromwell", "ec2-dcv", "sagemaker", "ec2-igv", "ec2-secure-desktop", "ec2-jupyterlab", "ec2-vscode"],
       "s3Mounts": {
         "ProjectStorage": {
           "id": "ProjectStorage",
@@ -344,7 +382,8 @@
         "ownCatalogLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "ownCatalogWithTagLink" : "https://researchgateway.readthedocs.io/en/latest/",
         "isProductDailyCostMigration_v1_13_0_Required" : true,
-        "projectStorage" : "https://researchgateway.readthedocs.io/en/latest/GettingStarted.html#project-storage"
+        "projectStorage" : "https://researchgateway.readthedocs.io/en/latest/GettingStarted.html#project-storage",
+        "addProjectLink" : "https://researchgateway.readthedocs.io/en/latest/Features.html#how-to-add-a-new-project"
     },
     "studySelectionCount" : 2
   },
@@ -408,7 +447,9 @@
                         "sagemaker",
                         "ec2-igv",
                         "ec2-secure-desktop",
-                        "ec2-dcv"
+                        "ec2-dcv",
+                        "ec2-vscode",
+                        "ec2-jupyterlab"
 
                 ]
         },
