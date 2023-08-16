@@ -11,7 +11,7 @@
       "$oid": "603623aa5fa691d0e712e95c"
     },
     "key": "TypeOfCatalogProduct",
-    "value": ["All", "Research", "IT Applications"]
+    "value": ["All", "Research", "IT Applications", "Secure"]
   },
   {
     "_id": {
@@ -46,6 +46,10 @@
       {
         "key": "Asia Pacific (Sydney) ap-southeast-2",
         "value": "ap-southeast-2"
+      },
+      {
+        "key": "Europe (London) eu-west-2",
+        "value": "eu-west-2"
       }
     ],
     "configType": "region"
@@ -467,6 +471,7 @@
                   "rstudio",
                   "ec2-dcv",
                   "nextflow"
+
           ]
   }
 }
