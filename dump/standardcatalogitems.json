@@ -1204,7 +1204,7 @@
     "_id": {
       "$oid": "60504955135663522b880ccc"
       },
-      "name" : "Jupyterlab",
+      "name" : "JupyterLab",
       "description" : "JupyterLab 3.5.0 web-based interactive development environment for notebooks, code, and data. Configure and arrange workflows in data science and machine learning.",
       "fileName" : "ec2-jupyterLab.yml",
       "tags" : [ 
