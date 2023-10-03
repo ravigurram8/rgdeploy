@@ -1094,9 +1094,17 @@
             "imageUrl": "../../assets/images/editStudy.png"
           },
           {
-            "action": "Terminate",
+            "action": "Delete",
             "imageUrl": "../../assets/images/delete@2x.png"
           }
+        ]
+      },
+      "external": {
+        "action": [
+            {
+                "action": "Delete",
+                "imageUrl": "../../assets/images/delete@2x.png"
+            }
         ]
       },
       "Personal": {
@@ -1116,7 +1124,7 @@
             "imageUrl": "../../assets/images/share@2x.png"
           },
           {
-            "action": "Terminate",
+            "action": "Delete",
             "imageUrl": "../../assets/images/delete@2x.png"
           }
         ]
@@ -1174,6 +1182,10 @@
       {
         "key": "studyType",
         "value": "internal"
+      },
+      {
+        "key": "studyType",
+        "value": "external"
       },
       {
         "key": "studyType",

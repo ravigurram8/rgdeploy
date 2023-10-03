@@ -67,22 +67,23 @@
       "host": ""
     }
   },
-  "LoginStrategy": "cognito",
+  "LoginStrategy": "saml",
   "samlConfig": {
     "domain": "",
     "path": "",
     "entryPoint": "",
     "issuer": "",
     "cert": "",
+    "logoutUrl": "",
     "groupToRoleMapping": {
       "admin": [
-        "Admin"
+        "RgAdmin"
       ],
       "principal": [
-        "Principal"
+        "RgPrincipal"
       ],
       "researcher": [
-        "Researcher"
+        "RgResearcher"
       ]
     },
     "roleMapToRg": {
@@ -90,6 +91,13 @@
       "1": "principal",
       "2": "admin"
     }
+  },
+  "azureAdConfig":{
+    "directoryId": "398de9f4-7b9b-4bec-b0ed-69737fa45cf4",
+    "clientID": "76973bbb-ed42-48f9-a8ae-c131820c650e",
+    "redirectUrl": "https://enterprise-test1.rlcatalyst.com/auth/callback",
+    "clientSecret": "_Df8Q~knreZNJ0O.fGbJhGWhfXVGaAxX.lCnZcTP",
+    "destroySessionUrl" : "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://enterprise-test1.rlcatalyst.com/logout"
   },
   "baseURL": "REPLACE_WITH_BASE_URL",
   "stateChangeEventTriggerURL": "http://sp2_cc-3102:3002/provisionProductEvent",
