@@ -67,14 +67,14 @@
       "host": ""
     }
   },
-  "LoginStrategy": "saml",
+  "LoginStrategy": "cognito",
   "samlConfig": {
     "domain": "https://dev-64629994.okta.com",
     "path": "/samllogin",
     "entryPoint": "https://dev-64629994.okta.com/app/dev-64629994_researchgateway_1/exkaoo9k27Z5n8YCc5d7/sso/saml",
     "issuer": "http://www.okta.com/exkaoo9k27Z5n8YCc5d7",
     "cert": "/rlc/cc/server/app/config/okta.cert",
-    "logoutUrl": "REPLACE_WITH_BASE_URL/logout",
+    "logoutUrl": "https://enterprise-test1.rlcatalyst.com/logout",
     "groupToRoleMapping": {
       "admin": [
         "RgAdmin"
@@ -95,7 +95,7 @@
   "azureAdConfig":{
     "directoryId": "398de9f4-7b9b-4bec-b0ed-69737fa45cf4",
     "clientID": "76973bbb-ed42-48f9-a8ae-c131820c650e",
-    "redirectUrl": "REPLACE_WITH_BASE_URL/auth/callback",
+    "redirectUrl": "https://enterprise-test1.rlcatalyst.com/logout/auth/callback",
     "clientSecret": "_Df8Q~knreZNJ0O.fGbJhGWhfXVGaAxX.lCnZcTP",
     "destroySessionUrl" : "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://enterprise-test1.rlcatalyst.com/logout"
   },
